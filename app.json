@@ -1,16 +1,16 @@
 {
   "expo": {
-    "name": "rn-soft-ui-kit-free",
-    "slug": "rn-soft-ui-kit-free",
-    "description": "React Native - Soft UI Kit - Free",
-    "primaryColor": "#CB0C9F",
+    "name": "life-in-the-uk",
+    "slug": "life-in-the-uk",
+    "description": "Life In the UK 2024",
+    "primaryColor": "#b2f6f6",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
-      "backgroundColor": "#CB0C9F"
+      "backgroundColor": "#b2f6f6"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -23,8 +23,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#CB0C9F"
+        "foregroundImage": "./assets/splash.png",
+        "backgroundColor": "#b2f6f6"
       }
     },
     "web": {

@@ -22,6 +22,22 @@ export interface IQuizCard {
   attributes?:any;
 }
 
+export interface IQuizQuestion {
+  id: number;
+  content: string;
+  imgUrl: string;
+  correctAnswerId: number;
+  explanation?: string;
+  attributes: any;
+  answersList: IAnswerResponse[];
+}
+
+export interface IAnswerResponse {
+  id: number;
+  content: string;
+  imgUrl: string;
+}
+
 export interface ISolvedQuizCard {
   id?: number;
   state?: string;

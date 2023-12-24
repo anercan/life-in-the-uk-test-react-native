@@ -5,7 +5,8 @@ import {
     Profile,
     Register,
     QuizListScreen,
-    SolvedQuizListScreen
+    SolvedQuizListScreen,
+    QuizScreen
 } from '../screens';
 
 const Stack = createStackNavigator();
@@ -16,6 +17,7 @@ export default () => {
         <Stack.Navigator initialRouteName="QuizGroupListScreen">
             <Stack.Screen name="QuizGroupListScreen" component={QuizGroupListScreen} options={{headerShown: false}}/>
             <Stack.Screen name="QuizListScreen" component={QuizListScreen} options={{headerShown: false}}/>
+            <Stack.Screen name="QuizScreen" component={QuizScreen} options={{headerShown: false}}/>
             <Stack.Screen name="SolvedQuizListScreen" component={SolvedQuizListScreen} options={{headerShown: false}}/>
             <Stack.Screen name="Profile" component={Profile} options={{headerShown: false}}/>
             <Stack.Screen name="Register" component={Register} options={{headerShown: false}}/>

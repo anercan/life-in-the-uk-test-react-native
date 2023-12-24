@@ -6,7 +6,6 @@ import * as SplashScreen from 'expo-splash-screen';
 import {useData, ThemeProvider, TranslationProvider} from '../hooks';
 import {View, StyleSheet} from 'react-native';
 import Screens from "./Screens";
-import {BottomMenu} from "../components";
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();

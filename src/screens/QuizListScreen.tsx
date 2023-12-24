@@ -5,10 +5,11 @@ import {Block, BottomMenu} from '../components/';
 import QuizCard from "../components/QuizCard";
 import {useRoute} from "@react-navigation/native";
 import apiCaller from "../config/apiCaller";
-import {IQuizCard,} from "../constants/types";
+import {IQuizCard} from "../constants/types";
 import Header from "../components/Header";
+import {TouchableOpacity} from "react-native-gesture-handler";
 
-const QuizListScreen = (navigation) => {
+const QuizListScreen = ({navigation}) => {
     const route = useRoute();
     const {quizGroupId, quizGroupTitle} = route.params;
     const {t} = useTranslation();
@@ -38,9 +39,14 @@ const QuizListScreen = (navigation) => {
         setTab(filter);
     };
 
+    const startQuiz = (card: IQuizCard) => (
+        navigation.navigate('QuizScreen', {quizId: card?.id})
+    );
+
     return (
         <Block>
-            <Header tabOneText={t('home.filter1')} tabTwoText={t('home.filter2')} title={quizGroupTitle} callback={setTabChange}/>
+            <Header tabOneText={t('home.filter1')} tabTwoText={t('home.filter2')} title={quizGroupTitle}
+                    callback={setTabChange}/>
 
             {/* quizCards list */}
             <Block
@@ -49,8 +55,10 @@ const QuizListScreen = (navigation) => {
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{paddingBottom: sizes.l}}>
                 <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
-                    {filteredQuizCards?.map((card: IQuizCard) => (
-                        <QuizCard {...card} key={`card-${card?.id}`}/>
+                    {filteredQuizCards.map((card: IQuizCard) => (
+                        <TouchableOpacity onPress={() => startQuiz(card)}>
+                            <QuizCard {...card} key={`card-${card?.id}`}/>
+                        </TouchableOpacity>
                     ))}
                 </Block>
             </Block>
