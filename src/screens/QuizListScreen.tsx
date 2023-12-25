@@ -40,7 +40,7 @@ const QuizListScreen = ({navigation}) => {
     };
 
     const startQuiz = (card: IQuizCard) => (
-        navigation.navigate('QuizScreen', {quizId: card?.id})
+        navigation.navigate('QuizScreen', {quizId: card?.id, quizGroupId: quizGroupId})
     );
 
     return (

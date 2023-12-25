@@ -1,4 +1,5 @@
 import Block from './Block';
+import ButtonCard from './ButtonCard';
 import Button from './Button';
 import Input from './Input';
 import AppText from './AppText';
@@ -20,6 +21,7 @@ export {
     Image,
     QuizGroupCard,
     Modal,
+    ButtonCard,
     QuizCard,
     BottomMenu
 };

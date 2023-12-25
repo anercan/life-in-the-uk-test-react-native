@@ -30,6 +30,9 @@ export interface IQuizQuestion {
   explanation?: string;
   attributes: any;
   answersList: IAnswerResponse[];
+  selectedId:number;
+  onSelect: (selectedId: number) => void;
+  isAnswered:boolean;
 }
 
 export interface IAnswerResponse {

@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const BASE_URL = 'http://localhost:8082/quesmarkt-base';
+const BASE_URL = 'http://192.168.1.47:8082/quesmarkt-base';
 
 const apiCaller = (endpoint, method = 'GET', data = null) => {
     const url = `${BASE_URL}/${endpoint}`;
