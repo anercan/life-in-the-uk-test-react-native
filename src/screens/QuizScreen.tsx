@@ -13,14 +13,13 @@ const {height, width} = Dimensions.get('window');
 const QuizScreen = ({navigation}) => {
     const {onTouchStart, onTouchEnd} = useSwipe(onSwipeLeft, onSwipeRight, 4)
     const route = useRoute();
-    const {quizId, quizGroupId} = route.params;
+    const {quizId, quizGroupId, quizCardList} = route.params;
 
     const [questionCounter, setQuestionCounter] = useState(0);
     const [correctAnswerCounter, setCorrectAnswerCounter] = useState(0);
     const [quizName, setQuizName] = useState('');
     const [attributes, setAttributes] = useState({});
     const [questionList, setQuestionList] = useState([{}]);
-    const [userQuiz, setUserQuiz] = useState({});
     const [activeQuestion, setActiveQuestion] = useState<any>({});
     const {fonts} = useTheme();
     const [answerMap, setAnswerMap] = useState(new Map());
@@ -42,7 +41,7 @@ const QuizScreen = ({navigation}) => {
         }
     };
 
-    useEffect(() => {
+    useEffect(() => { //todo nextquiz
         apiCaller('quiz/get-quiz-with-id/' + quizId)
             .then(quiz => {
                 if (quiz?.userQuiz == null) {
@@ -55,10 +54,9 @@ const QuizScreen = ({navigation}) => {
                 setAttributes(quiz?.attributes);
                 setQuizName(quiz?.name);
                 setQuestionList(quiz?.questionList);
-                setUserQuiz(quiz.userQuiz);
                 setActiveQuestion(quiz.questionList[questionCounter]);
             });
-    }, []);
+    }, [quizId]);
 
     function onSwipeLeft() {
         let newQuestionOrder = questionCounter + 1;
@@ -69,7 +67,9 @@ const QuizScreen = ({navigation}) => {
             navigation.navigate('CompletedQuizScreen', {
                 quizName: quizName,
                 quizSize: questionList.length,
-                correctAnswerSize: correctAnswerCounter
+                correctAnswerSize: correctAnswerCounter,
+                quizCardList: quizCardList,
+                quizGroupId:quizGroupId
             });
         } else {
             startShake();

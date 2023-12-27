@@ -6,7 +6,7 @@ import {
 import useTheme from '../hooks/useTheme';
 
 export interface IButton {
-    onPress?: (selectedId: number) => void;
+    onPress?: () => void;
     buttonText?: string;
 }
 
@@ -38,14 +38,14 @@ const ButtonCard = (props: IButton) => {
         }
     };
 
-    function onPress() {
-        if (props.onPress) {
-            props.onPress;
+    const onPress = () => {
+        if (props?.onPress) {
+            props?.onPress();
         }
     }
 
     return (
-        <TouchableOpacity onPress={() => onPress()}>
+        <TouchableOpacity onPress={onPress}>
             <View style={styles.card}>
                 <Text style={styles.buttonText}>{props.buttonText}</Text>
             </View>

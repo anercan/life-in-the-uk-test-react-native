@@ -1,16 +1,21 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Dimensions, Text, View} from 'react-native';
 import {useRoute} from "@react-navigation/native";
 import {BottomMenu, ButtonCard} from "../components";
-import * as Progress from 'react-native-progress';
 import {useTheme} from "../hooks";
 
-const {height, width} = Dimensions.get('window');
+const {height} = Dimensions.get('window');
 
 const CompletedQuizScreen = ({navigation}) => {
     const route = useRoute();
-    const {quizName, quizSize, correctAnswerSize} = route.params;
+    const {quizName, quizSize, correctAnswerSize, quizCardList, quizGroupId} = route.params;
     const {fonts} = useTheme();
+    const [isNextQuizExist, setNextQuizExist] = useState(true);
+
+    useEffect(() => {
+        let nextQuiz = getNextQuiz();
+        setNextQuizExist(nextQuiz !== undefined);
+    }, []);
 
     const styles = {
         container: {
@@ -35,14 +40,27 @@ const CompletedQuizScreen = ({navigation}) => {
         }
     };
 
+    function getNextQuiz() {
+        let indexOfCurrentQuiz = quizCardList?.findIndex(quiz => quiz.name === quizName);
+        console.log(indexOfCurrentQuiz,quizCardList)
+        return quizCardList[indexOfCurrentQuiz + 1];
+    }
+
+    const onPressNextQuiz = () => {
+        let nextQuiz = getNextQuiz();
+        console.log('nextQuiz',nextQuiz)
+        navigation.navigate('QuizScreen', {
+            quizId: nextQuiz?.id,
+            quizGroupId: quizGroupId,
+            quizCardList: quizCardList
+        })
+    }
+
     return (
         <>
             <View style={styles.container}>
                 <View style={{paddingTop: height / 14}}>
                     <Text style={styles.questionName}>{quizName}</Text>
-                </View>
-                <View style={{paddingTop: height / 30}}>
-                    <Progress.Bar height={12} color={'#4b4848'} progress={1} width={width / 1.2}/>
                 </View>
                 <View style={{paddingTop: height / 12, paddingBottom: height / 10}}>
                     <Text style={styles.text}>Quiz Completed</Text>
@@ -51,7 +69,7 @@ const CompletedQuizScreen = ({navigation}) => {
                     <Text style={styles.score}> {correctAnswerSize} / {quizSize}</Text>
                 </View>
                 <ButtonCard buttonText={'Review Wrong Answers'}/>
-                <ButtonCard buttonText={'Next Quiz'}/>
+                {isNextQuizExist && <ButtonCard onPress={onPressNextQuiz} buttonText={'Next Quiz'}/>}
             </View>
             <BottomMenu/>
         </>

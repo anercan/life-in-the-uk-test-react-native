@@ -39,9 +39,9 @@ const QuizListScreen = ({navigation}) => {
         setTab(filter);
     };
 
-    const startQuiz = (card: IQuizCard) => (
-        navigation.navigate('QuizScreen', {quizId: card?.id, quizGroupId: quizGroupId})
-    );
+    const startQuiz = (card: IQuizCard, quizCardList: IQuizCard[]) => {
+        navigation.navigate('QuizScreen', {quizId: card?.id, quizGroupId: quizGroupId, quizCardList: quizCardList})
+    }
 
     return (
         <Block>
@@ -55,8 +55,8 @@ const QuizListScreen = ({navigation}) => {
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{paddingBottom: sizes.l}}>
                 <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
-                    {filteredQuizCards.map((card: IQuizCard) => (
-                        <TouchableOpacity onPress={() => startQuiz(card)}>
+                    {filteredQuizCards.map((card: IQuizCard, index) => (
+                        <TouchableOpacity onPress={() => startQuiz(card, filteredQuizCards)}>
                             <QuizCard {...card} key={`card-${card?.id}`}/>
                         </TouchableOpacity>
                     ))}
