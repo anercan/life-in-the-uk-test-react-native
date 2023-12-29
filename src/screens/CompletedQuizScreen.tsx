@@ -42,13 +42,11 @@ const CompletedQuizScreen = ({navigation}) => {
 
     function getNextQuiz() {
         let indexOfCurrentQuiz = quizCardList?.findIndex(quiz => quiz.name === quizName);
-        console.log(indexOfCurrentQuiz,quizCardList)
         return quizCardList[indexOfCurrentQuiz + 1];
     }
 
     const onPressNextQuiz = () => {
         let nextQuiz = getNextQuiz();
-        console.log('nextQuiz',nextQuiz)
         navigation.navigate('QuizScreen', {
             quizId: nextQuiz?.id,
             quizGroupId: quizGroupId,
@@ -63,9 +61,9 @@ const CompletedQuizScreen = ({navigation}) => {
                     <Text style={styles.questionName}>{quizName}</Text>
                 </View>
                 <View style={{paddingTop: height / 12, paddingBottom: height / 10}}>
-                    <Text style={styles.text}>Quiz Completed</Text>
+                    <Text style={styles.text}>Completed!</Text>
                 </View>
-                <View style={{paddingBottom: height / 5}}>
+                <View style={{paddingBottom: height / 4}}>
                     <Text style={styles.score}> {correctAnswerSize} / {quizSize}</Text>
                 </View>
                 <ButtonCard buttonText={'Review Wrong Answers'}/>

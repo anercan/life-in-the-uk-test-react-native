@@ -36,12 +36,12 @@ const QuizQuestion = (props: IQuizQuestion) => {
                 elevation: 5,
             }
             , questionText: {
-                fontFamily:fonts.p,
+                fontFamily: fonts.p,
                 textAlign: "center",
-                fontSize:16
+                fontSize: 16
             }, answerText: {
-                fontFamily:fonts.p,
-                fontSize:15
+                fontFamily: fonts.p,
+                fontSize: 15
             }
         });
 
@@ -92,7 +92,7 @@ const QuizQuestion = (props: IQuizQuestion) => {
             <>
                 <View>
                     <View style={styles.questionBox}>
-                        <Text style={styles.questionText}>{props.content}</Text>
+                        <Text style={styles.questionText}>{props.questionOrder + 1 + '. ' + props.content}</Text>
                     </View>
                     {answers(props.answersList)}
                 </View>

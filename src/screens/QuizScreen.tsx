@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Animated, Dimensions, Text, View} from 'react-native';
 import apiCaller from "../config/apiCaller";
-import {useRoute} from "@react-navigation/native";
+import {useFocusEffect, useRoute} from "@react-navigation/native";
 import QuizQuestion from "../components/QuizQuestion";
 import {BottomMenu} from "../components";
 import * as Progress from 'react-native-progress';
@@ -41,22 +41,26 @@ const QuizScreen = ({navigation}) => {
         }
     };
 
-    useEffect(() => { //todo nextquiz
-        apiCaller('quiz/get-quiz-with-id/' + quizId)
-            .then(quiz => {
-                if (quiz?.userQuiz == null) {
-                    createUserQuizData();
-                } else {
-                    quiz?.userQuiz?.correctQuestionList?.forEach(questionId => updateAnswerMap(questionId, quiz?.questionList.find(q => q.id == questionId).correctAnswerId));
-                    setCorrectAnswerCounter(quiz?.userQuiz?.correctQuestionList?.length);
-                    quiz?.userQuiz?.wrongQuestionList?.forEach(wrongQuestion => updateAnswerMap(wrongQuestion.question.id, wrongQuestion.wrongAnswer.id));
-                }
-                setAttributes(quiz?.attributes);
-                setQuizName(quiz?.name);
-                setQuestionList(quiz?.questionList);
-                setActiveQuestion(quiz.questionList[questionCounter]);
-            });
-    }, [quizId]);
+    useFocusEffect(
+        useCallback(() => {
+            apiCaller('quiz/get-quiz-with-id/' + quizId)
+                .then((quiz) => {
+                    if (quiz?.userQuiz == null) {
+                        createUserQuizData();
+                        setQuestionCounter(0);
+                        setActiveQuestion(quiz.questionList[0]);
+                    } else {
+                        updateQuizWithUserQuizData(quiz);
+                        let questionCounter = quiz?.userQuiz?.correctQuestionList?.length + quiz?.userQuiz?.wrongQuestionList.length;
+                        setActiveQuestion(quiz.questionList[questionCounter === 0 ? 0 : questionCounter - 1]);
+                        setQuestionCounter(questionCounter === 0 ? 0 : questionCounter - 1);
+                    }
+                    setAttributes(quiz?.attributes);
+                    setQuizName(quiz?.name);
+                    setQuestionList(quiz?.questionList);
+                });
+        }, [quizId])
+    );
 
     function onSwipeLeft() {
         let newQuestionOrder = questionCounter + 1;
@@ -64,12 +68,14 @@ const QuizScreen = ({navigation}) => {
             setQuestionCounter(newQuestionOrder);
             setActiveQuestion(questionList[newQuestionOrder])
         } else if (answerMap.size == newQuestionOrder) {
+            setAnswerMap(new Map());
+            setCorrectAnswerCounter(0);
             navigation.navigate('CompletedQuizScreen', {
                 quizName: quizName,
                 quizSize: questionList.length,
                 correctAnswerSize: correctAnswerCounter,
                 quizCardList: quizCardList,
-                quizGroupId:quizGroupId
+                quizGroupId: quizGroupId
             });
         } else {
             startShake();
@@ -82,6 +88,24 @@ const QuizScreen = ({navigation}) => {
             setQuestionCounter(newQuestionOrder);
             setActiveQuestion(questionList[newQuestionOrder])
         }
+    }
+
+    const updateQuizWithUserQuizData = (quiz) => {
+        quiz?.userQuiz?.correctQuestionList?.forEach((questionId) =>
+            updateAnswerMap(
+                questionId,
+                quiz?.questionList.find((q) => q.id == questionId).correctAnswerId
+            )
+        );
+        setCorrectAnswerCounter(
+            quiz?.userQuiz?.correctQuestionList?.length
+        );
+        quiz?.userQuiz?.wrongQuestionList?.forEach((wrongQuestion) =>
+            updateAnswerMap(
+                wrongQuestion.question.id,
+                wrongQuestion.wrongAnswer.id
+            )
+        );
     }
 
     function createUserQuizData() {
@@ -114,9 +138,9 @@ const QuizScreen = ({navigation}) => {
 
     const startShake = () => {
         Animated.sequence([
-            Animated.timing(shakeAnimation, {toValue: 10, duration: 100, useNativeDriver: true}),
-            Animated.timing(shakeAnimation, {toValue: -10, duration: 100, useNativeDriver: true}),
-            Animated.timing(shakeAnimation, {toValue: 10, duration: 100, useNativeDriver: true}),
+            Animated.timing(shakeAnimation, {toValue: 15, duration: 100, useNativeDriver: true}),
+            Animated.timing(shakeAnimation, {toValue: -15, duration: 100, useNativeDriver: true}),
+            Animated.timing(shakeAnimation, {toValue: 15, duration: 100, useNativeDriver: true}),
             Animated.timing(shakeAnimation, {toValue: 0, duration: 100, useNativeDriver: true})
         ]).start();
     }
@@ -135,6 +159,7 @@ const QuizScreen = ({navigation}) => {
                 <Animated.View style={{transform: [{translateX: shakeAnimation}]}}>
                     <View style={{paddingTop: height / 30}}>
                         <QuizQuestion id={activeQuestion?.id}
+                                      questionOrder={questionCounter}
                                       content={activeQuestion?.content}
                                       imgUrl={activeQuestion?.imgUrl}
                                       correctAnswerId={activeQuestion?.correctAnswerId}

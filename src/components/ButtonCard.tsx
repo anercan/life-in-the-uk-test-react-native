@@ -16,8 +16,8 @@ const ButtonCard = (props: IButton) => {
 
     const styles = {
         card: {
-            height: height / 14,
-            width: width / 1.7,
+            height: height / 15,
+            width: width / 1.5,
             backgroundColor: '#b2f6f6',
             padding: 10,
             borderRadius: 7,
@@ -31,7 +31,7 @@ const ButtonCard = (props: IButton) => {
             alignItems: 'center', //Centered horizontally
         }, buttonText: {
             color: '#404040',
-            fontSize: 17,
+            fontSize: 16,
             fontFamily: fonts.medium,
             fontWeight: 'bold',
             justifyContent: 'center',

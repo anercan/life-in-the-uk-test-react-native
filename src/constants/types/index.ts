@@ -24,6 +24,7 @@ export interface IQuizCard {
 
 export interface IQuizQuestion {
   id: number;
+  questionOrder:number;
   content: string;
   imgUrl: string;
   correctAnswerId: number;
