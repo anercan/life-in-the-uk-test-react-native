@@ -133,7 +133,7 @@ const QuizScreen = ({navigation}) => {
     }
 
     const updateAnswerMap = (key, value) => {
-        setAnswerMap(map => new Map(map.set(key, value)));
+        setAnswerMap(answerMap.set(key, value));
     }
 
     const startShake = () => {
