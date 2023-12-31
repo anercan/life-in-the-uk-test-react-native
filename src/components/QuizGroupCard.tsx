@@ -1,18 +1,18 @@
 import React from 'react';
-import {Dimensions, TouchableOpacity, View, StyleSheet, Text} from 'react-native';
+import {Dimensions, View, StyleSheet, Text} from 'react-native';
 
 import {IQuizGroupCard} from '../constants/types';
 import {useTheme} from "../hooks";
 const {height, width} = Dimensions.get('window');
 
 const QuizGroupCard = ({image, title,description,imageUrl,quizQuantity,userSolvedCount,attributes}: IQuizGroupCard) => {
+    const {fonts,colors} = useTheme();
 
-    const {fonts} = useTheme();
     const styles = StyleSheet.create({
         card: {
             height: height / 7.5,
             width: width / 1.15,
-            backgroundColor: '#b2f6f6',
+            backgroundColor: colors.primary,
             padding: 10,
             borderRadius: 5,
             margin: 8,
@@ -56,7 +56,7 @@ const QuizGroupCard = ({image, title,description,imageUrl,quizQuantity,userSolve
                 <Text style={styles.title}>{title}</Text>
                 <Text style={styles.description}>{description}</Text>
                 <View style={styles.infoContainer}>
-                    <Text style={styles.count}>{userSolvedCount} / {quizQuantity}</Text>
+                    <Text style={styles.count}>{userSolvedCount} / {quizQuantity} {'Quizzes'}</Text>
                     <View style={{flex: 1, alignItems: 'flex-end'}}>
                         <Text style={styles.difficulty}>{attributes?.subject}</Text>
                     </View>

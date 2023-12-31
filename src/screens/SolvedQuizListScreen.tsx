@@ -4,11 +4,12 @@ import {useTheme} from '../hooks/';
 import {Block, BottomMenu} from '../components/';
 import {useRoute} from "@react-navigation/native";
 import apiCaller from "../config/apiCaller";
-import {IQuizCard, ISolvedQuizCard,} from "../constants/types";
+import {ISolvedQuizCard} from "../constants/types";
 import Header from "../components/Header";
 import ReportQuizCard from "../components/ReportQuizCard";
+import {TouchableOpacity} from "react-native";
 
-const SolvedQuizListScreen = (navigation) => {
+const SolvedQuizListScreen = ({navigation}) => {
     const route = useRoute();
     const [tab, setTab] = useState<number>(0);
     const [quizCards, setQuizCards] = useState([{}]);
@@ -41,6 +42,15 @@ const SolvedQuizListScreen = (navigation) => {
         setTab(filter);
     };
 
+    function cardOnPress(card: any) {
+        navigation.navigate('QuizScreen', {
+            quizId: card.quiz.id,
+            quizGroupId: card.quizGroupId,
+            quizCardList: [],
+            isReviewPage: card?.state === 'COMPLETED'
+        });
+    }
+
     return (
         <Block>
             <Header tabOneText={'Ongoing'} tabTwoText={'Completed'} selectedTab={tab} hideSearch={true}
@@ -53,8 +63,11 @@ const SolvedQuizListScreen = (navigation) => {
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{paddingBottom: sizes.l}}>
                 <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
-                    {filteredQuizCards?.map((card: IQuizCard) => (
-                        <ReportQuizCard {...card} key={`card-${card?.id}`}/>
+                    {filteredQuizCards?.map((card: any) => (
+                        <TouchableOpacity onPress={() => cardOnPress(card)}>
+                            <ReportQuizCard {...card} key={`card-${card?.id}`}/>
+                        </TouchableOpacity>
+
                     ))}
                 </Block>
             </Block>

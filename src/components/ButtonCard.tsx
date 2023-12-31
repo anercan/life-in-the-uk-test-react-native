@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-    View, Text, Dimensions, TouchableOpacity,
-} from 'react-native';
+import {View, Text, Dimensions, TouchableOpacity, StyleSheet,} from 'react-native';
 
 import useTheme from '../hooks/useTheme';
 
@@ -12,19 +10,19 @@ export interface IButton {
 
 const {height, width} = Dimensions.get('window');
 const ButtonCard = (props: IButton) => {
-    const {fonts} = useTheme();
+    const {fonts, colors} = useTheme();
 
-    const styles = {
+    const styles = StyleSheet.create({
         card: {
             height: height / 15,
             width: width / 1.5,
-            backgroundColor: '#b2f6f6',
+            backgroundColor: colors.primary,
             padding: 10,
             borderRadius: 7,
             margin: 8,
             shadowColor: '#363535',
             shadowOffset: {width: 0, height: 1},
-            shadowOpacity: 0.1,
+            shadowOpacity: 0.2,
             shadowRadius: 2,
             elevation: 5,
             justifyContent: 'center', //Centered vertically
@@ -36,7 +34,7 @@ const ButtonCard = (props: IButton) => {
             fontWeight: 'bold',
             justifyContent: 'center',
         }
-    };
+    });
 
     const onPress = () => {
         if (props?.onPress) {

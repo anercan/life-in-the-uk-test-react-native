@@ -3,14 +3,14 @@
     "name": "life-in-the-uk",
     "slug": "life-in-the-uk",
     "description": "Life In the UK 2024",
-    "primaryColor": "#b2f6f6",
+    "primaryColor": "#eabc7c",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
-      "backgroundColor": "#b2f6f6"
+      "backgroundColor": "#eabc7c"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

@@ -6,13 +6,13 @@ import {useTheme} from "../hooks";
 
 const {height, width} = Dimensions.get('window');
 const QuizCard = ({name, questionCount, solvedCount, attributes}: IQuizCard) => {
-    const {fonts} = useTheme();
+    const {fonts,colors} = useTheme();
 
     const styles = StyleSheet.create({
         card: {
             height: height / 7.5,
             width: width / 1.2,
-            backgroundColor: '#b2f6f6',
+            backgroundColor: colors.primary,
             padding: 10,
             borderRadius: 5,
             margin: 8,
@@ -54,9 +54,9 @@ const QuizCard = ({name, questionCount, solvedCount, attributes}: IQuizCard) => 
             <View style={styles.card}>
                 <Text style={styles.title}>{name}</Text>
                 <View style={styles.infoContainer}>
-                    <Text style={styles.count}>{solvedCount} / {questionCount}</Text>
+                    <Text style={styles.count}>{solvedCount} / {questionCount} {'Questions'}</Text>
                     <View style={{flex: 1, alignItems: 'flex-end'}}>
-                        <Text style={styles.difficulty}>{attributes?.difficulty}</Text>
+                        <Text style={styles.difficulty}>{'Difficulty: '}{attributes?.difficulty}</Text>
                     </View>
                 </View>
             </View>

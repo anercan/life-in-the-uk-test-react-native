@@ -1,5 +1,5 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {Animated, Dimensions, Text, View} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {Animated, Dimensions, StyleSheet, Text, View} from 'react-native';
 import apiCaller from "../config/apiCaller";
 import {useFocusEffect, useRoute} from "@react-navigation/native";
 import QuizQuestion from "../components/QuizQuestion";
@@ -12,8 +12,10 @@ const {height, width} = Dimensions.get('window');
 
 const QuizScreen = ({navigation}) => {
     const {onTouchStart, onTouchEnd} = useSwipe(onSwipeLeft, onSwipeRight, 4)
+    const shakeAnimation = new Animated.Value(0);
     const route = useRoute();
-    const {quizId, quizGroupId, quizCardList} = route.params;
+    const {fonts, colors} = useTheme();
+    const {quizId, quizGroupId, quizCardList, isReviewPage} = route.params;
 
     const [questionCounter, setQuestionCounter] = useState(0);
     const [correctAnswerCounter, setCorrectAnswerCounter] = useState(0);
@@ -21,25 +23,28 @@ const QuizScreen = ({navigation}) => {
     const [attributes, setAttributes] = useState({});
     const [questionList, setQuestionList] = useState([{}]);
     const [activeQuestion, setActiveQuestion] = useState<any>({});
-    const {fonts} = useTheme();
     const [answerMap, setAnswerMap] = useState(new Map());
-    const shakeAnimation = new Animated.Value(0);
+    const [userQuiz, setUserQuiz] = useState<any>({});
 
-    const styles = {
+    const styles = StyleSheet.create({
         container: {
             flex: 1,
             alignItems: 'center'
         },
         questionName: {
             color: '#404040',
-            fontSize: 16,
-            fontFamily: fonts.medium,
+            fontSize: 20,
+            fontFamily: fonts.p,
             fontWeight: 'bold'
-        }
-        , buttonTextStyle: {
+        }, buttonTextStyle: {
             color: '#393939'
+        }, progressBar: {
+            shadowColor: '#363535',
+            shadowOffset: {width: 0, height: 2},
+            shadowOpacity: 0.3,
+            shadowRadius: 1, paddingTop: height / 30
         }
-    };
+    });
 
     useFocusEffect(
         useCallback(() => {
@@ -52,31 +57,54 @@ const QuizScreen = ({navigation}) => {
                     } else {
                         updateQuizWithUserQuizData(quiz);
                         let questionCounter = quiz?.userQuiz?.correctQuestionList?.length + quiz?.userQuiz?.wrongQuestionList.length;
-                        setActiveQuestion(quiz.questionList[questionCounter === 0 ? 0 : questionCounter - 1]);
+                        setActiveQuestion(isReviewPage ? quiz.questionList[0] : quiz.questionList[questionCounter === 0 ? 0 : questionCounter - 1]);
                         setQuestionCounter(questionCounter === 0 ? 0 : questionCounter - 1);
                     }
                     setAttributes(quiz?.attributes);
                     setQuizName(quiz?.name);
-                    setQuestionList(quiz?.questionList);
+                    if (isReviewPage) {
+                        setQuestionCounter(0);
+                        setQuestionList(quiz?.questionList.filter(question => !quiz?.userQuiz?.correctQuestionList?.includes(question.id)));
+                    } else {
+                        setQuestionList(quiz?.questionList);
+                    }
                 });
-        }, [quizId])
+        }, [quizId, isReviewPage])
     );
+
+    function getCompletedScreenBody() {
+        if (isReviewPage) {
+            return {
+                quizName: quizName,
+                quizSize: userQuiz?.correctQuestionList.length + userQuiz?.wrongQuestionList?.length,
+                correctAnswerSize: userQuiz?.correctQuestionList.length,
+                quizCardList: [],
+                quizGroupId: quizGroupId,
+                quizId: quizId
+            };
+        } else {
+            return {
+                quizName: quizName,
+                quizSize: questionList.length,
+                correctAnswerSize: correctAnswerCounter,
+                quizCardList: quizCardList,
+                quizGroupId: quizGroupId,
+                quizId: quizId
+            };
+        }
+    }
 
     function onSwipeLeft() {
         let newQuestionOrder = questionCounter + 1;
         if (newQuestionOrder < questionList.length && answerMap.has(activeQuestion?.id)) {
             setQuestionCounter(newQuestionOrder);
             setActiveQuestion(questionList[newQuestionOrder])
-        } else if (answerMap.size == newQuestionOrder) {
-            setAnswerMap(new Map());
+        } else if (answerMap.size == newQuestionOrder || isReviewPage && questionCounter + 1 == questionList.length) {
+            if (!isReviewPage) {
+                setAnswerMap(new Map());
+            }
             setCorrectAnswerCounter(0);
-            navigation.navigate('CompletedQuizScreen', {
-                quizName: quizName,
-                quizSize: questionList.length,
-                correctAnswerSize: correctAnswerCounter,
-                quizCardList: quizCardList,
-                quizGroupId: quizGroupId
-            });
+            navigation.navigate('CompletedQuizScreen', getCompletedScreenBody());
         } else {
             startShake();
         }
@@ -91,14 +119,13 @@ const QuizScreen = ({navigation}) => {
     }
 
     const updateQuizWithUserQuizData = (quiz) => {
+        setUserQuiz(quiz?.userQuiz);
+        setCorrectAnswerCounter(quiz?.userQuiz?.correctQuestionList?.length);
         quiz?.userQuiz?.correctQuestionList?.forEach((questionId) =>
             updateAnswerMap(
                 questionId,
                 quiz?.questionList.find((q) => q.id == questionId).correctAnswerId
             )
-        );
-        setCorrectAnswerCounter(
-            quiz?.userQuiz?.correctQuestionList?.length
         );
         quiz?.userQuiz?.wrongQuestionList?.forEach((wrongQuestion) =>
             updateAnswerMap(
@@ -151,10 +178,10 @@ const QuizScreen = ({navigation}) => {
                 <View style={{paddingTop: height / 14}}>
                     <Text style={styles.questionName}>{quizName}</Text>
                 </View>
-                <View style={{paddingTop: height / 30}}>
-                    <Progress.Bar height={12} color={'#4b4848'}
+                <View style={styles.progressBar}>
+                    <Progress.Bar height={15} color={'#eabc7c'}
                                   progress={answerMap.size / questionList.length}
-                                  width={width / 1.2}/>
+                                  width={width / 1.12}/>
                 </View>
                 <Animated.View style={{transform: [{translateX: shakeAnimation}]}}>
                     <View style={{paddingTop: height / 30}}>
@@ -167,7 +194,10 @@ const QuizScreen = ({navigation}) => {
                                       answersList={activeQuestion?.answersList}
                                       selectedId={answerMap.get(activeQuestion?.id)}
                                       onSelect={handleAnswer}
-                                      isAnswered={answerMap.get(activeQuestion?.id)}/>
+                                      isAnswered={answerMap.get(activeQuestion?.id)}
+                                      isReviewPage={isReviewPage}
+                                      explanation={activeQuestion?.explanation}
+                        />
                     </View>
                 </Animated.View>
             </View>
