@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dimensions, TouchableOpacity, View, StyleSheet, Text} from 'react-native';
+import {Dimensions, View, StyleSheet, Text} from 'react-native';
 import {ISolvedQuizCard} from '../constants/types';
 import {useTheme} from "../hooks";
 
