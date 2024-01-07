@@ -114,8 +114,7 @@ const QuizQuestion = (props: IQuizQuestion) => {
             <TouchableOpacity
                 disabled={isAnswered}
                 key={answer.id}
-                onPress={() => handleSelect(answer)}
-            >
+                onPress={() => handleSelect(answer)}>
                 <View style={{...styles.answerBox, backgroundColor: getBackgroundColor(answer.id)}}>
                     <Text style={styles.answerText}>{answer.content}</Text>
                 </View>
