@@ -1,15 +1,14 @@
 import React, {useEffect, useState} from 'react';
 
-import {useTheme, useTranslation} from '../hooks/';
+import {useTheme} from '../hooks/';
 import {Block, QuizGroupCard, BottomMenu} from '../components/';
 import {TouchableOpacity} from "react-native";
 import apiCaller from "../config/apiCaller";
 import {IQuizGroupCard} from "../constants/types";
-import Header from "../components/Header";
+import Tabs from "../components/Tabs";
 
 const QuizGroupListScreen = ({navigation}) => {
 
-    const {t} = useTranslation();
     const [tab, setTab] = useState<number>(0);
     const [filteredQuizGroupCards, setFilteredQuizGroupCards] = useState([{}]);
     const [quizGroupCards, setQuizGroupCards] = useState([{}]);
@@ -42,8 +41,8 @@ const QuizGroupListScreen = ({navigation}) => {
 
     return (
         <Block>
-            <Header tabOneText={t('home.filter1')} tabTwoText={t('home.filter2')} callback={setTabChange}
-                    title={'Quiz Groups'}/>
+            <Tabs tabOneText={'home.filter1'} tabTwoText={'home.filter2'} callback={setTabChange}
+                  title={'Quiz Groups'}/>
 
             {/* quizGroupCards list */}
             <Block
@@ -53,8 +52,8 @@ const QuizGroupListScreen = ({navigation}) => {
                 contentContainerStyle={{paddingBottom: sizes.l}}>
                 <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
                     {filteredQuizGroupCards?.map((card: IQuizGroupCard) => (
-                        <TouchableOpacity onPress={() => onPressQuizGroupCard(card)}>
-                            <QuizGroupCard  {...card} key={`card-${card?.id}`}/>
+                        <TouchableOpacity key={`card-${card?.id}`} onPress={() => onPressQuizGroupCard(card)}>
+                            <QuizGroupCard  {...card}/>
                         </TouchableOpacity>
                     ))}
                 </Block>

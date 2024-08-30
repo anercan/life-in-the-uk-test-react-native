@@ -39,10 +39,12 @@ const QuizScreen = ({navigation}) => {
         }, buttonTextStyle: {
             color: '#393939'
         }, progressBar: {
-            shadowColor: '#363535',
+            shadowColor: '#dcdcdc',
             shadowOffset: {width: 0, height: 2},
             shadowOpacity: 0.3,
             shadowRadius: 1, paddingTop: height / 30
+        }, customProgressBar: {
+            borderRadius: 7,
         }
     });
 
@@ -175,11 +177,11 @@ const QuizScreen = ({navigation}) => {
     return (
         <>
             <View onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} style={styles.container}>
-                <View style={{paddingTop: height / 14}}>
+                <View style={{paddingTop: 20}}>
                     <Text style={styles.questionName}>{quizName}</Text>
                 </View>
                 <View style={styles.progressBar}>
-                    <Progress.Bar height={15} color={'#eabc7c'}
+                    <Progress.Bar height={15} color={'#012169'} style={styles.customProgressBar}
                                   progress={answerMap.size / questionList.length}
                                   width={width / 1.12}/>
                 </View>

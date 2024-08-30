@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {Linking, Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 
-import {useData, useTheme, useTranslation} from '../hooks/';
+import {useData, useTheme} from '../hooks/';
 import * as regex from '../constants/regex';
 import {Block, Button, Input, Image, AppText, Checkbox} from '../components/';
 
@@ -23,7 +23,6 @@ interface IRegistrationValidation {
 
 const Register = () => {
   const {isDark} = useData();
-  const {t} = useTranslation();
   const navigation = useNavigation();
   const [isValid, setIsValid] = useState<IRegistrationValidation>({
     name: false,
@@ -88,12 +87,12 @@ const Register = () => {
                 transform={[{rotate: '180deg'}]}
               />
               <AppText p white marginLeft={sizes.s}>
-                {t('common.goBack')}
+                {'common.goBack'}
               </AppText>
             </Button>
 
             <AppText h4 center white marginBottom={sizes.md}>
-              {t('register.title')}
+              {'register.title'}
             </AppText>
           </Image>
         </Block>
@@ -118,7 +117,7 @@ const Register = () => {
               tint={colors.blurTint}
               paddingVertical={sizes.sm}>
               <AppText p semibold center>
-                {t('register.subtitle')}
+                {'register.subtitle'}
               </AppText>
               {/* social buttons */}
               <Block row center justify="space-evenly" marginVertical={sizes.m}>
@@ -163,7 +162,7 @@ const Register = () => {
                   gradient={gradients.divider}
                 />
                 <AppText center marginHorizontal={sizes.s}>
-                  {t('common.or')}
+                  {'common.or'}
                 </AppText>
                 <Block
                   flex={0}
@@ -179,8 +178,8 @@ const Register = () => {
                 <Input
                   autoCapitalize="none"
                   marginBottom={sizes.m}
-                  label={t('common.name')}
-                  placeholder={t('common.namePlaceholder')}
+                  label={'common.name'}
+                  placeholder={'common.namePlaceholder'}
                   success={Boolean(registration.name && isValid.name)}
                   danger={Boolean(registration.name && !isValid.name)}
                   onChangeText={(value) => handleChange({name: value})}
@@ -188,9 +187,9 @@ const Register = () => {
                 <Input
                   autoCapitalize="none"
                   marginBottom={sizes.m}
-                  label={t('common.email')}
+                  label={'common.email'}
                   keyboardType="email-address"
-                  placeholder={t('common.emailPlaceholder')}
+                  placeholder={'common.emailPlaceholder'}
                   success={Boolean(registration.email && isValid.email)}
                   danger={Boolean(registration.email && !isValid.email)}
                   onChangeText={(value) => handleChange({email: value})}
@@ -199,8 +198,8 @@ const Register = () => {
                   secureTextEntry
                   autoCapitalize="none"
                   marginBottom={sizes.m}
-                  label={t('common.password')}
-                  placeholder={t('common.passwordPlaceholder')}
+                  label={'common.password'}
+                  placeholder={'common.passwordPlaceholder'}
                   onChangeText={(value) => handleChange({password: value})}
                   success={Boolean(registration.password && isValid.password)}
                   danger={Boolean(registration.password && !isValid.password)}
@@ -214,13 +213,13 @@ const Register = () => {
                   onPress={(value) => handleChange({agreed: value})}
                 />
                 <AppText paddingRight={sizes.s}>
-                  {t('common.agree')}
+                  {'common.agree'}
                   <AppText
                     semibold
                     onPress={() => {
                       Linking.openURL('https://www.creative-tim.com/terms');
                     }}>
-                    {t('common.terms')}
+                    {'common.terms'}
                   </AppText>
                 </AppText>
               </Block>
@@ -231,7 +230,7 @@ const Register = () => {
                 gradient={gradients.primary}
                 disabled={Object.values(isValid).includes(false)}>
                 <AppText bold white transform="uppercase">
-                  {t('common.signup')}
+                  {'common.signup'}
                 </AppText>
               </Button>
               <Button
@@ -242,7 +241,7 @@ const Register = () => {
                 marginHorizontal={sizes.sm}
                 onPress={() => navigation.navigate('QuizGroupListScreen')}>
                 <AppText bold primary transform="uppercase">
-                  {t('common.signin')}
+                  {'common.signin'}
                 </AppText>
               </Button>
             </Block>

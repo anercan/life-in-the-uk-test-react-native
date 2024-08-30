@@ -4,13 +4,12 @@ import {Ionicons} from '@expo/vector-icons';
 import {useNavigation} from '@react-navigation/core';
 
 import {Block, Button, Image, AppText} from '../components/';
-import {useData, useTheme, useTranslation} from '../hooks/';
+import {useData, useTheme} from '../hooks/';
 
 const isAndroid = Platform.OS === 'android';
 
 const Profile = () => {
   const {user} = useData();
-  const {t} = useTranslation();
   const navigation = useNavigation();
   const {assets, colors, sizes} = useTheme();
 
@@ -67,7 +66,7 @@ const Profile = () => {
                 transform={[{rotate: '180deg'}]}
               />
               <AppText p white marginLeft={sizes.s}>
-                {t('profile.title')}
+                {'profile.title'}
               </AppText>
             </Button>
             <Block flex={0} align="center">
@@ -98,7 +97,7 @@ const Profile = () => {
                     paddingHorizontal={sizes.m}
                     color="rgba(255,255,255,0.2)">
                     <AppText white bold transform="uppercase">
-                      {t('common.follow')}
+                      {'common.follow'}
                     </AppText>
                   </Block>
                 </Button>
@@ -152,15 +151,15 @@ const Profile = () => {
               renderToHardwareTextureAndroid>
               <Block align="center">
                 <AppText h5>{user?.stats?.posts}</AppText>
-                <AppText>{t('profile.posts')}</AppText>
+                <AppText>{'profile.posts'}</AppText>
               </Block>
               <Block align="center">
                 <AppText h5>{(user?.stats?.followers || 0) / 1000}k</AppText>
-                <AppText>{t('profile.followers')}</AppText>
+                <AppText>{'profile.followers'}</AppText>
               </Block>
               <Block align="center">
                 <AppText h5>{(user?.stats?.following || 0) / 1000}k</AppText>
-                <AppText>{t('profile.following')}</AppText>
+                <AppText>{'profile.following'}</AppText>
               </Block>
             </Block>
           </Block>
@@ -168,7 +167,7 @@ const Profile = () => {
           {/* profile: about me */}
           <Block paddingHorizontal={sizes.sm}>
             <AppText h5 semibold marginBottom={sizes.s} marginTop={sizes.sm}>
-              {t('profile.aboutMe')}
+              {'profile.aboutMe'}
             </AppText>
             <AppText p lineHeight={26}>
               {user?.about}
@@ -179,11 +178,11 @@ const Profile = () => {
           <Block paddingHorizontal={sizes.sm} marginTop={sizes.s}>
             <Block row align="center" justify="space-between">
               <AppText h5 semibold>
-                {t('common.album')}
+                {'common.album'}
               </AppText>
               <Button>
                 <AppText p primary semibold>
-                  {t('common.viewall')}
+                  {'common.viewall'}
                 </AppText>
               </Button>
             </Block>

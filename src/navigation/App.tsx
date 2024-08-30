@@ -3,12 +3,15 @@ import {Platform, StatusBar} from 'react-native';
 import {useFonts} from 'expo-font';
 import {NavigationContainer} from '@react-navigation/native';
 import * as SplashScreen from 'expo-splash-screen';
-import {useData, ThemeProvider, TranslationProvider} from '../hooks';
+import {useData, ThemeProvider} from '../hooks';
 import {View, StyleSheet} from 'react-native';
 import Screens from "./Screens";
+import Header from "../components/Header";
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
+
+
 export default () => {
     const {isDark, theme, setTheme} = useData();
 
@@ -44,19 +47,18 @@ export default () => {
     const styles = StyleSheet.create({
         container: {
             flex: 1,
-            backgroundColor: '#eef8fa'
+            backgroundColor: '#f3f0f0'
         },
     });
 
     return (
-        <TranslationProvider>
-            <ThemeProvider theme={theme} setTheme={setTheme}>
-                <NavigationContainer>
-                    <View style={styles.container}>
-                        <Screens/>
-                    </View>
-                </NavigationContainer>
-            </ThemeProvider>
-        </TranslationProvider>
+        <ThemeProvider theme={theme} setTheme={setTheme}>
+            <NavigationContainer>
+                <View style={styles.container}>
+                    <Header/>
+                    <Screens/>
+                </View>
+            </NavigationContainer>
+        </ThemeProvider>
     );
 };

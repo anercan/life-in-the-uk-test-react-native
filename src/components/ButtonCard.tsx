@@ -14,11 +14,11 @@ const ButtonCard = (props: IButton) => {
 
     const styles = StyleSheet.create({
         card: {
-            height: height / 15,
-            width: width / 1.5,
+            height: height / 18,
+            width: width / 1.7,
             backgroundColor: colors.primary,
             padding: 10,
-            borderRadius: 7,
+            borderRadius: 9,
             margin: 8,
             shadowColor: '#363535',
             shadowOffset: {width: 0, height: 1},
@@ -28,9 +28,9 @@ const ButtonCard = (props: IButton) => {
             justifyContent: 'center', //Centered vertically
             alignItems: 'center', //Centered horizontally
         }, buttonText: {
-            color: '#404040',
+            color: '#f8f8f8',
             fontSize: 16,
-            fontFamily: fonts.medium,
+            fontFamily: fonts.normal,
             fontWeight: 'bold',
             justifyContent: 'center',
         }

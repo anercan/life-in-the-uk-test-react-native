@@ -1,81 +1,35 @@
-import {AppText, Block, Button, Input} from "./index";
-import {Text, View} from "react-native";
-import React, {useEffect, useState} from "react";
-import {useTheme, useTranslation} from "../hooks";
+import React from 'react';
+import {View, Image, StyleSheet, StatusBar, Platform} from 'react-native';
 
-export interface IHeader {
-    callback: (tabNumber: number) => void;
-    title: String;
-    hideSearch?: boolean;
-    selectedTab?: number;
-    tabOneText: string;
-    tabTwoText: string;
-}
-
-const Header = (props: IHeader) => {
-    const {t} = useTranslation();
-    const [tab, setTab] = useState<number>(0);
-    const {fonts, sizes} = useTheme();
-
-    useEffect(() => {
-        if (props.selectedTab != undefined) {
-            setTab(props.selectedTab);
-        }
-    }, [props.selectedTab]);
-
-    const setTabChange = (filter: number) => {
-        setTab(filter);
-        props.callback(filter);
-    };
-
+const Header = () => {
     return (
-        <>
-            {props.hideSearch ? null :
-                <Block flex={0} paddingRight={20} paddingLeft={20} paddingTop={50} paddingBottom={20}>
-                    <Input search placeholder={t('common.search')}/>
-                </Block>}
-
-            <View style={{paddingTop: props.hideSearch ? 42 : null, paddingBottom: 10}}>
-                <Text style={{
-                    fontFamily: fonts.medium,
-                    textAlign: 'center',
-                    fontSize: 20,
-                    color: '#283130'
-                }}> {props.title} </Text>
-            </View>
-
-            <Block
-                row
-                flex={0}
-                align="center"
-                marginTop={0}
-                marginBottom={-10}
-                justify="center"
-            >
-                <Button>
-                    <Block row align="center">
-                        <AppText onPress={() => setTabChange(0)} p font={fonts?.[tab === 0 ? 'medium' : 'normal']}>
-                            {props.tabOneText}
-                        </AppText>
-                    </Block>
-                </Button>
-                <Block
-                    gray
-                    flex={0}
-                    width={1}
-                    marginHorizontal={sizes.sm}
-                    height={sizes.socialIconSize}
-                />
-                <Button>
-                    <Block row align="center">
-                        <AppText onPress={() => setTabChange(1)} p font={fonts?.[tab === 1 ? 'medium' : 'normal']}>
-                            {props.tabTwoText}
-                        </AppText>
-                    </Block>
-                </Button>
-            </Block>
-        </>
+        <View style={styles.headerContainer}>
+            <StatusBar backgroundColor="#012169" barStyle="light-content"/>
+            <Image
+                source={require('./../../assets/img.png')}
+                style={styles.logo}
+            />
+        </View>
     );
-}
-export default Header;
+};
 
+const styles = StyleSheet.create({
+    headerContainer: {
+        height: 55,  // Smaller height for the header to allow for more overflow
+        backgroundColor: '#012169',
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'relative',
+        overflow: 'visible',  // Ensure overflow is visible
+        marginBottom: 50,
+    },
+    logo: {
+        width: 75,  // Width of the logo
+        height: 75, // Height of the logo
+        borderRadius: 50,  // Circle shape
+        position: 'absolute',
+        top: 25,  // Move the logo up so that half of it is outside the header
+    },
+});
+
+export default Header;

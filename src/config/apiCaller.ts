@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const BASE_URL = 'http://192.168.1.47:8082/quesmarkt-base';
+const BASE_URL = 'http://10.0.2.2:8083/quesmarkt-base';
 
 const apiCaller = (endpoint, method = 'GET', data = null) => {
     const url = `${BASE_URL}/${endpoint}`;
@@ -9,7 +9,7 @@ const apiCaller = (endpoint, method = 'GET', data = null) => {
         'Content-Type': 'application/json',
     };
 
-    AsyncStorage.getItem('authToken')
+    /*AsyncStorage.getItem('authToken')
         .then((authToken) => {
             if (authToken) {
                 headers['Authorization'] = `Bearer ${authToken}`;
@@ -17,7 +17,7 @@ const apiCaller = (endpoint, method = 'GET', data = null) => {
         })
         .catch((error) => {
             console.error('Error retrieving auth token from AsyncStorage:', error);
-        });
+        });*/
 
     const options = {
         method,

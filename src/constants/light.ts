@@ -10,11 +10,11 @@ import {THEME as commonTheme} from './theme';
 
 export const COLORS: ThemeColors = {
   // default text color
-  text: '#252F40',
+  text: '#444444',
 
   // base colors
   /** UI color for #primary */
-  primary: '#eabc7c',
+  primary: '#012169',
   /** UI color for #secondary */
   secondary: '#627594', // '#8392AB',
   /** UI color for #tertiary */
@@ -25,7 +25,7 @@ export const COLORS: ThemeColors = {
   white: '#FFFFFF',
 
   dark: '#252F40',
-  light: '#E9ECEF',
+  light: '#2f91f3',
 
   // gray variations
   /** UI color for #gray */

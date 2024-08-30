@@ -41,7 +41,7 @@ const CompletedQuizScreen = ({navigation}) => {
             padding: 1,
             borderRadius: 100,
             margin: 8,
-            backgroundColor: '#575656',
+            backgroundColor: '#012169',
             shadowColor: '#363535',
             shadowOffset: {width: 0, height: 5},
             shadowOpacity: 0.2,
@@ -81,7 +81,7 @@ const CompletedQuizScreen = ({navigation}) => {
     return (
         <>
             <View style={styles.container}>
-                <View style={{paddingTop: height / 10}}>
+                <View style={{paddingTop: 10}}>
                     <Text style={styles.quizName}>{quizName}</Text>
                 </View>
                 <View style={{paddingTop: height / 30, paddingBottom: height / 10}}>
@@ -94,7 +94,7 @@ const CompletedQuizScreen = ({navigation}) => {
                         borderWidth={0}
                         textStyle={{fontFamily: fonts.p, fontSize: 25}}
                         thickness={15}
-                        color={'#eabc7c'}
+                        color={'#ffffff'}
                         showsText={true}
                         formatText={() => getScoreText()}
                         size={150}

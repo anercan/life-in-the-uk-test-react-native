@@ -1,18 +1,17 @@
 import React, {useEffect, useState} from 'react';
 
-import {useTheme, useTranslation} from '../hooks/';
+import {useTheme} from '../hooks/';
 import {Block, BottomMenu} from '../components/';
-import QuizCard from "../components/QuizCard";
 import {useRoute} from "@react-navigation/native";
 import apiCaller from "../config/apiCaller";
 import {IQuizCard} from "../constants/types";
-import Header from "../components/Header";
+import Tabs from "../components/Tabs";
 import {TouchableOpacity} from "react-native-gesture-handler";
+import ListCard from "../components/ListCard";
 
 const QuizListScreen = ({navigation}) => {
     const route = useRoute();
     const {quizGroupId, quizGroupTitle} = route.params;
-    const {t} = useTranslation();
     const [tab, setTab] = useState<number>(0);
     const [quizCards, setQuizCards] = useState([{}]);
     const [filteredQuizCards, setFilteredQuizCards] = useState([{}]);
@@ -45,8 +44,8 @@ const QuizListScreen = ({navigation}) => {
 
     return (
         <Block>
-            <Header tabOneText={t('home.filter1')} tabTwoText={t('home.filter2')} title={quizGroupTitle}
-                    callback={setTabChange}/>
+            <Tabs tabOneText={'home.filter1'} tabTwoText={'home.filter2'} title={quizGroupTitle}
+                  callback={setTabChange}/>
 
             {/* quizCards list */}
             <Block
@@ -56,8 +55,14 @@ const QuizListScreen = ({navigation}) => {
                 contentContainerStyle={{paddingBottom: sizes.l}}>
                 <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
                     {filteredQuizCards.map((card: IQuizCard, index) => (
-                        <TouchableOpacity onPress={() => startQuiz(card, filteredQuizCards)}>
-                            <QuizCard {...card} key={`card-${card?.id}`}/>
+                        <TouchableOpacity key={`card-${card?.id}`} onPress={() => startQuiz(card, filteredQuizCards)}>
+                            <ListCard
+                                title={card.name}
+                                rightBottomTitle={'Difficulty:'}
+                                rightBottomDesc={card.attributes?.difficulty}
+                                rightTopText1={card.solvedCount + ''}
+                                rightTopText2={card.questionCount + ''}
+                            />
                         </TouchableOpacity>
                     ))}
                 </Block>

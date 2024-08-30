@@ -8,7 +8,6 @@ import Switch from './Switch';
 import Checkbox from './Checkbox';
 import Image from './Image';
 import QuizGroupCard from './QuizGroupCard';
-import QuizCard from './QuizCard';
 import BottomMenu from './BottomMenu';
 
 export {
@@ -22,6 +21,5 @@ export {
     QuizGroupCard,
     Modal,
     ButtonCard,
-    QuizCard,
     BottomMenu
 };

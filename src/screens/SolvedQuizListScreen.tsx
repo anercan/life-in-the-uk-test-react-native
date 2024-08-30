@@ -5,9 +5,9 @@ import {Block, BottomMenu} from '../components/';
 import {useRoute} from "@react-navigation/native";
 import apiCaller from "../config/apiCaller";
 import {ISolvedQuizCard} from "../constants/types";
-import Header from "../components/Header";
-import ReportQuizCard from "../components/ReportQuizCard";
+import Tabs from "../components/Tabs";
 import {TouchableOpacity} from "react-native";
+import ListCard from "../components/ListCard";
 
 const SolvedQuizListScreen = ({navigation}) => {
     const route = useRoute();
@@ -53,8 +53,8 @@ const SolvedQuizListScreen = ({navigation}) => {
 
     return (
         <Block>
-            <Header tabOneText={'Ongoing'} tabTwoText={'Completed'} selectedTab={tab} hideSearch={true}
-                    title={'Reports'} callback={setTabChange}/>
+            <Tabs tabOneText={'Ongoing'} tabTwoText={'Completed'} selectedTab={tab} hideSearch={true}
+                  title={'Reports'} callback={setTabChange}/>
 
             {/* quizCards list */}
             <Block
@@ -64,8 +64,13 @@ const SolvedQuizListScreen = ({navigation}) => {
                 contentContainerStyle={{paddingBottom: sizes.l}}>
                 <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
                     {filteredQuizCards?.map((card: any) => (
-                        <TouchableOpacity onPress={() => cardOnPress(card)}>
-                            <ReportQuizCard {...card} key={`card-${card?.id}`}/>
+                        <TouchableOpacity key={`card-${card?.id}`} onPress={() => cardOnPress(card)}>
+                            <ListCard
+                                title={card?.quiz?.name}
+                                rightBottomTitle={'Difficulty:'}
+                                rightBottomDesc={card.quiz?.attributes?.difficulty}
+                                rightTopText2={card.completeDate}
+                            />
                         </TouchableOpacity>
 
                     ))}
