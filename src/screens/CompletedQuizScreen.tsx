@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import {useRoute} from "@react-navigation/native";
-import {BottomMenu, ButtonCard} from "../components";
+import {ButtonCard} from "../components";
 import {useTheme} from "../hooks";
 import * as Progress from 'react-native-progress';
 
@@ -105,7 +105,6 @@ const CompletedQuizScreen = ({navigation}) => {
                 }
                 {isNextQuizExist && <ButtonCard onPress={onPressNextQuiz} buttonText={'Next Quiz'}/>}
             </View>
-            <BottomMenu/>
         </>
     );
 };

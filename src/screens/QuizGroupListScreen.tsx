@@ -1,11 +1,14 @@
 import React, {useEffect, useState} from 'react';
 
 import {useTheme} from '../hooks/';
-import {Block, QuizGroupCard, BottomMenu} from '../components/';
-import {TouchableOpacity} from "react-native";
+import {Block} from '../components/';
+import {Dimensions, StyleSheet, TouchableOpacity, View} from "react-native";
 import apiCaller from "../config/apiCaller";
 import {IQuizGroupCard} from "../constants/types";
 import Tabs from "../components/Tabs";
+import {GroupCard} from "../components";
+const { width } = Dimensions.get('window');
+
 
 const QuizGroupListScreen = ({navigation}) => {
 
@@ -39,28 +42,57 @@ const QuizGroupListScreen = ({navigation}) => {
         navigation.navigate('QuizListScreen', {quizGroupId: card.id, quizGroupTitle: card.title})
     );
 
+    const chunkArray = (array, size) => {
+        const result = [];
+        for (let i = 0; i < array.length; i += size) {
+            result.push(array.slice(i, i + size));
+        }
+        return result;
+    };
+
+    // Chunk the cardData array into rows of 2 cards
+    const rows = chunkArray(filteredQuizGroupCards, 2);
+
     return (
         <Block>
-            <Tabs tabOneText={'home.filter1'} tabTwoText={'home.filter2'} callback={setTabChange}
+            <Tabs tabOneText={'Recent'} tabTwoText={'Completed'} callback={setTabChange}
                   title={'Quiz Groups'}/>
 
             {/* quizGroupCards list */}
             <Block
                 scroll
-                paddingHorizontal={15}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{paddingBottom: sizes.l}}>
-                <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
-                    {filteredQuizGroupCards?.map((card: IQuizGroupCard) => (
-                        <TouchableOpacity key={`card-${card?.id}`} onPress={() => onPressQuizGroupCard(card)}>
-                            <QuizGroupCard  {...card}/>
-                        </TouchableOpacity>
+                <View style={styles.container}>
+                    {rows.map((row, rowIndex) => (
+                        <View key={rowIndex} style={styles.row}>
+                            {row.map((card, cardIndex) => (
+                                <TouchableOpacity key={`card-${card?.id}`} onPress={() => onPressQuizGroupCard(card)}>
+                                    <GroupCard key={cardIndex} card={card}/>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
                     ))}
-                </Block>
+                </View>
             </Block>
-            <BottomMenu/>
         </Block>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+        padding: 10,
+    },
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 10,
+    }
+});
+
 
 export default QuizGroupListScreen;

@@ -1,12 +1,11 @@
 import {AppText, Block, Button, Input} from "./index";
-import {Text, View} from "react-native";
+import {StyleSheet, Text, View} from "react-native";
 import React, {useEffect, useState} from "react";
 import {useTheme} from "../hooks";
 
 export interface IHeader {
     callback: (tabNumber: number) => void;
     title: String;
-    hideSearch?: boolean;
     selectedTab?: number;
     tabOneText: string;
     tabTwoText: string;
@@ -27,9 +26,29 @@ const Tabs = (props: IHeader) => {
         props.callback(filter);
     };
 
+    const styles = StyleSheet.create({
+        active: {
+            borderRadius: 15,
+            paddingVertical: 8,
+            paddingHorizontal:0,
+            backgroundColor: '#e0dede',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textDecorationLine: 'underline',
+
+        },
+        passive: {
+            borderRadius: 25,
+            paddingVertical: 10,
+            paddingHorizontal:0,
+            backgroundColor: '#f3f2f2',
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+    });
     return (
-        <>
-            <View style={{paddingTop: props.hideSearch ? 42 : null, paddingBottom: 10}}>
+        <View style={{marginTop: 15,marginBottom: 10}}>
+            <View>
                 <Text style={{
                     fontFamily: fonts.medium,
                     textAlign: 'center',
@@ -42,33 +61,32 @@ const Tabs = (props: IHeader) => {
                 row
                 flex={0}
                 align="center"
-                marginTop={0}
+                marginTop={20}
                 marginBottom={-10}
+                marginHorizontal={60}
                 justify="center"
             >
-                <Button>
-                    <Block row align="center">
-                        <AppText onPress={() => setTabChange(0)} p font={fonts?.[tab === 0 ? 'medium' : 'normal']}>
-                            {props.tabOneText}
-                        </AppText>
-                    </Block>
-                </Button>
+                <Block align="center" style={tab === 0 ? styles.active : styles.passive}>
+                    <AppText margin={0} padding={0} onPress={() => setTabChange(0)} p font={fonts?.[tab === 0 ? 'medium' : 'medium']}>
+                        {props.tabOneText}
+                    </AppText>
+                </Block>
                 <Block
                     gray
                     flex={0}
                     width={1}
-                    marginHorizontal={sizes.sm}
+                    marginHorizontal={15}
                     height={sizes.socialIconSize}
+                    align="center"
+                    justify="center"
                 />
-                <Button>
-                    <Block row align="center">
-                        <AppText onPress={() => setTabChange(1)} p font={fonts?.[tab === 1 ? 'medium' : 'normal']}>
-                            {props.tabTwoText}
-                        </AppText>
-                    </Block>
-                </Button>
+                <Block align="center" style={tab === 1 ? styles.active : styles.passive}>
+                    <AppText onPress={() => setTabChange(1)} p font={fonts?.[tab === 1 ? 'medium' : 'medium']}>
+                        {props.tabTwoText}
+                    </AppText>
+                </Block>
             </Block>
-        </>
+        </View>
     );
 }
 export default Tabs;

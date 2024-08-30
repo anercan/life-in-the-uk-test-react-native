@@ -3,7 +3,6 @@ import {Animated, Dimensions, StyleSheet, Text, View} from 'react-native';
 import apiCaller from "../config/apiCaller";
 import {useFocusEffect, useRoute} from "@react-navigation/native";
 import QuizQuestion from "../components/QuizQuestion";
-import {BottomMenu} from "../components";
 import * as Progress from 'react-native-progress';
 import {useTheme} from "../hooks";
 import {useSwipe} from "../hooks/useSwipe";
@@ -196,14 +195,13 @@ const QuizScreen = ({navigation}) => {
                                       answersList={activeQuestion?.answersList}
                                       selectedId={answerMap.get(activeQuestion?.id)}
                                       onSelect={handleAnswer}
-                                      isAnswered={answerMap.get(activeQuestion?.id)}
+                                      isAnswered={answerMap.get(activeQuestion?.id) !== undefined}
                                       isReviewPage={isReviewPage}
                                       explanation={activeQuestion?.explanation}
                         />
                     </View>
                 </Animated.View>
             </View>
-            <BottomMenu/>
         </>
     );
 };

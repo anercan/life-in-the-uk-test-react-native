@@ -58,17 +58,27 @@ const ListCard = (props:IQuizCard) => {
             elevation: 5,
             marginLeft: width / 1.45
         },
-        description: {
-            fontFamily: fonts.thin,
-            fontSize: 13,
-            marginTop: 5,
+        orderBoxDate: {
+            height: 35,
+            width: 85,
+            justifyContent: "center",
+            alignItems: 'center',
+            borderRadius: 30,
+            backgroundColor: '#dddede',
+            shadowColor: '#363535',
+            shadowOffset: {width: 0, height: 1},
+            shadowOpacity: 0.1,
+            shadowRadius: 2,
+            marginTop: -25,
+            elevation: 5,
+            marginLeft: width / 1.65
         },
         infoContainer: {
             marginTop: 20,
             flexDirection: 'row',
             justifyContent: 'space-between'
         },
-        righBottom: {
+        rightBottom: {
             flex: 1,
             alignItems: 'flex-end',
             marginTop:-7,
@@ -85,22 +95,29 @@ const ListCard = (props:IQuizCard) => {
             color: '#4c4c4c',
             fontSize: 14,
         },
+        text: {
+            fontWeight: 'bold',
+            color: '#5a5a5a',
+        }
     });
 
     return (
         <View style={styles.card}>
-            <View style={styles.orderBox}>
-                <Text style={{fontWeight:'bold',color:'#5a5a5a',fontSize:16}}>
-                    {props.rightTopText1}
-                    /
-                    <Text style={{fontWeight:'bold',color:'#5a5a5a',fontSize:13}}>{props.rightTopText1}</Text>
-                </Text>
-
+            <View style={props.rightTopText1 ? styles.orderBox : styles.orderBoxDate}>
+                {props.rightTopText1 ?
+                    <Text style={[styles.text, {fontSize: 16}]}>{props.rightTopText1} / <Text
+                        style={[styles.text, {fontSize: 13}]}>{props.rightTopText2}</Text>
+                    </Text>
+                    :
+                    <Text style={[styles.text, { fontSize: 13 }]}>
+                        {props.rightTopText2}
+                    </Text>
+                }
             </View>
             <Text style={styles.title}>{props.title}</Text>
             <View style={styles.infoContainer}>
                 {(props.rightBottomTitle || this.props.rightBottomDesc) &&
-                    <View style={styles.righBottom}>
+                    <View style={styles.rightBottom}>
                         <Text style={styles.rightBottomTextOne}>{props.rightBottomTitle} <Text
                             style={styles.rightBottomTextTwo}>{props.rightBottomDesc}</Text></Text>
                     </View>}

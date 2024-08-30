@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
 import {useTheme} from '../hooks/';
-import {Block, BottomMenu} from '../components/';
+import {Block} from '../components/';
 import {useRoute} from "@react-navigation/native";
 import apiCaller from "../config/apiCaller";
 import {IQuizCard} from "../constants/types";
@@ -39,12 +39,17 @@ const QuizListScreen = ({navigation}) => {
     };
 
     const startQuiz = (card: IQuizCard, quizCardList: IQuizCard[]) => {
-        navigation.navigate('QuizScreen', {quizId: card?.id, quizGroupId: quizGroupId, quizCardList: quizCardList,isReviewPage:false})
+        navigation.navigate('QuizScreen', {
+            quizId: card?.id,
+            quizGroupId: quizGroupId,
+            quizCardList: quizCardList,
+            isReviewPage: false
+        })
     }
 
     return (
         <Block>
-            <Tabs tabOneText={'home.filter1'} tabTwoText={'home.filter2'} title={quizGroupTitle}
+            <Tabs tabOneText={'Recent'} tabTwoText={'Completed'} title={quizGroupTitle}
                   callback={setTabChange}/>
 
             {/* quizCards list */}
@@ -67,7 +72,6 @@ const QuizListScreen = ({navigation}) => {
                     ))}
                 </Block>
             </Block>
-            <BottomMenu/>
         </Block>
     );
 };

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
 import {useTheme} from '../hooks/';
-import {Block, BottomMenu} from '../components/';
+import {Block} from '../components/';
 import {useRoute} from "@react-navigation/native";
 import apiCaller from "../config/apiCaller";
 import {ISolvedQuizCard} from "../constants/types";
@@ -10,7 +10,6 @@ import {TouchableOpacity} from "react-native";
 import ListCard from "../components/ListCard";
 
 const SolvedQuizListScreen = ({navigation}) => {
-    const route = useRoute();
     const [tab, setTab] = useState<number>(0);
     const [quizCards, setQuizCards] = useState([{}]);
     const [filteredQuizCards, setFilteredQuizCards] = useState([{}]);
@@ -24,6 +23,7 @@ const SolvedQuizListScreen = ({navigation}) => {
                 let onGoingQuizes = dataList?.filter((card: ISolvedQuizCard) => card?.state !== 'COMPLETED');
                 if (onGoingQuizes.length > 0) {
                     setFilteredQuizCards(onGoingQuizes);
+                    console.log(onGoingQuizes)
                 } else {
                     setTab(1);
                 }
@@ -51,10 +51,20 @@ const SolvedQuizListScreen = ({navigation}) => {
         });
     }
 
+    function formatDate(dateString) {
+        const date = new Date(dateString); // Parse the date string into a Date object
+
+        const day = String(date.getDate()).padStart(2, '0'); // Get the day and pad with leading zero if necessary
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based, so add 1 and pad with leading zero
+        const year = date.getFullYear(); // Get the full year
+
+        return `${day}.${month}.${year}`; // Format the date as DD-MM-YYYY
+    }
+
     return (
         <Block>
-            <Tabs tabOneText={'Ongoing'} tabTwoText={'Completed'} selectedTab={tab} hideSearch={true}
-                  title={'Reports'} callback={setTabChange}/>
+            <Tabs tabOneText={'Recent'} tabTwoText={'Completed'} selectedTab={tab} hideSearch={true}
+                  title={'My Quizzes'} callback={setTabChange}/>
 
             {/* quizCards list */}
             <Block
@@ -69,14 +79,13 @@ const SolvedQuizListScreen = ({navigation}) => {
                                 title={card?.quiz?.name}
                                 rightBottomTitle={'Difficulty:'}
                                 rightBottomDesc={card.quiz?.attributes?.difficulty}
-                                rightTopText2={card.completeDate}
+                                rightTopText1={tab === 0 ? card?.correctQuestionList?.length + card?.wrongQuestionList?.length : undefined}
+                                rightTopText2={tab === 0 ? card?.quiz?.activeQuestionCount :formatDate(card?.completeDate)}
                             />
                         </TouchableOpacity>
-
                     ))}
                 </Block>
             </Block>
-            <BottomMenu/>
         </Block>
     );
 };

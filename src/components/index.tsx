@@ -7,8 +7,7 @@ import Modal from './Modal';
 import Switch from './Switch';
 import Checkbox from './Checkbox';
 import Image from './Image';
-import QuizGroupCard from './QuizGroupCard';
-import BottomMenu from './BottomMenu';
+import GroupCard from './GroupCard';
 
 export {
     Block,
@@ -18,8 +17,7 @@ export {
     Switch,
     Checkbox,
     Image,
-    QuizGroupCard,
+    GroupCard,
     Modal,
-    ButtonCard,
-    BottomMenu
+    ButtonCard
 };

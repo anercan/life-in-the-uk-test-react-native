@@ -7,6 +7,7 @@ import {useData, ThemeProvider} from '../hooks';
 import {View, StyleSheet} from 'react-native';
 import Screens from "./Screens";
 import Header from "../components/Header";
+import TabMenu from "../components/TabMenu";
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -56,7 +57,7 @@ export default () => {
             <NavigationContainer>
                 <View style={styles.container}>
                     <Header/>
-                    <Screens/>
+                    <TabMenu/>
                 </View>
             </NavigationContainer>
         </ThemeProvider>
