@@ -104,7 +104,7 @@ const ListCard = (props:IQuizCard) => {
     return (
         <View style={styles.card}>
             <View style={props.rightTopText1 ? styles.orderBox : styles.orderBoxDate}>
-                {props.rightTopText1 ?
+                {props.rightTopText1 !== undefined  ?
                     <Text style={[styles.text, {fontSize: 16}]}>{props.rightTopText1} / <Text
                         style={[styles.text, {fontSize: 13}]}>{props.rightTopText2}</Text>
                     </Text>
