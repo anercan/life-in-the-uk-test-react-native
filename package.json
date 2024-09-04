@@ -2,8 +2,8 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
     "eject": "expo eject",
     "test": "jest",
@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.23.1",
+    "@react-native-google-signin/google-signin": "^13.0.1",
     "@react-native-masked-view/masked-view": "0.3.1",
     "@react-navigation/bottom-tabs": "7.0.0-rc.30",
     "@react-navigation/native": "7.0.0-rc.18",
@@ -21,7 +22,7 @@
     "expo-haptics": "~13.0.0",
     "expo-linear-gradient": "~13.0.0",
     "expo-localization": "~15.0.3",
-    "expo-modules-core": "~1.12.23",
+    "expo-modules-core": "~1.12.24",
     "expo-splash-screen": "^0.27.5",
     "expo-status-bar": "1.12.1",
     "react": "18.2.0",
@@ -54,5 +55,7 @@
     "transformIgnorePatterns": [
       "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|@sentry/.*)"
     ]
-  }
+  },
+  "name": "life-in-the-uk-client",
+  "version": "1.0.0"
 }

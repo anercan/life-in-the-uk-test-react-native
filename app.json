@@ -24,7 +24,6 @@
     "android": {
       "package": "com.quizmarkt.lifeintheuk",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/splash.png",
         "backgroundColor": "#b2f6f6"
       }
     },
@@ -32,7 +31,13 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-localization"
-    ]
+      "expo-localization",
+      "@react-native-google-signin/google-signin"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "bb230948-a417-4a49-b054-7a2153be174e"
+      }
+    }
   }
 }
