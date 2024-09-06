@@ -83,6 +83,7 @@ const QuizQuestion = (props: IQuizQuestion) => {
     }
 
     useEffect(() => {
+        console.log('props',props)
         setAnswered(props.isAnswered);
         if (props.selectedId != null && props.selectedId !== 0) {
             setSelectedId(props.selectedId);

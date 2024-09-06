@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {useTheme} from '../hooks/';
 import {Block} from '../components/';
-import {useRoute} from "@react-navigation/native";
+import {useFocusEffect, useRoute} from "@react-navigation/native";
 import apiCaller from "../config/apiCaller";
 import {IQuizCard} from "../constants/types";
 import Tabs from "../components/Tabs";
@@ -17,14 +17,16 @@ const QuizListScreen = ({navigation}) => {
     const [filteredQuizCards, setFilteredQuizCards] = useState([{}]);
     const {sizes} = useTheme();
 
-    useEffect(() => {
-        apiCaller('quiz/get-quizzes-with-user-data', 'POST', {pageSize: 25, page: 0, quizGroupId: quizGroupId})
-            .then(response => {
-                let dataList = response?.quizResponseWithUserDataList;
-                setQuizCards(dataList);
-                setFilteredQuizCards(dataList?.filter((card: IQuizCard) => card?.solvedCount !== card?.questionCount));
-            });
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            apiCaller('quiz/get-quizzes-with-user-data', 'POST', {pageSize: 25, page: 0, quizGroupId: quizGroupId})
+                .then(response => {
+                    let dataList = response?.quizResponseWithUserDataList;
+                    setQuizCards(dataList);
+                    setFilteredQuizCards(dataList?.filter((card: IQuizCard) => card?.solvedCount !== card?.questionCount));
+                });
+        }, [])
+    )
 
     useEffect(() => {
         if (tab === 0) {

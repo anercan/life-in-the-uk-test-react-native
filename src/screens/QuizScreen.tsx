@@ -10,16 +10,15 @@ import {useSwipe} from "../hooks/useSwipe";
 const {height, width} = Dimensions.get('window');
 
 const QuizScreen = ({navigation}) => {
-    const {onTouchStart, onTouchEnd} = useSwipe(onSwipeLeft, onSwipeRight, 4)
+    const {onTouchStart, onTouchEnd} = useSwipe(onSwipeLeft, onSwipeRight, 4);
     const shakeAnimation = new Animated.Value(0);
     const route = useRoute();
-    const {fonts, colors} = useTheme();
+    const {fonts} = useTheme();
     const {quizId, quizGroupId, quizCardList, isReviewPage} = route.params;
 
     const [questionCounter, setQuestionCounter] = useState(0);
     const [correctAnswerCounter, setCorrectAnswerCounter] = useState(0);
     const [quizName, setQuizName] = useState('');
-    const [attributes, setAttributes] = useState({});
     const [questionList, setQuestionList] = useState([{}]);
     const [activeQuestion, setActiveQuestion] = useState<any>({});
     const [answerMap, setAnswerMap] = useState(new Map());
@@ -47,22 +46,29 @@ const QuizScreen = ({navigation}) => {
         }
     });
 
+    const setStateForNewQuiz = (quiz) => {
+        createUserQuizData();
+        setQuestionCounter(0);
+        setActiveQuestion(quiz.questionList[0]);
+    }
+
+    const setStatesForOngoingQuiz = (quiz) => {
+        updateQuizWithUserQuizData(quiz);
+        let questionCounter = quiz?.userQuiz?.correctQuestionList?.length + quiz?.userQuiz?.wrongQuestionList.length;
+        setActiveQuestion(isReviewPage ? quiz.questionList[0] : quiz.questionList[questionCounter === 0 ? 0 : questionCounter - 1]);
+        setQuestionCounter(questionCounter === 0 ? 0 : questionCounter - 1);
+    }
+
     useFocusEffect(
         useCallback(() => {
             apiCaller('quiz/get-quiz-with-id/' + quizId)
                 .then((quiz) => {
-                    if (quiz?.userQuiz == null) {
-                        createUserQuizData();
-                        setQuestionCounter(0);
-                        setActiveQuestion(quiz.questionList[0]);
-                    } else {
-                        updateQuizWithUserQuizData(quiz);
-                        let questionCounter = quiz?.userQuiz?.correctQuestionList?.length + quiz?.userQuiz?.wrongQuestionList.length;
-                        setActiveQuestion(isReviewPage ? quiz.questionList[0] : quiz.questionList[questionCounter === 0 ? 0 : questionCounter - 1]);
-                        setQuestionCounter(questionCounter === 0 ? 0 : questionCounter - 1);
-                    }
-                    setAttributes(quiz?.attributes);
                     setQuizName(quiz?.name);
+                    if (quiz?.userQuiz == null) {
+                        setStateForNewQuiz(quiz);
+                    } else {
+                        setStatesForOngoingQuiz(quiz);
+                    }
                     if (isReviewPage) {
                         setQuestionCounter(0);
                         setQuestionList(quiz?.questionList.filter(question => !quiz?.userQuiz?.correctQuestionList?.includes(question.id)));

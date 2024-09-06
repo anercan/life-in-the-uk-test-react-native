@@ -5,13 +5,14 @@ import {NavigationContainer} from '@react-navigation/native';
 import * as SplashScreen from 'expo-splash-screen';
 import {useData, ThemeProvider} from '../hooks';
 import {View, StyleSheet} from 'react-native';
-import Screens from "./Screens";
 import Header from "../components/Header";
-import TabMenu from "../components/TabMenu";
+import {createStackNavigator} from "@react-navigation/stack";
+import {LoginScreen, Profile, QuizGroupListScreen, QuizListScreen, QuizScreen, SolvedQuizListScreen,CompletedQuizScreen} from "../screens";
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
-
 
 export default () => {
     const {isDark, theme, setTheme} = useData();
@@ -63,3 +64,100 @@ export default () => {
         </ThemeProvider>
     );
 };
+
+const Stack = createStackNavigator();
+
+export const QuizGroupListScreens = () => {
+    return (
+        <Stack.Navigator initialRouteName="QuizGroupListScreen" screenOptions={{headerShown: false}}>
+            <Stack.Screen name="QuizGroupListScreen" component={QuizGroupListScreen}/>
+            <Stack.Screen name="QuizListScreen" component={QuizListScreen}/>
+            <Stack.Screen name="QuizScreen" component={QuizScreen}/>
+            <Stack.Screen name="CompletedQuizScreen" component={CompletedQuizScreen}/>
+        </Stack.Navigator>
+    );
+};
+
+export const SolvedQuizListScreens = () => {
+    return (
+        <Stack.Navigator initialRouteName="SolvedQuizListScreen" screenOptions={{headerShown: false}}>
+            <Stack.Screen name="SolvedQuizListScreen" component={SolvedQuizListScreen}/>
+            <Stack.Screen name="QuizScreen" component={QuizScreen}/>
+            <Stack.Screen name="CompletedQuizScreen" component={CompletedQuizScreen}/>
+        </Stack.Navigator>
+    );
+};
+
+export const ProfileScreens = () => {
+    return (
+        <Stack.Navigator initialRouteName="Profile" screenOptions={{headerShown: false}}>
+            <Stack.Screen name="Profile" component={Profile}/>
+        </Stack.Navigator>
+    );
+};
+
+const Tab = createBottomTabNavigator();
+
+export const TabMenu = () => {
+    return (
+        <Tab.Navigator
+            initialRouteName="QuizGroupListScreens"
+            screenOptions={{
+                headerShown: false,
+                tabBarActiveTintColor: '#ffffff', // White color for active items
+                tabBarInactiveTintColor: '#d1d1d1', // Light gray color for inactive items
+                tabBarLabelStyle: {
+                    fontSize: 12, // Optional: customize font size
+                }, tabBarStyle: {
+                    backgroundColor: '#012169', // Dark blue background
+                    height: 80, // Custom height
+                    paddingBottom: 4, // Optional: add padding for better item placement
+                    paddingTop: 1, // Optional: add padding for better item placement
+                },
+            }}
+        >
+            <Tab.Screen
+                name="QuizGroupListScreens"
+                component={QuizGroupListScreens}
+                options={{
+                    tabBarLabel: 'Home',
+                    tabBarIcon: ({color, size}) => (
+                        <MaterialCommunityIcons name="home" color={color} size={size}/>
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="SolvedQuizListScreens"
+                component={SolvedQuizListScreens}
+                options={{
+                    tabBarLabel: 'My Quizzes',
+                    tabBarIcon: ({color, size}) => (
+                        <MaterialCommunityIcons name="file-document-multiple" color={color} size={size}/>
+                    ),
+                }}
+            />
+            {/*<Tab.Screen
+                name="Notifications"
+                component={SolvedQuizListScreen}
+                options={{
+                    tabBarLabel: 'Updates',
+                    tabBarIcon: ({color, size}) => (
+                        <MaterialCommunityIcons name="bell" color={color} size={size}/>
+                    ),
+                    tabBarBadge: 3,
+                }}
+            />*/}
+            <Tab.Screen
+                name="ProfileScreens"
+                component={ProfileScreens}
+                options={{
+                    tabBarLabel: 'Profile',
+                    tabBarIcon: ({color, size}) => (
+                        <MaterialCommunityIcons name="account" color={color} size={size}/>
+                    ),
+                }}
+            />
+        </Tab.Navigator>
+    );
+}
+

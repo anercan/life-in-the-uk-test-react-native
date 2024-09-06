@@ -1,28 +1,21 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const BASE_URL = 'http://10.0.2.2:8083/quesmarkt-base';
+const BASE_URL = 'http://10.0.2.2:8083/quizmarkt-base';
 
-const apiCaller = (endpoint, method = 'GET', data = null) => {
+const apiCaller = async (endpoint, method = 'GET', data = null) => {
     const url = `${BASE_URL}/${endpoint}`;
 
     const headers = {
         'Content-Type': 'application/json',
     };
 
-    /*AsyncStorage.getItem('authToken')
-        .then((authToken) => {
-            if (authToken) {
-                headers['Authorization'] = `Bearer ${authToken}`;
-            }
-        })
-        .catch((error) => {
-            console.error('Error retrieving auth token from AsyncStorage:', error);
-        });*/
+    let authToken = await AsyncStorage.getItem('authToken');
+    headers['Authorization'] = `Bearer ${authToken}`;
 
     const options = {
         method,
         headers,
-        body:data
+        body: data
     };
 
     if (data) {
@@ -36,7 +29,7 @@ const apiCaller = (endpoint, method = 'GET', data = null) => {
             console.log(result);
             resolve(result);
         } catch (error) {
-            console.error('API Call Error:', error.message);
+            console.error('API Call Error:', error);
             reject(error);
         }
     });

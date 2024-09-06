@@ -8,7 +8,7 @@ import {
     statusCodes
 } from '@react-native-google-signin/google-signin';
 import apiCaller from "../config/apiCaller";
-import {IQuizGroupCard} from "../constants/types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function getGoogleConfig() {
     return {
@@ -19,55 +19,44 @@ function getGoogleConfig() {
 
 const LoginScreen = ({navigation}) => {
 
-    const [state, setState] = useState<any>();
-
     useEffect(() => {
-        console.log('useeffect')
+        AsyncStorage.getItem('authToken').then((auth)=> console.log('AUTH:',auth))
         GoogleSignin.configure(getGoogleConfig());
         hasPreviousSignIn();
     }, []);
 
-    const signIn = async () => {
+    const googleSignIn = async () => {
         try {
             await GoogleSignin.hasPlayServices();
-            console.log('evet')
-            const response:any = await GoogleSignin.signIn();
-            console.log('eve2t',response)
+            const response: any = await GoogleSignin.signIn();
             if (isSuccessResponse(response)) {
-                setState({userInfo: response.data});
-                console.log(response)
-                apiCaller('user-management/google-sign-in', 'POST', {token: response?.data?.idToken})
-                    .then(response => {
-                        console.log(response)
-                    });
+                loginWithGoogle(response);
             } else {
-                // sign in was cancelled by user
+                console.log('error', response)
             }
         } catch (error) {
             if (isErrorWithCode(error)) {
                 switch (error.code) {
                     case statusCodes.IN_PROGRESS:
-                        console.log('error',error)
+                        console.log('error', error)
                         break;
                     case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
-                        console.log('error',error)
+                        console.log('error', error)
                         break;
                     default:
-                        console.log('error',error)
+                        console.log('error', error)
                 }
             } else {
-                console.log('error',error)
+                console.log('error', error)
             }
         }
     };
 
-    const getCurrentUser = async () => {
+    const loginWithCurrentUser = async () => {
         try {
-            const response:any = await GoogleSignin.signInSilently();
+            const response: any = await GoogleSignin.signInSilently();
             if (isSuccessResponse(response)) {
-                console.log('getCurrentUser',response)
-                setState({ userInfo: response.data });
-                navigation.navigate('QuizGroupListScreen')
+                loginWithGoogle(response);
             } else if (isNoSavedCredentialFoundResponse(response)) {
                 // user has not signed in yet
             }
@@ -78,27 +67,29 @@ const LoginScreen = ({navigation}) => {
 
     const hasPreviousSignIn = async () => {
         const hasPreviousSignIn = GoogleSignin.hasPreviousSignIn();
-        console.log('hasPreviousSignIn',hasPreviousSignIn)
-        setState({ hasPreviousSignIn });
-        getCurrentUser();
+        if (hasPreviousSignIn) {
+            loginWithCurrentUser();
+        }
     };
+
+    const loginWithGoogle = (response: any) => {
+        apiCaller('user-management/google-sign-in', 'POST', {token: response?.data?.idToken, appId: 1})
+            .then((response) => {
+                AsyncStorage.setItem('authToken', response.jwt).then(() => navigation.navigate('QuizGroupListScreen'));
+            })
+            .catch(() => alert('Login Failed'));
+    }
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Life In The UK Test</Text>
             <GoogleSigninButton style={styles.googleButton}
-                size={GoogleSigninButton.Size.Standard}
-                onPress={() => {
-                    signIn()
-                }}
-                disabled={false}
+                                size={GoogleSigninButton.Size.Standard}
+                                onPress={() => {
+                                    googleSignIn()
+                                }}
+                                disabled={false}
             />
-            {state && (
-            <View style={styles.userInfo}>
-                <Text style={styles.userInfoText}>Welcome, {state?.userInfo?.name}</Text>
-                <Text style={styles.userInfoText}>{state?.userInfo?.email}</Text>
-            </View>
-        )}
         </View>
     );
 };
@@ -121,8 +112,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginBottom: 8,
     },
-    googleButton: {
-    },
+    googleButton: {},
 
 });
 

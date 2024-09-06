@@ -1,14 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {useTheme} from '../hooks/';
 import {Block} from '../components/';
-import {Dimensions, StyleSheet, TouchableOpacity, View} from "react-native";
+import {StyleSheet, TouchableOpacity, View} from "react-native";
 import apiCaller from "../config/apiCaller";
 import {IQuizGroupCard} from "../constants/types";
 import Tabs from "../components/Tabs";
 import {GroupCard} from "../components";
-const { width } = Dimensions.get('window');
-
+import {useFocusEffect} from "@react-navigation/native";
 
 const QuizGroupListScreen = ({navigation}) => {
 
@@ -17,14 +16,16 @@ const QuizGroupListScreen = ({navigation}) => {
     const [quizGroupCards, setQuizGroupCards] = useState([{}]);
     const {sizes} = useTheme();
 
-    useEffect(() => {
-        apiCaller('quiz-group/get-quiz-groups-with-user-quiz-data', 'POST', {pageSize: 25, page: 0})
-            .then(response => {
-                let dataList = response?.quizGroupWithUserDataList;
-                setQuizGroupCards(dataList);
-                setFilteredQuizGroupCards(dataList?.filter((card: IQuizGroupCard) => card?.userSolvedCount !== card?.quizQuantity));
-            });
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            apiCaller('quiz-group/get-quiz-groups-with-user-quiz-data', 'POST', {pageSize: 25, page: 0})
+                .then(response => {
+                    let dataList = response?.quizGroupWithUserDataList;
+                    setQuizGroupCards(dataList);
+                    setFilteredQuizGroupCards(dataList?.filter((card: IQuizGroupCard) => card?.userSolvedCount !== card?.quizQuantity));
+                });
+        }, [])
+    )
 
     useEffect(() => {
         if (tab === 0) {

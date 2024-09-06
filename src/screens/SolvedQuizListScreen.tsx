@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {useTheme} from '../hooks/';
 import {Block} from '../components/';
-import {useRoute} from "@react-navigation/native";
+import {useFocusEffect} from "@react-navigation/native";
 import apiCaller from "../config/apiCaller";
 import {ISolvedQuizCard} from "../constants/types";
 import Tabs from "../components/Tabs";
@@ -15,20 +15,22 @@ const SolvedQuizListScreen = ({navigation}) => {
     const [filteredQuizCards, setFilteredQuizCards] = useState([{}]);
     const {sizes} = useTheme();
 
-    useEffect(() => {
-        apiCaller('user-quiz/get-user-quiz-list')
-            .then(response => {
-                let dataList = response?.userQuizResponseList;
-                setQuizCards(dataList);
-                let onGoingQuizes = dataList?.filter((card: ISolvedQuizCard) => card?.state !== 'COMPLETED');
-                if (onGoingQuizes.length > 0) {
-                    setFilteredQuizCards(onGoingQuizes);
-                    console.log(onGoingQuizes)
-                } else {
-                    setTab(1);
-                }
-            });
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            apiCaller('user-quiz/get-user-quiz-list')
+                .then(response => {
+                    let dataList = response?.userQuizResponseList;
+                    setQuizCards(dataList);
+                    let onGoingQuizes = dataList?.filter((card: ISolvedQuizCard) => card?.state !== 'COMPLETED');
+                    if (onGoingQuizes.length > 0) {
+                        setFilteredQuizCards(onGoingQuizes);
+                        console.log(onGoingQuizes)
+                    } else {
+                        setTab(1);
+                    }
+                });
+        }, [])
+    )
 
     useEffect(() => {
         if (tab === 0) {
@@ -80,7 +82,7 @@ const SolvedQuizListScreen = ({navigation}) => {
                                 rightBottomTitle={'Difficulty:'}
                                 rightBottomDesc={card.quiz?.attributes?.difficulty}
                                 rightTopText1={tab === 0 ? card?.correctQuestionList?.length + card?.wrongQuestionList?.length : undefined}
-                                rightTopText2={tab === 0 ? card?.quiz?.activeQuestionCount :formatDate(card?.completeDate)}
+                                rightTopText2={tab === 0 ? card?.quiz?.activeQuestionCount : formatDate(card?.completeDate)}
                             />
                         </TouchableOpacity>
                     ))}
