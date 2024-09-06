@@ -18,6 +18,7 @@ export interface IQuizCard {
   priority?: number;
   solvedCount?:number;
   attributes?:any;
+  state?:string;
 }
 
 export interface IQuizQuestion {

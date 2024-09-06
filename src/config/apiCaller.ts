@@ -26,7 +26,7 @@ const apiCaller = async (endpoint, method = 'GET', data = null) => {
         try {
             const response = await fetch(url, options);
             const result = await response.json();
-            console.log(result);
+            //console.log(result);
             resolve(result);
         } catch (error) {
             console.error('API Call Error:', error);

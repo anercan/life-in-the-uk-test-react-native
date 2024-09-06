@@ -24,7 +24,6 @@ const SolvedQuizListScreen = ({navigation}) => {
                     let onGoingQuizes = dataList?.filter((card: ISolvedQuizCard) => card?.state !== 'COMPLETED');
                     if (onGoingQuizes.length > 0) {
                         setFilteredQuizCards(onGoingQuizes);
-                        console.log(onGoingQuizes)
                     } else {
                         setTab(1);
                     }
@@ -45,12 +44,24 @@ const SolvedQuizListScreen = ({navigation}) => {
     };
 
     function cardOnPress(card: any) {
-        navigation.navigate('QuizScreen', {
-            quizId: card.quiz.id,
-            quizGroupId: card.quizGroupId,
-            quizCardList: [],
-            isReviewPage: card?.state === 'COMPLETED'
-        });
+        if (card?.state === 'COMPLETED') {
+            navigation.navigate('CompletedQuizScreen', {
+                quizName: card.quiz?.name,
+                quizSize: card?.correctQuestionList?.length + card?.wrongQuestionList?.length,
+                correctAnswerSize: card?.correctQuestionList?.length,
+                quizCardList: [],
+                quizGroupId: card?.quizGroupId,
+                quizId: card.quiz?.id,
+                //showRestartQuiz: true
+            });
+        } else {
+            navigation.navigate('QuizScreen', {
+                quizId: card.quiz.id,
+                quizGroupId: card.quizGroupId,
+                quizCardList: [],
+                isReviewPage: false
+            });
+        }
     }
 
     function formatDate(dateString) {

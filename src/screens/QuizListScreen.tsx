@@ -23,16 +23,16 @@ const QuizListScreen = ({navigation}) => {
                 .then(response => {
                     let dataList = response?.quizResponseWithUserDataList;
                     setQuizCards(dataList);
-                    setFilteredQuizCards(dataList?.filter((card: IQuizCard) => card?.solvedCount !== card?.questionCount));
+                    setFilteredQuizCards(dataList?.filter((card: IQuizCard) => card?.state !== 'COMPLETED'));
                 });
         }, [])
     )
 
     useEffect(() => {
         if (tab === 0) {
-            setFilteredQuizCards(quizCards.filter((card: IQuizCard) => card?.solvedCount !== card?.questionCount));
+            setFilteredQuizCards(quizCards.filter((card: IQuizCard) => card?.state !== 'COMPLETED'));
         } else {
-            setFilteredQuizCards(quizCards.filter((card: IQuizCard) => card?.solvedCount === card?.questionCount));
+            setFilteredQuizCards(quizCards.filter((card: IQuizCard) => card?.state === 'COMPLETED'));
         }
     }, [tab]);
 

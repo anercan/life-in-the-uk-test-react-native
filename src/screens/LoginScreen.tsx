@@ -20,7 +20,6 @@ function getGoogleConfig() {
 const LoginScreen = ({navigation}) => {
 
     useEffect(() => {
-        AsyncStorage.getItem('authToken').then((auth)=> console.log('AUTH:',auth))
         GoogleSignin.configure(getGoogleConfig());
         hasPreviousSignIn();
     }, []);

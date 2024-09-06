@@ -75,7 +75,6 @@ const GroupCard = (props: IGroupCard) => {
         12: require('../assets/icons/groupIcons/icon-12.png')
     };
     const getRandomNumber = (number: number) => {
-        console.log('card' ,props.card)
         return Math.floor(Math.random() * number) + 1;
     };
 

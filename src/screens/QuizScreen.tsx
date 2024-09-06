@@ -1,7 +1,7 @@
-import React, {useCallback, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Animated, Dimensions, StyleSheet, Text, View} from 'react-native';
 import apiCaller from "../config/apiCaller";
-import {useFocusEffect, useRoute} from "@react-navigation/native";
+import {useRoute} from "@react-navigation/native";
 import QuizQuestion from "../components/QuizQuestion";
 import * as Progress from 'react-native-progress';
 import {useTheme} from "../hooks";
@@ -16,13 +16,11 @@ const QuizScreen = ({navigation}) => {
     const {fonts} = useTheme();
     const {quizId, quizGroupId, quizCardList, isReviewPage} = route.params;
 
-    const [questionCounter, setQuestionCounter] = useState(0);
-    const [correctAnswerCounter, setCorrectAnswerCounter] = useState(0);
-    const [quizName, setQuizName] = useState('');
+    const [quiz, setQuiz] = useState<any>();
     const [questionList, setQuestionList] = useState([{}]);
     const [activeQuestion, setActiveQuestion] = useState<any>({});
+    const [correctAnswerCounter, setCorrectAnswerCounter] = useState(0);
     const [answerMap, setAnswerMap] = useState(new Map());
-    const [userQuiz, setUserQuiz] = useState<any>({});
 
     const styles = StyleSheet.create({
         container: {
@@ -37,61 +35,81 @@ const QuizScreen = ({navigation}) => {
         }, buttonTextStyle: {
             color: '#393939'
         }, progressBar: {
-            shadowColor: '#dcdcdc',
-            shadowOffset: {width: 0, height: 2},
-            shadowOpacity: 0.3,
-            shadowRadius: 1, paddingTop: height / 30
+            paddingTop: height / 30,
         }, customProgressBar: {
-            borderRadius: 7,
+            borderRadius: 7
         }
     });
 
-    const setStateForNewQuiz = (quiz) => {
-        createUserQuizData();
-        setQuestionCounter(0);
-        setActiveQuestion(quiz.questionList[0]);
+    useEffect(() => {
+        apiCaller('quiz/get-quiz-with-id/' + quizId)
+            .then((quizResponse) => {
+                setQuiz(quizResponse);
+                setStatesForQuiz(quizResponse);
+                if (isReviewPage) { // only wrong ones will display at review page
+                    let wrongQuestions = getWrongQuestions(quizResponse);
+                    setQuestionList(wrongQuestions);
+                    setActiveQuestionState(wrongQuestions, 0);
+                } else {
+                    setQuestionList(quizResponse?.questionList);
+                    setActiveQuestionState(quizResponse?.questionList, getQuestionCount(quizResponse?.userQuiz));
+                }
+            });
+    }, [quizId, isReviewPage]);
+
+    const getQuestionCount = (userQuiz) => {
+        if (userQuiz) {
+            let corrects = userQuiz?.correctQuestionList ? userQuiz?.correctQuestionList?.length : 0;
+            let wrongs = userQuiz?.wrongQuestionList ? userQuiz?.wrongQuestionList?.length : 0;
+            return corrects + wrongs - 1;
+        }
+        return 0;
     }
 
-    const setStatesForOngoingQuiz = (quiz) => {
-        updateQuizWithUserQuizData(quiz);
-        let questionCounter = quiz?.userQuiz?.correctQuestionList?.length + quiz?.userQuiz?.wrongQuestionList.length;
-        setActiveQuestion(isReviewPage ? quiz.questionList[0] : quiz.questionList[questionCounter === 0 ? 0 : questionCounter - 1]);
-        setQuestionCounter(questionCounter === 0 ? 0 : questionCounter - 1);
+    const setStatesForQuiz = (quizResponse) => {
+        if (quizResponse?.userQuiz) {
+            setStatesForOngoingQuiz(quizResponse);
+        } else {
+            createUserQuizData();
+        }
     }
 
-    useFocusEffect(
-        useCallback(() => {
-            apiCaller('quiz/get-quiz-with-id/' + quizId)
-                .then((quiz) => {
-                    setQuizName(quiz?.name);
-                    if (quiz?.userQuiz == null) {
-                        setStateForNewQuiz(quiz);
-                    } else {
-                        setStatesForOngoingQuiz(quiz);
-                    }
-                    if (isReviewPage) {
-                        setQuestionCounter(0);
-                        setQuestionList(quiz?.questionList.filter(question => !quiz?.userQuiz?.correctQuestionList?.includes(question.id)));
-                    } else {
-                        setQuestionList(quiz?.questionList);
-                    }
-                });
-        }, [quizId, isReviewPage])
-    );
+    const setActiveQuestionState = (questionList, questionCounter) => {
+        let activeQuestion = questionList[questionCounter];
+        activeQuestion.counter = questionCounter;
+        setActiveQuestion(activeQuestion);
+    }
 
-    function getCompletedScreenBody() {
+    const setStatesForOngoingQuiz = (quizResponse) => {
+        let answersMap = new Map();
+        setCorrectAnswerCounter(quizResponse?.userQuiz?.correctQuestionList?.length);
+        quizResponse?.userQuiz?.correctQuestionList?.forEach((questionId) =>
+            answersMap.set(questionId, quizResponse?.questionList.find((q) => q.id == questionId)?.correctAnswerId)
+        );
+        quizResponse?.userQuiz?.wrongQuestionList?.forEach((wrongQuestion) =>
+            answersMap.set(wrongQuestion.question.id, wrongQuestion.wrongAnswer.id)
+        );
+        setAnswerMap(answersMap);
+    }
+
+    const getWrongQuestions = (quiz) => {
+        let wrongQuestionIdList = quiz?.userQuiz?.wrongQuestionList.map(wrongQuestion => wrongQuestion.question.id);
+        return quiz?.questionList.filter(question => wrongQuestionIdList.includes(question.id));
+    }
+
+    const getCompletedScreenBody = () => {
         if (isReviewPage) {
             return {
-                quizName: quizName,
-                quizSize: userQuiz?.correctQuestionList.length + userQuiz?.wrongQuestionList?.length,
-                correctAnswerSize: userQuiz?.correctQuestionList.length,
+                quizName: quiz.name,
+                quizSize: quiz?.userQuiz?.correctQuestionList.length + quiz?.userQuiz?.wrongQuestionList?.length,
+                correctAnswerSize: quiz?.userQuiz?.correctQuestionList.length,
                 quizCardList: [],
                 quizGroupId: quizGroupId,
                 quizId: quizId
             };
         } else {
             return {
-                quizName: quizName,
+                quizName: quiz.name,
                 quizSize: questionList.length,
                 correctAnswerSize: correctAnswerCounter,
                 quizCardList: quizCardList,
@@ -101,50 +119,34 @@ const QuizScreen = ({navigation}) => {
         }
     }
 
-    function onSwipeLeft() {
-        let newQuestionOrder = questionCounter + 1;
-        if (newQuestionOrder < questionList.length && answerMap.has(activeQuestion?.id)) {
-            setQuestionCounter(newQuestionOrder);
-            setActiveQuestion(questionList[newQuestionOrder])
-        } else if (answerMap.size == newQuestionOrder || isReviewPage && questionCounter + 1 == questionList.length) {
-            if (!isReviewPage) {
-                setAnswerMap(new Map());
-            }
-            setCorrectAnswerCounter(0);
-            navigation.navigate('CompletedQuizScreen', getCompletedScreenBody());
-        } else {
+    function onSwipeLeft() { // to next question
+        let activeOneAnswered = answerMap.has(activeQuestion?.id);
+        if (!activeOneAnswered) {
             startShake();
+            return;
+        }
+
+        let newQuestionOrder = activeQuestion.counter + 1;
+        let isLastQuestion = newQuestionOrder == questionList.length;
+        if (!isLastQuestion) {
+            setActiveQuestionState(questionList, newQuestionOrder)
+        } else {
+            navigation.navigate('CompletedQuizScreen', getCompletedScreenBody());
         }
     }
 
     function onSwipeRight() {
-        let newQuestionOrder = questionCounter - 1;
+        let newQuestionOrder = activeQuestion.counter - 1;
         if (newQuestionOrder >= 0) {
-            setQuestionCounter(newQuestionOrder);
-            setActiveQuestion(questionList[newQuestionOrder])
+            setActiveQuestionState(questionList, newQuestionOrder);
         }
     }
 
-    const updateQuizWithUserQuizData = (quiz) => {
-        setUserQuiz(quiz?.userQuiz);
-        setCorrectAnswerCounter(quiz?.userQuiz?.correctQuestionList?.length);
-        quiz?.userQuiz?.correctQuestionList?.forEach((questionId) =>
-            updateAnswerMap(
-                questionId,
-                quiz?.questionList.find((q) => q.id == questionId).correctAnswerId
-            )
-        );
-        quiz?.userQuiz?.wrongQuestionList?.forEach((wrongQuestion) =>
-            updateAnswerMap(
-                wrongQuestion.question.id,
-                wrongQuestion.wrongAnswer.id
-            )
-        );
-    }
-
     function createUserQuizData() {
-        let data: any = {quizId: quizId, quizGroupId: quizGroupId};
-        apiCaller('user-quiz/create-update-user-quiz', 'POST', data).then(r => console.log(r))
+        if (answerMap.size === 0) {
+            let data: any = {quizId: quizId, quizGroupId: quizGroupId};
+            apiCaller('user-quiz/create-update-user-quiz', 'POST', data);
+        }
     }
 
     function updateUserQuizData(id) {
@@ -158,7 +160,7 @@ const QuizScreen = ({navigation}) => {
                 userWrongAnswerRequest: {questionId: activeQuestion.id, answerId: id}
             }
         }
-        apiCaller('user-quiz/create-update-user-quiz', 'POST', data).then(r => console.log(r))
+        apiCaller('user-quiz/create-update-user-quiz', 'POST', data);
     }
 
     function handleAnswer(id) {
@@ -183,17 +185,17 @@ const QuizScreen = ({navigation}) => {
         <>
             <View onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} style={styles.container}>
                 <View style={{paddingTop: 20}}>
-                    <Text style={styles.questionName}>{quizName}</Text>
+                    <Text style={styles.questionName}>{quiz?.name}</Text>
                 </View>
                 <View style={styles.progressBar}>
                     <Progress.Bar height={15} color={'#012169'} style={styles.customProgressBar}
-                                  progress={answerMap.size / questionList.length}
+                                  progress={activeQuestion?.counter / questionList?.length || 0}
                                   width={width / 1.12}/>
                 </View>
-                <Animated.View style={{transform: [{translateX: shakeAnimation}]}}>
+                <Animated.View style={{transform: [{translateX: shakeAnimation} as any]}}>
                     <View style={{paddingTop: height / 30}}>
                         <QuizQuestion id={activeQuestion?.id}
-                                      questionOrder={questionCounter}
+                                      questionOrder={activeQuestion.counter}
                                       content={activeQuestion?.content}
                                       imgUrl={activeQuestion?.imgUrl}
                                       correctAnswerId={activeQuestion?.correctAnswerId}

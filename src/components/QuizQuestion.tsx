@@ -83,7 +83,6 @@ const QuizQuestion = (props: IQuizQuestion) => {
     }
 
     useEffect(() => {
-        console.log('props',props)
         setAnswered(props.isAnswered);
         if (props.selectedId != null && props.selectedId !== 0) {
             setSelectedId(props.selectedId);
@@ -133,11 +132,11 @@ const QuizQuestion = (props: IQuizQuestion) => {
                     <Text style={styles.questionText}>{props.content}</Text>
                 </View>
                 {answers(props.answersList)}
-                {props.isReviewPage && props.explanation &&
+                {(props.isReviewPage && props.explanation?.length > 0) ?
                     <View style={styles.explanationBox}>
                         <Text style={styles.questionText}>
                             <Text style={{fontFamily: fonts.medium}}>{'Explanation:'}</Text> {props.explanation}</Text>
-                    </View>
+                    </View> : ''
                 }
             </View>
 
