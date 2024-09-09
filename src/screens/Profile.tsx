@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Platform, Text, View} from 'react-native';
 
 import {Block, Image, AppText, Button} from '../components/';
@@ -6,26 +6,27 @@ import {useTheme} from '../hooks/';
 import {GoogleSignin} from "@react-native-google-signin/google-signin";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import apiCaller from "../config/apiCaller";
+import {AuthContext} from "../context/AuthContext";
 
 const isAndroid = Platform.OS === 'android';
 
 const Profile = ({navigation}) => {
     const {colors, sizes} = useTheme();
     const [userData, setUserData] = useState();
-
+    const { logout } = useContext(AuthContext);
 
     useEffect(() => {
         apiCaller('profile/get-user-info')
             .then((profileResponse:any) => {
-                //todo context
                 setUserData(profileResponse)
             });
     }, []);
 
-    const logout = async () => {
+    const logoutInternal = async () => {
+        console.log('evet')
         await GoogleSignin.signOut();
         await AsyncStorage.removeItem('authToken');
-        navigation.navigate('LoginScreen');
+        logout();
     }
 
     return (
@@ -42,6 +43,7 @@ const Profile = ({navigation}) => {
                         padding={sizes.sm}
                         paddingBottom={sizes.l}
                         radius={sizes.cardRadius}
+                        source={require('../../assets/img.png')}
                     >
                         <Block flex={0} align="center">
                             <Image
@@ -89,7 +91,7 @@ const Profile = ({navigation}) => {
                     <Button width={100} color={'#666666'} ><Text style={{color:'#ffffff'}}>Get Premium</Text></Button>
                 </View>
                 <View style={{alignItems:'center',justifyContent:'center', marginTop:350}}>
-                    <Button width={100} color={'#666666'}  onPress={() => logout()} ><Text style={{color:'#ffffff'}}>Logout</Text></Button>
+                    <Button width={100} color={'#666666'}  onPress={() => logoutInternal()} ><Text style={{color:'#ffffff'}}>Logout</Text></Button>
                 </View>
             </Block>
         </Block>

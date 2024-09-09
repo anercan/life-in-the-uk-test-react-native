@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, Button, StyleSheet} from 'react-native';
 import {
     GoogleSignin, GoogleSigninButton,
@@ -8,7 +8,7 @@ import {
     statusCodes
 } from '@react-native-google-signin/google-signin';
 import apiCaller from "../config/apiCaller";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import {AuthContext} from "../context/AuthContext";
 
 function getGoogleConfig() {
     return {
@@ -18,6 +18,8 @@ function getGoogleConfig() {
 }
 
 const LoginScreen = ({navigation}) => {
+
+    const { login } = useContext(AuthContext);
 
     useEffect(() => {
         GoogleSignin.configure(getGoogleConfig());
@@ -74,7 +76,7 @@ const LoginScreen = ({navigation}) => {
     const loginWithGoogle = (response: any) => {
         apiCaller('user-management/google-sign-in', 'POST', {token: response?.data?.idToken, appId: 1})
             .then((response) => {
-                AsyncStorage.setItem('authToken', response.jwt).then(() => navigation.navigate('QuizGroupListScreen'));
+                login(response.jwt);
             })
             .catch(() => alert('Login Failed'));
     }

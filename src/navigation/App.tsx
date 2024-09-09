@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Platform, StatusBar} from 'react-native';
 import {useFonts} from 'expo-font';
 import {NavigationContainer} from '@react-navigation/native';
@@ -7,15 +7,25 @@ import {useData, ThemeProvider} from '../hooks';
 import {View, StyleSheet} from 'react-native';
 import Header from "../components/Header";
 import {createStackNavigator} from "@react-navigation/stack";
-import {Profile, QuizGroupListScreen, QuizListScreen, QuizScreen, SolvedQuizListScreen,CompletedQuizScreen} from "../screens";
+import {
+    Profile,
+    QuizGroupListScreen,
+    QuizListScreen,
+    QuizScreen,
+    SolvedQuizListScreen,
+    CompletedQuizScreen,
+    LoginScreen
+} from "../screens";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {AuthContext} from "../context/AuthContext";
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
 export default () => {
     const {theme, setTheme} = useData();
+    const { isLoggedIn } = useContext(AuthContext);
 
     /* set the status bar based on isDark constant */
     useEffect(() => {
@@ -57,7 +67,7 @@ export default () => {
             <NavigationContainer>
                 <View style={styles.container}>
                     <Header/>
-                    <TabMenu/>
+                    {isLoggedIn === true ? <TabMenu/> : <LoginStack/>}
                 </View>
             </NavigationContainer>
         </ThemeProvider>
@@ -66,7 +76,17 @@ export default () => {
 
 const Stack = createStackNavigator();
 
-export const QuizGroupListScreens = () => {
+const LoginStack = ({}) => (
+    <Stack.Navigator>
+        <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{ headerShown: false }}
+        />
+    </Stack.Navigator>
+);
+
+export const QuizGroupListStack = () => {
     return (
         <Stack.Navigator initialRouteName="QuizGroupListScreen" screenOptions={{headerShown: false}}>
             <Stack.Screen name="QuizGroupListScreen" component={QuizGroupListScreen}/>
@@ -77,7 +97,7 @@ export const QuizGroupListScreens = () => {
     );
 };
 
-export const SolvedQuizListScreens = () => {
+export const SolvedQuizListStack = () => {
     return (
         <Stack.Navigator initialRouteName="SolvedQuizListScreen" screenOptions={{headerShown: false}}>
             <Stack.Screen name="SolvedQuizListScreen" component={SolvedQuizListScreen}/>
@@ -87,7 +107,7 @@ export const SolvedQuizListScreens = () => {
     );
 };
 
-export const ProfileScreens = () => {
+export const ProfileStack = () => {
     return (
         <Stack.Navigator initialRouteName="Profile" screenOptions={{headerShown: false}}>
             <Stack.Screen name="Profile" component={Profile}/>
@@ -100,7 +120,7 @@ const Tab = createBottomTabNavigator();
 export const TabMenu = () => {
     return (
         <Tab.Navigator
-            initialRouteName="QuizGroupListScreens"
+            initialRouteName="QuizGroupListStack"
             screenOptions={{
                 headerShown: false,
                 tabBarActiveTintColor: '#ffffff', // White color for active items
@@ -116,8 +136,8 @@ export const TabMenu = () => {
             }}
         >
             <Tab.Screen
-                name="QuizGroupListScreens"
-                component={QuizGroupListScreens}
+                name="QuizGroupListStack"
+                component={QuizGroupListStack}
                 options={{
                     tabBarLabel: 'Home',
                     tabBarIcon: ({color, size}) => (
@@ -127,7 +147,7 @@ export const TabMenu = () => {
             />
             <Tab.Screen
                 name="SolvedQuizListScreens"
-                component={SolvedQuizListScreens}
+                component={SolvedQuizListStack}
                 options={{
                     tabBarLabel: 'My Quizzes',
                     tabBarIcon: ({color, size}) => (
@@ -148,7 +168,7 @@ export const TabMenu = () => {
             />*/}
             <Tab.Screen
                 name="ProfileScreens"
-                component={ProfileScreens}
+                component={ProfileStack}
                 options={{
                     tabBarLabel: 'Profile',
                     tabBarIcon: ({color, size}) => (

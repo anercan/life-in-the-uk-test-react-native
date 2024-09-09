@@ -4,11 +4,7 @@ import {View, Image, StyleSheet, StatusBar, Platform} from 'react-native';
 const Header = () => {
     return (
         <View style={styles.headerContainer}>
-            <StatusBar backgroundColor="#012169" barStyle="light-content"/>
-            <Image
-                source={require('./../../assets/img.png')}
-                style={styles.logo}
-            />
+            <StatusBar backgroundColor="#012169"/>
         </View>
     );
 };
@@ -20,9 +16,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         position: 'relative',
-        marginBottom: 50,
-        borderColor:'#ffffffff',
-        borderWidth:10
+        marginBottom: 60,
     },
     logo: {
         width: 75,  // Width of the logo
