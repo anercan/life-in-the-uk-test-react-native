@@ -1,11 +1,12 @@
 import React from 'react';
-import {View, Text, Dimensions, TouchableOpacity, StyleSheet,} from 'react-native';
+import {View, Text, Dimensions, TouchableOpacity, StyleSheet, StyleProp, ViewStyle,} from 'react-native';
 
 import useTheme from '../hooks/useTheme';
 
 export interface IButton {
     onPress?: () => void;
     buttonText?: string;
+    style?: StyleProp<ViewStyle>;
 }
 
 const {height, width} = Dimensions.get('window');
@@ -14,8 +15,8 @@ const ButtonCard = (props: IButton) => {
 
     const styles = StyleSheet.create({
         card: {
-            height: height / 18,
-            width: width / 1.7,
+            height: height / 19,
+            width: width / 1.9,
             backgroundColor: colors.primary,
             padding: 10,
             borderRadius: 9,
@@ -44,7 +45,7 @@ const ButtonCard = (props: IButton) => {
 
     return (
         <TouchableOpacity onPress={onPress}>
-            <View style={styles.card}>
+            <View style={[styles.card, props.style]}>
                 <Text style={styles.buttonText}>{props.buttonText}</Text>
             </View>
         </TouchableOpacity>

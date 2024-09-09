@@ -15,13 +15,14 @@ const Header = () => {
 
 const styles = StyleSheet.create({
     headerContainer: {
-        height: 55,  // Smaller height for the header to allow for more overflow
+        height: 15,  // Smaller height for the header to allow for more overflow
         backgroundColor: '#012169',
         justifyContent: 'center',
         alignItems: 'center',
         position: 'relative',
-        overflow: 'visible',  // Ensure overflow is visible
         marginBottom: 50,
+        borderColor:'#ffffffff',
+        borderWidth:10
     },
     logo: {
         width: 75,  // Width of the logo
@@ -29,6 +30,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,  // Circle shape
         position: 'absolute',
         top: 25,  // Move the logo up so that half of it is outside the header
+        zIndex:999
     },
 });
 

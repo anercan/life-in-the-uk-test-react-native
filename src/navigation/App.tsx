@@ -7,7 +7,7 @@ import {useData, ThemeProvider} from '../hooks';
 import {View, StyleSheet} from 'react-native';
 import Header from "../components/Header";
 import {createStackNavigator} from "@react-navigation/stack";
-import {LoginScreen, Profile, QuizGroupListScreen, QuizListScreen, QuizScreen, SolvedQuizListScreen,CompletedQuizScreen} from "../screens";
+import {Profile, QuizGroupListScreen, QuizListScreen, QuizScreen, SolvedQuizListScreen,CompletedQuizScreen} from "../screens";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -15,16 +15,15 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 SplashScreen.preventAutoHideAsync();
 
 export default () => {
-    const {isDark, theme, setTheme} = useData();
+    const {theme, setTheme} = useData();
 
     /* set the status bar based on isDark constant */
     useEffect(() => {
         Platform.OS === 'android' && StatusBar.setTranslucent(true);
-        StatusBar.setBarStyle(isDark ? 'light-content' : 'dark-content');
         return () => {
             StatusBar.setBarStyle('default');
         };
-    }, [isDark]);
+    }, []);
 
     // load custom fonts
     const [fontsLoaded] = useFonts({

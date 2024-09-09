@@ -1,22 +1,26 @@
-import React, {useCallback} from 'react';
-import {Platform, Linking} from 'react-native';
-import {Ionicons} from '@expo/vector-icons';
-import {useNavigation} from '@react-navigation/core';
+import React, {useEffect, useState} from 'react';
+import {Platform, Text, View} from 'react-native';
 
-import {Block, Button, Image, AppText} from '../components/';
-import {useData, useTheme} from '../hooks/';
+import {Block, Image, AppText, Button} from '../components/';
+import {useTheme} from '../hooks/';
 import {GoogleSignin} from "@react-native-google-signin/google-signin";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {ButtonCard} from "../components";
+import apiCaller from "../config/apiCaller";
 
 const isAndroid = Platform.OS === 'android';
 
 const Profile = ({navigation}) => {
-    const {user} = useData();
-    const {assets, colors, sizes} = useTheme();
+    const {colors, sizes} = useTheme();
+    const [userData, setUserData] = useState();
 
-    const IMAGE_SIZE = (sizes.width - (sizes.padding + sizes.sm) * 2) / 3;
-    const IMAGE_VERTICAL_SIZE = (sizes.width - (sizes.padding + sizes.sm) * 2) / 2;
+
+    useEffect(() => {
+        apiCaller('profile/get-user-info')
+            .then((profileResponse:any) => {
+                //todo context
+                setUserData(profileResponse)
+            });
+    }, []);
 
     const logout = async () => {
         await GoogleSignin.signOut();
@@ -39,36 +43,13 @@ const Profile = ({navigation}) => {
                         paddingBottom={sizes.l}
                         radius={sizes.cardRadius}
                     >
-                        <Button
-                            row
-                            flex={0}
-                            justify="flex-start"
-                            onPress={() => navigation.goBack()}>
-                            <Image
-                                radius={0}
-                                width={10}
-                                height={18}
-                                color={colors.white}
-                                source={assets.arrow}
-                                transform={[{rotate: '180deg'}]}
-                            />
-                            <AppText p white marginLeft={sizes.s}>
-                                {'profile.title'}
-                            </AppText>
-                        </Button>
                         <Block flex={0} align="center">
                             <Image
                                 width={64}
                                 height={64}
                                 marginBottom={sizes.sm}
-                                source={{uri: user?.avatar}}
+                                source={{uri: userData?.avatarUrl}}
                             />
-                            <AppText h5 center white>
-                                {user?.name}
-                            </AppText>
-                            <AppText p center white>
-                                Sa
-                            </AppText>
                         </Block>
                     </Image>
 
@@ -82,35 +63,34 @@ const Profile = ({navigation}) => {
                         color="rgba(255,255,255,0.2)">
                         <Block
                             row
-                            blur
                             flex={0}
-                            intensity={100}
                             radius={sizes.sm}
+                            color={'#dbdbdb'}
                             overflow="hidden"
-                            tint={colors.blurTint}
                             justify="space-evenly"
                             paddingVertical={sizes.sm}
                             renderToHardwareTextureAndroid>
                             <Block align="center">
-                                <AppText h5>120</AppText>
+                                <AppText h5>{userData?.totalQuizCount}</AppText>
+                                <AppText>Total</AppText>
+                            </Block>
+                            <Block align="center">
+                                <AppText h5>{userData?.userOngoingQuizCount}</AppText>
+                                <AppText>Ongoing</AppText>
+                            </Block>
+                            <Block align="center">
+                                <AppText h5>{userData?.userSolvedQuizCount}</AppText>
                                 <AppText>Solved</AppText>
-                            </Block>
-                            <Block align="center">
-                                <AppText h5>100</AppText>
-                                <AppText>Correct</AppText>
-                            </Block>
-                            <Block align="center">
-                                <AppText h5>20</AppText>
-                                <AppText>Wrong</AppText>
                             </Block>
                         </Block>
                     </Block>
-
-                    <ButtonCard buttonText={'logout'} onPress={() => logout()}>
-
-                    </ButtonCard>
-
                 </Block>
+                <View style={{alignItems:'center',justifyContent:'center',marginTop:50}}>
+                    <Button width={100} color={'#666666'} ><Text style={{color:'#ffffff'}}>Get Premium</Text></Button>
+                </View>
+                <View style={{alignItems:'center',justifyContent:'center', marginTop:350}}>
+                    <Button width={100} color={'#666666'}  onPress={() => logout()} ><Text style={{color:'#ffffff'}}>Logout</Text></Button>
+                </View>
             </Block>
         </Block>
     );
