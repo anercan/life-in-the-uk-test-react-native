@@ -4,7 +4,6 @@ import {Platform, Text, View} from 'react-native';
 import {Block, Image, AppText, Button} from '../components/';
 import {useTheme} from '../hooks/';
 import {GoogleSignin} from "@react-native-google-signin/google-signin";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import apiCaller from "../config/apiCaller";
 import {AuthContext} from "../context/AuthContext";
 
@@ -23,10 +22,8 @@ const Profile = ({navigation}) => {
     }, []);
 
     const logoutInternal = async () => {
-        console.log('evet')
-        await GoogleSignin.signOut();
-        await AsyncStorage.removeItem('authToken');
-        logout();
+        await GoogleSignin.signOut()
+            .then(() => logout());
     }
 
     return (

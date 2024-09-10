@@ -59,6 +59,9 @@ const QuizScreen = ({navigation}) => {
 
     const getQuestionCount = (userQuiz) => {
         if (userQuiz) {
+            if (userQuiz?.state === 'COMPLETED') {
+                return 0;
+            }
             let corrects = userQuiz?.correctQuestionList ? userQuiz?.correctQuestionList?.length : 0;
             let wrongs = userQuiz?.wrongQuestionList ? userQuiz?.wrongQuestionList?.length : 0;
             return corrects + wrongs - 1;

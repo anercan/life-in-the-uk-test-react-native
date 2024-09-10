@@ -7,6 +7,10 @@ export const AuthContext = createContext({});
 export const AuthProvider = ({children}) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+    useEffect(() => {
+        checkLoginStatus().then(r => console.log(r));
+    }, []);
+
     const checkLoginStatus = async () => {
         try {
             const token = await AsyncStorage.getItem('authToken');
@@ -20,18 +24,14 @@ export const AuthProvider = ({children}) => {
         }
     };
 
-    useEffect(() => {
-        checkLoginStatus();
-    }, []);
-
     const login = async (token) => {
-        await AsyncStorage.setItem('authToken', token);
-        setIsLoggedIn(true);
+        AsyncStorage.setItem('authToken', token)
+            .then(() => setIsLoggedIn(true));
     };
 
     const logout = async () => {
-        await AsyncStorage.removeItem('authToken');
-        setIsLoggedIn(false);
+        AsyncStorage.removeItem('authToken')
+            .then(() => setIsLoggedIn(false));
     };
 
     return (
