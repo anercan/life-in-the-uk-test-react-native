@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Animated, Dimensions, StyleSheet, Text, View} from 'react-native';
 import apiCaller from "../config/apiCaller";
 import {useRoute} from "@react-navigation/native";
@@ -6,10 +6,12 @@ import QuizQuestion from "../components/QuizQuestion";
 import * as Progress from 'react-native-progress';
 import {useTheme} from "../hooks";
 import {useSwipe} from "../hooks/useSwipe";
+import {TitleContext} from "../context/TitleContext";
 
 const {height, width} = Dimensions.get('window');
 
 const QuizScreen = ({navigation}) => {
+    const { setTitle } = useContext(TitleContext);
     const {onTouchStart, onTouchEnd} = useSwipe(onSwipeLeft, onSwipeRight, 4);
     const shakeAnimation = new Animated.Value(0);
     const route = useRoute();
@@ -45,6 +47,7 @@ const QuizScreen = ({navigation}) => {
         apiCaller('quiz/get-quiz-with-id/' + quizId)
             .then((quizResponse) => {
                 setQuiz(quizResponse);
+                setTitle(quizResponse?.name);
                 setStatesForQuiz(quizResponse);
                 if (isReviewPage) { // only wrong ones will display at review page
                     let wrongQuestions = getWrongQuestions(quizResponse);
@@ -54,6 +57,9 @@ const QuizScreen = ({navigation}) => {
                     setQuestionList(quizResponse?.questionList);
                     setActiveQuestionState(quizResponse?.questionList, getQuestionCount(quizResponse?.userQuiz));
                 }
+            })
+            .catch(error => {
+                console.log(error);
             });
     }, [quizId, isReviewPage]);
 
@@ -64,7 +70,8 @@ const QuizScreen = ({navigation}) => {
             }
             let corrects = userQuiz?.correctQuestionList ? userQuiz?.correctQuestionList?.length : 0;
             let wrongs = userQuiz?.wrongQuestionList ? userQuiz?.wrongQuestionList?.length : 0;
-            return corrects + wrongs - 1;
+            let questionOrder = (corrects + wrongs) - 1;
+            return questionOrder < 0 ? 0: questionOrder;
         }
         return 0;
     }
@@ -187,9 +194,6 @@ const QuizScreen = ({navigation}) => {
     return (
         <>
             <View onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} style={styles.container}>
-                <View style={{paddingTop: 20}}>
-                    <Text style={styles.questionName}>{quiz?.name}</Text>
-                </View>
                 <View style={styles.progressBar}>
                     <Progress.Bar height={15} color={'#012169'} style={styles.customProgressBar}
                                   progress={activeQuestion?.counter / questionList?.length || 0}

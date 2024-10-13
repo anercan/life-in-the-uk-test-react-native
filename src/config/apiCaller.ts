@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const BASE_URL = 'http://10.0.2.2:8083/quizmarkt-base';
+const BASE_URL = 'http://10.0.2.2:9092/quizmarkt-base';
 
 const apiCaller = async (endpoint, method = 'GET', data = null) => {
     const url = `${BASE_URL}/${endpoint}`;
@@ -29,6 +29,7 @@ const apiCaller = async (endpoint, method = 'GET', data = null) => {
             //console.log(result);
             resolve(result);
         } catch (error) {
+            //todo unathorize gelirse checkLoginStatus() cagrılabilir
             console.error('API Call Error:', error);
             reject(error);
         }

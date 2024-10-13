@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import {useRoute} from "@react-navigation/native";
 import {ButtonCard} from "../components";
 import {useTheme} from "../hooks";
 import * as Progress from 'react-native-progress';
+import {TitleContext} from "../context/TitleContext";
 
 const {height} = Dimensions.get('window');
 
@@ -12,8 +13,10 @@ const CompletedQuizScreen = ({navigation}) => {
     const {quizName, quizSize, correctAnswerSize, quizCardList, quizGroupId, quizId} = route.params;
     const {fonts} = useTheme();
     const [isNextQuizExist, setNextQuizExist] = useState(true);
+    const { setTitle } = useContext(TitleContext);
 
     useEffect(() => {
+        setTitle(quizName)
         let nextQuiz = getNextQuiz();
         setNextQuizExist(nextQuiz !== undefined);
     }, []);
@@ -81,10 +84,7 @@ const CompletedQuizScreen = ({navigation}) => {
     return (
         <>
             <View style={styles.container}>
-                <View style={{paddingTop: 10}}>
-                    <Text style={styles.quizName}>{quizName}</Text>
-                </View>
-                <View style={{paddingTop: height / 30, paddingBottom: height / 10}}>
+                <View style={{paddingTop: height / 25, paddingBottom: height / 10}}>
                     <Text style={styles.text}>Completed!</Text>
                 </View>
 

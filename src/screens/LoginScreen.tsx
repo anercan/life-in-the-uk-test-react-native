@@ -1,5 +1,5 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {View, Text, Button, StyleSheet} from 'react-native';
+import React, {useContext, useEffect} from 'react';
+import {View, StyleSheet} from 'react-native';
 import {
     GoogleSignin, GoogleSigninButton,
     isErrorWithCode,
@@ -83,7 +83,6 @@ const LoginScreen = ({navigation}) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Life In The UK Test</Text>
             <GoogleSigninButton style={styles.googleButton}
                                 size={GoogleSigninButton.Size.Standard}
                                 onPress={() => {
@@ -113,8 +112,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginBottom: 8,
     },
-    googleButton: {},
-
 });
 
 export default LoginScreen;

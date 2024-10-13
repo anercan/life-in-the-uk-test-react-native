@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 
 import {useTheme} from '../hooks/';
 import {Block} from '../components/';
@@ -8,15 +8,18 @@ import {ISolvedQuizCard} from "../constants/types";
 import Tabs from "../components/Tabs";
 import {TouchableOpacity} from "react-native";
 import ListCard from "../components/ListCard";
+import {TitleContext} from "../context/TitleContext";
 
 const SolvedQuizListScreen = ({navigation}) => {
     const [tab, setTab] = useState<number>(0);
     const [quizCards, setQuizCards] = useState([{}]);
     const [filteredQuizCards, setFilteredQuizCards] = useState([{}]);
     const {sizes} = useTheme();
+    const { setTitle } = useContext(TitleContext);
 
     useFocusEffect(
         useCallback(() => {
+            setTitle('My Quizzes');
             apiCaller('user-quiz/get-user-quiz-list')
                 .then(response => {
                     let dataList = response?.userQuizResponseList;
@@ -76,8 +79,7 @@ const SolvedQuizListScreen = ({navigation}) => {
 
     return (
         <Block>
-            <Tabs tabOneText={'Recent'} tabTwoText={'Completed'} selectedTab={tab} hideSearch={true}
-                  title={'My Quizzes'} callback={setTabChange}/>
+            <Tabs tabOneText={'Recent'} tabTwoText={'Completed'} selectedTab={tab} hideSearch={true} callback={setTabChange}/>
 
             {/* quizCards list */}
             <Block

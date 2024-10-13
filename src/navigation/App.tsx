@@ -14,7 +14,7 @@ import {
     QuizScreen,
     SolvedQuizListScreen,
     CompletedQuizScreen,
-    LoginScreen
+    LoginScreen, GetPremiumScreen
 } from "../screens";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -93,6 +93,7 @@ export const QuizGroupListStack = () => {
             <Stack.Screen name="QuizListScreen" component={QuizListScreen}/>
             <Stack.Screen name="QuizScreen" component={QuizScreen}/>
             <Stack.Screen name="CompletedQuizScreen" component={CompletedQuizScreen}/>
+            <Stack.Screen name="GetPremiumScreen" component={GetPremiumScreen}/>
         </Stack.Navigator>
     );
 };
@@ -111,6 +112,7 @@ export const ProfileStack = () => {
     return (
         <Stack.Navigator initialRouteName="Profile" screenOptions={{headerShown: false}}>
             <Stack.Screen name="Profile" component={Profile}/>
+            <Stack.Screen name="GetPremiumScreen" component={GetPremiumScreen}/>
         </Stack.Navigator>
     );
 };

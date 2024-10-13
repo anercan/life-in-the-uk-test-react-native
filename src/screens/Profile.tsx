@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {Platform, Text, View} from 'react-native';
 
 import {Block, Image, AppText, Button} from '../components/';
@@ -6,24 +6,38 @@ import {useTheme} from '../hooks/';
 import {GoogleSignin} from "@react-native-google-signin/google-signin";
 import apiCaller from "../config/apiCaller";
 import {AuthContext} from "../context/AuthContext";
+import {TitleContext} from "../context/TitleContext";
+import {useFocusEffect} from "@react-navigation/native";
 
 const isAndroid = Platform.OS === 'android';
 
 const Profile = ({navigation}) => {
     const {colors, sizes} = useTheme();
     const [userData, setUserData] = useState();
-    const { logout } = useContext(AuthContext);
+    const { login,logout } = useContext(AuthContext);
+    const { setTitle } = useContext(TitleContext);
 
-    useEffect(() => {
-        apiCaller('profile/get-user-info')
-            .then((profileResponse:any) => {
-                setUserData(profileResponse)
-            });
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            setTitle('My Profile');
+            apiCaller('profile/get-user-info')
+                .then((profileResponse:any) => {
+                    setUserData(profileResponse)
+                });
+        }, [])
+    )
 
     const logoutInternal = async () => {
-        await GoogleSignin.signOut()
-            .then(() => logout());
+        logout()
+        GoogleSignin.signOut();
+    }
+
+    const setPremiumInfo = () => {
+        apiCaller('user-management/update-premium-info', 'POST', {})
+            .then((response) => {
+                login(response);
+            })
+            .catch(() => alert('Login Failed'));
     }
 
     return (
@@ -85,9 +99,9 @@ const Profile = ({navigation}) => {
                     </Block>
                 </Block>
                 <View style={{alignItems:'center',justifyContent:'center',marginTop:50}}>
-                    <Button width={100} color={'#666666'} ><Text style={{color:'#ffffff'}}>Get Premium</Text></Button>
+                    <Button width={100} color={'#666666'} onPress={() => setPremiumInfo()} ><Text style={{color:'#ffffff'}}>Get Premium</Text></Button>
                 </View>
-                <View style={{alignItems:'center',justifyContent:'center', marginTop:350}}>
+                <View style={{alignItems:'center',justifyContent:'center', marginTop:300}}>
                     <Button width={100} color={'#666666'}  onPress={() => logoutInternal()} ><Text style={{color:'#ffffff'}}>Logout</Text></Button>
                 </View>
             </Block>

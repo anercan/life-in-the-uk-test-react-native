@@ -30,6 +30,7 @@ export const AuthProvider = ({children}) => {
     };
 
     const logout = async () => {
+        console.log("Logout internal called");
         AsyncStorage.removeItem('authToken')
             .then(() => setIsLoggedIn(false));
     };

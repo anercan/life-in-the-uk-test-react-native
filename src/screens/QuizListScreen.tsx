@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 
 import {useTheme} from '../hooks/';
 import {Block} from '../components/';
@@ -8,6 +8,7 @@ import {IQuizCard} from "../constants/types";
 import Tabs from "../components/Tabs";
 import {TouchableOpacity} from "react-native-gesture-handler";
 import ListCard from "../components/ListCard";
+import {TitleContext} from "../context/TitleContext";
 
 const QuizListScreen = ({navigation}) => {
     const route = useRoute();
@@ -16,13 +17,17 @@ const QuizListScreen = ({navigation}) => {
     const [quizCards, setQuizCards] = useState([{}]);
     const [filteredQuizCards, setFilteredQuizCards] = useState([{}]);
     const {sizes} = useTheme();
+    const { setTitle } = useContext(TitleContext);
+
 
     useFocusEffect(
         useCallback(() => {
+            setTitle(quizGroupTitle);
             apiCaller('quiz/get-quizzes-with-user-data', 'POST', {pageSize: 25, page: 0, quizGroupId: quizGroupId})
                 .then(response => {
                     let dataList = response?.quizResponseWithUserDataList;
                     setQuizCards(dataList);
+                    console.log(dataList)
                     setFilteredQuizCards(dataList?.filter((card: IQuizCard) => card?.state !== 'COMPLETED'));
                 });
         }, [])
@@ -40,19 +45,22 @@ const QuizListScreen = ({navigation}) => {
         setTab(filter);
     };
 
-    const startQuiz = (card: IQuizCard, quizCardList: IQuizCard[]) => {
-        navigation.navigate('QuizScreen', {
-            quizId: card?.id,
-            quizGroupId: quizGroupId,
-            quizCardList: quizCardList,
-            isReviewPage: false
-        })
+    const handleSelect = (card: IQuizCard, quizCardList: IQuizCard[]) => {
+        if(!card.locked) {
+            navigation.navigate('QuizScreen', {
+                quizId: card?.id,
+                quizGroupId: quizGroupId,
+                quizCardList: quizCardList,
+                isReviewPage: false
+            });
+        } else {
+            navigation.navigate('GetPremiumScreen');
+        }
     }
 
     return (
         <Block>
-            <Tabs tabOneText={'Recent'} tabTwoText={'Completed'} title={quizGroupTitle}
-                  callback={setTabChange}/>
+            <Tabs tabOneText={'Recent'} tabTwoText={'Completed'} callback={setTabChange}/>
 
             {/* quizCards list */}
             <Block
@@ -61,9 +69,10 @@ const QuizListScreen = ({navigation}) => {
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{paddingBottom: sizes.l}}>
                 <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
-                    {filteredQuizCards.map((card: IQuizCard, index) => (
-                        <TouchableOpacity key={`card-${card?.id}`} onPress={() => startQuiz(card, filteredQuizCards)}>
+                    {filteredQuizCards.map((card: IQuizCard) => (
+                        <TouchableOpacity key={`card-${card?.id}`} onPress={() => handleSelect(card, filteredQuizCards)}>
                             <ListCard
+                                locked={card.locked}
                                 title={card.name}
                                 rightBottomTitle={'Difficulty:'}
                                 rightBottomDesc={card.attributes?.difficulty}

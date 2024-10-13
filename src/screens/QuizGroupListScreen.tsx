@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 
 import {useTheme} from '../hooks/';
 import {Block} from '../components/';
@@ -8,16 +8,18 @@ import {IQuizGroupCard} from "../constants/types";
 import Tabs from "../components/Tabs";
 import {GroupCard} from "../components";
 import {useFocusEffect} from "@react-navigation/native";
+import {TitleContext} from "../context/TitleContext";
 
 const QuizGroupListScreen = ({navigation}) => {
-
     const [tab, setTab] = useState<number>(0);
     const [filteredQuizGroupCards, setFilteredQuizGroupCards] = useState([{}]);
     const [quizGroupCards, setQuizGroupCards] = useState([{}]);
     const {sizes} = useTheme();
+    const { setTitle } = useContext(TitleContext);
 
     useFocusEffect(
         useCallback(() => {
+            setTitle('Quiz Group Screen');
             apiCaller('quiz-group/get-quiz-groups-with-user-quiz-data', 'POST', {pageSize: 25, page: 0})
                 .then(response => {
                     let dataList = response?.quizGroupWithUserDataList;
@@ -56,8 +58,7 @@ const QuizGroupListScreen = ({navigation}) => {
 
     return (
         <Block>
-            <Tabs tabOneText={'Recent'} tabTwoText={'Completed'} callback={setTabChange}
-                  title={'Quiz Groups'}/>
+            <Tabs tabOneText={'Recent'} tabTwoText={'Completed'} callback={setTabChange}/>
 
             {/* quizGroupCards list */}
             <Block

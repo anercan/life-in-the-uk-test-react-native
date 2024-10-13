@@ -19,6 +19,7 @@ export interface IQuizCard {
   solvedCount?:number;
   attributes?:any;
   state?:string;
+  locked?:boolean | undefined;
 }
 
 export interface IQuizQuestion {

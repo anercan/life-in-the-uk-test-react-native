@@ -5,7 +5,6 @@ import {useTheme} from "../hooks";
 
 export interface IHeader {
     callback: (tabNumber: number) => void;
-    title: String;
     selectedTab?: number;
     tabOneText: string;
     tabTwoText: string;
@@ -47,16 +46,7 @@ const Tabs = (props: IHeader) => {
         },
     });
     return (
-        <View style={{marginTop: 15,marginBottom: 10}}>
-            <View>
-                <Text style={{
-                    fontFamily: fonts.medium,
-                    textAlign: 'center',
-                    fontSize: 20,
-                    color: '#283130'
-                }}> {props.title} </Text>
-            </View>
-
+        <View style={{marginBottom: 10}}>
             <Block
                 row
                 flex={0}

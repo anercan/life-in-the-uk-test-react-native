@@ -3,6 +3,7 @@ import {Dimensions, View, StyleSheet, Text} from 'react-native';
 
 import {IQuizCard} from '../constants/types';
 import {useTheme} from "../hooks";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const {height, width} = Dimensions.get('window');
 
@@ -12,6 +13,7 @@ interface IQuizCard {
     rightTopText2?:string | undefined,
     rightBottomTitle?:string | undefined,
     rightBottomDesc?:string | undefined,
+    locked?:boolean | undefined
 }
 
 const ListCard = (props:IQuizCard) => {
@@ -21,7 +23,7 @@ const ListCard = (props:IQuizCard) => {
         card: {
             height: height / 10,
             width: width / 1.2,
-            backgroundColor: '#ececec',
+            backgroundColor: '#f5f4f4',
             padding: 10,
             borderRadius: 13,
             borderLeftWidth: 8,
@@ -36,8 +38,8 @@ const ListCard = (props:IQuizCard) => {
             elevation: 5,
         },
         title: {
-            color: '#404040',
-            fontSize: 17,
+            color: !props.locked ? '#474747' : '#848383',
+            fontSize: 18,
             fontFamily: fonts.h4,
             fontWeight: 'bold',
             marginTop: 9,
@@ -81,27 +83,28 @@ const ListCard = (props:IQuizCard) => {
         rightBottom: {
             flex: 1,
             alignItems: 'flex-end',
-            marginTop:-7,
+            marginTop:-11,
             marginRight:3
         },
         rightBottomTextOne: {
             fontFamily: 'Roboto',
-            color: '#4c4c4c',
+            color: !props.locked ? '#474747' : '#848383',
             fontSize: 14,
             fontWeight: 'bold'
         },
         rightBottomTextTwo: {
             fontFamily: 'Roboto',
-            color: '#4c4c4c',
+            color: !props.locked ? '#474747' : '#848383',
             fontSize: 14,
         },
         text: {
             fontWeight: 'bold',
-            color: '#5a5a5a',
+            color: !props.locked ? '#474747' : '#848383',
         }
     });
 
     return (
+        !props.locked ?
         <View style={styles.card}>
             <View style={props.rightTopText1 ? styles.orderBox : styles.orderBoxDate}>
                 {props.rightTopText1 !== undefined  ?
@@ -123,6 +126,20 @@ const ListCard = (props:IQuizCard) => {
                     </View>}
             </View>
         </View>
+            :
+            <View style={styles.card}>
+                <View style={props.rightTopText1 ? styles.orderBox : styles.orderBoxDate}>
+                    <MaterialCommunityIcons name="lock" color={'#848383'} size={20}/>
+                </View>
+                <Text style={styles.title}>{props.title}</Text>
+                <View style={styles.infoContainer}>
+                    {(props.rightBottomTitle || this.props.rightBottomDesc) &&
+                        <View style={styles.rightBottom}>
+                            <Text style={styles.rightBottomTextOne}>{props.rightBottomTitle} <Text
+                                style={styles.rightBottomTextTwo}>{props.rightBottomDesc}</Text></Text>
+                        </View>}
+                </View>
+            </View>
     );
 };
 
