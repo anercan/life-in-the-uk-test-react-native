@@ -47,7 +47,7 @@ const ListCard = (props:IQuizCard) => {
         },
         orderBox: {
             height: 35,
-            width: 45,
+            width: props.rightTopText1?.length + props.rightTopText2?.length > 3 ? 50 : 45,
             justifyContent: "center",
             alignItems: 'center',
             borderRadius: 30,
@@ -100,6 +100,11 @@ const ListCard = (props:IQuizCard) => {
         text: {
             fontWeight: 'bold',
             color: !props.locked ? '#474747' : '#848383',
+            letterSpacing: props.rightTopText1?.length + props.rightTopText2?.length > 2 ? 1 : 2
+        },
+        dateText: {
+            fontWeight: 'bold',
+            color: !props.locked ? '#474747' : '#848383',
         }
     });
 
@@ -108,11 +113,11 @@ const ListCard = (props:IQuizCard) => {
         <View style={styles.card}>
             <View style={props.rightTopText1 ? styles.orderBox : styles.orderBoxDate}>
                 {props.rightTopText1 !== undefined  ?
-                    <Text style={[styles.text, {fontSize: 16}]}>{props.rightTopText1} / <Text
-                        style={[styles.text, {fontSize: 13}]}>{props.rightTopText2}</Text>
+                    <Text style={[styles.text, {fontSize: 17}]}>{props.rightTopText1}<Text
+                        style={[styles.text, {fontSize: 13}]}>/{props.rightTopText2}</Text>
                     </Text>
                     :
-                    <Text style={[styles.text, { fontSize: 13 }]}>
+                    <Text style={[styles.dateText, { fontSize: 13 }]}>
                         {props.rightTopText2}
                     </Text>
                 }

@@ -11,35 +11,20 @@ import {useFocusEffect} from "@react-navigation/native";
 import {TitleContext} from "../context/TitleContext";
 
 const QuizGroupListScreen = ({navigation}) => {
-    const [tab, setTab] = useState<number>(0);
-    const [filteredQuizGroupCards, setFilteredQuizGroupCards] = useState([{}]);
     const [quizGroupCards, setQuizGroupCards] = useState([{}]);
     const {sizes} = useTheme();
     const { setTitle } = useContext(TitleContext);
 
     useFocusEffect(
         useCallback(() => {
-            setTitle('Quiz Group Screen');
+            setTitle('Quiz Groups');
             apiCaller('quiz-group/get-quiz-groups-with-user-quiz-data', 'POST', {pageSize: 25, page: 0})
                 .then(response => {
                     let dataList = response?.quizGroupWithUserDataList;
                     setQuizGroupCards(dataList);
-                    setFilteredQuizGroupCards(dataList?.filter((card: IQuizGroupCard) => card?.userSolvedCount !== card?.quizQuantity));
                 });
         }, [])
     )
-
-    useEffect(() => {
-        if (tab === 0) {
-            setFilteredQuizGroupCards(quizGroupCards.filter((card: IQuizGroupCard) => card?.userSolvedCount !== card?.quizQuantity));
-        } else {
-            setFilteredQuizGroupCards(quizGroupCards.filter((card: IQuizGroupCard) => card?.userSolvedCount === card?.quizQuantity));
-        }
-    }, [tab]);
-
-    const setTabChange = (filter: number) => {
-        setTab(filter);
-    };
 
     const onPressQuizGroupCard = (card: IQuizGroupCard) => (
         navigation.navigate('QuizListScreen', {quizGroupId: card.id, quizGroupTitle: card.title})
@@ -54,12 +39,10 @@ const QuizGroupListScreen = ({navigation}) => {
     };
 
     // Chunk the cardData array into rows of 2 cards
-    const rows = chunkArray(filteredQuizGroupCards, 2);
+    const rows = chunkArray(quizGroupCards, 2);
 
     return (
-        <Block>
-            <Tabs tabOneText={'Recent'} tabTwoText={'Completed'} callback={setTabChange}/>
-
+        <Block marginTop={15}>
             {/* quizGroupCards list */}
             <Block
                 scroll

@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, Dimensions, Image} from 'react-native';
+import {useTheme} from "../hooks";
 
 const {width} = Dimensions.get('window');
 
@@ -9,6 +10,8 @@ interface IGroupCard {
 }
 
 const GroupCard = (props: IGroupCard) => {
+
+    const {fonts} = useTheme();
 
     const colors = [
         '#3d2f2f', '#444538',
@@ -38,10 +41,10 @@ const GroupCard = (props: IGroupCard) => {
             elevation: 4,
         },
         cardText: {
+            fontFamily:fonts.medium,
             fontSize: 18,
-            fontWeight: 'medium',
             marginTop: 15,
-            color: '#f3f2f2'
+            color: '#eeeeee'
         },
         orderBox: {
             height: 35,

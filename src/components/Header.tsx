@@ -1,26 +1,40 @@
 import React, {useContext} from 'react';
-import {View, Image, StyleSheet, StatusBar, Platform, Text, Dimensions} from 'react-native';
+import {View, Text, StyleSheet, StatusBar, Dimensions, TouchableOpacity} from 'react-native';
 import {useTheme} from "../hooks";
 import {TitleContext} from "../context/TitleContext";
-import {useRoute} from "@react-navigation/native";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import {useNavigation} from '@react-navigation/native'; 
 
 const {height} = Dimensions.get('window');
 
 const Header = () => {
     const {getTitle} = useContext(TitleContext);
     const {fonts} = useTheme();
+    const navigation = useNavigation();
+
+    const handleBackPress = () => {
+        navigation.goBack();
+    };
 
     return (
         <View style={styles.headerContainer}>
-            <StatusBar backgroundColor="#012169"/>
-            <View>
+            <StatusBar backgroundColor='#012169'/>
+            <View style={styles.row}>
+                {navigation.canGoBack() &&
+                    <TouchableOpacity onPress={handleBackPress} style={styles.backButton}>
+                        <MaterialCommunityIcons name='arrow-left' color={'#e8e8e8'} size={28}/>
+                    </TouchableOpacity>}
                 <Text style={{
                     marginTop: 35,
+                    marginLeft: navigation.canGoBack() ? -60 : 0,
                     fontFamily: fonts.medium,
                     textAlign: 'center',
                     fontSize: 23,
-                    color: '#e3e3e3'
-                }}> {getTitle()} </Text>
+                    color: '#e8e8e8',
+                    flex: 1,
+                }}>
+                    {getTitle()}
+                </Text>
             </View>
         </View>
     );
@@ -28,21 +42,23 @@ const Header = () => {
 
 const styles = StyleSheet.create({
     headerContainer: {
-        height: height / 9,  // Smaller height for the header to allow for more overflow
+        height: height / 9,
         backgroundColor: '#012169',
         justifyContent: 'center',
         alignItems: 'center',
         position: 'relative',
-        marginBottom: 20,
+        marginBottom: 5,
     },
-    logo: {
-        width: 75,  // Width of the logo
-        height: 75, // Height of the logo
-        borderRadius: 50,  // Circle shape
-        position: 'absolute',
-        top: 25,  // Move the logo up so that half of it is outside the header
-        zIndex: 999
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '100%',
     },
+    backButton: {
+        marginTop: 38,
+        padding: 15,
+        zIndex: 1
+    }
 });
 
 export default Header;

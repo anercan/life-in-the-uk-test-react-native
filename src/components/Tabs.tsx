@@ -46,7 +46,7 @@ const Tabs = (props: IHeader) => {
         },
     });
     return (
-        <View style={{marginBottom: 10}}>
+        <View style={{marginBottom: 15}}>
             <Block
                 row
                 flex={0}
