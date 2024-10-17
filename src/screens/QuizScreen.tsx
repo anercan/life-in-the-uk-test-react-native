@@ -59,7 +59,9 @@ const QuizScreen = ({navigation}) => {
                 }
             })
             .catch(error => {
-                console.log(error);
+                if(error.status == 401) {
+                    navigation.navigate('GetPremiumScreen');
+                }
             });
     }, [quizId, isReviewPage]);
 

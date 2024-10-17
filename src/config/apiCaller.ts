@@ -25,11 +25,13 @@ const apiCaller = async (endpoint, method = 'GET', data = null) => {
     return new Promise(async (resolve, reject) => {
         try {
             const response = await fetch(url, options);
-            const result = await response.json();
-            //console.log(result);
-            resolve(result);
+            if (response.ok) {
+                resolve(await response.json());
+            } else {
+                console.error('API Call Error:', response?.status);
+                reject(response);
+            }
         } catch (error) {
-            //todo unathorize gelirse checkLoginStatus() cagrılabilir
             console.error('API Call Error:', error);
             reject(error);
         }

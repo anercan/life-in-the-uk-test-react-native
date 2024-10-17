@@ -12,9 +12,9 @@ import {useFocusEffect} from "@react-navigation/native";
 const isAndroid = Platform.OS === 'android';
 
 const Profile = ({navigation}) => {
-    const {colors, sizes} = useTheme();
+    const {sizes} = useTheme();
     const [userData, setUserData] = useState();
-    const { login,logout } = useContext(AuthContext);
+    const { logout } = useContext(AuthContext);
     const { setTitle } = useContext(TitleContext);
 
     useFocusEffect(
@@ -32,12 +32,8 @@ const Profile = ({navigation}) => {
         GoogleSignin.signOut();
     }
 
-    const setPremiumInfo = () => {
-        apiCaller('user-management/update-premium-info', 'POST', {})
-            .then((response) => {
-                login(response);
-            })
-            .catch(() => alert('Login Failed'));
+    const getPremiumScreen = () => {
+        navigation.navigate('GetPremiumScreen');
     }
 
     return (
@@ -99,7 +95,7 @@ const Profile = ({navigation}) => {
                     </Block>
                 </Block>
                 <View style={{alignItems:'center',justifyContent:'center',marginTop:50}}>
-                    <Button width={100} color={'#666666'} onPress={() => setPremiumInfo()} ><Text style={{color:'#ffffff'}}>Get Premium</Text></Button>
+                    <Button width={100} color={'#666666'} onPress={() => getPremiumScreen()} ><Text style={{color:'#ffffff'}}>Get Premium</Text></Button>
                 </View>
                 <View style={{alignItems:'center',justifyContent:'center', marginTop:300}}>
                     <Button width={100} color={'#666666'}  onPress={() => logoutInternal()} ><Text style={{color:'#ffffff'}}>Logout</Text></Button>

@@ -4,7 +4,6 @@ import {useTheme} from "../hooks";
 
 const {width} = Dimensions.get('window');
 
-
 interface IGroupCard {
     card: any
 }

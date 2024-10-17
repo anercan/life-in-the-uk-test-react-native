@@ -104,6 +104,7 @@ export const SolvedQuizListStack = () => {
             <Stack.Screen name="SolvedQuizListScreen" component={SolvedQuizListScreen}/>
             <Stack.Screen name="QuizScreen" component={QuizScreen}/>
             <Stack.Screen name="CompletedQuizScreen" component={CompletedQuizScreen}/>
+            <Stack.Screen name="GetPremiumScreen" component={GetPremiumScreen}/>
         </Stack.Navigator>
     );
 };

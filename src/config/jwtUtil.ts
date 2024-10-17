@@ -1,9 +1,17 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {jwtDecode} from "jwt-decode";
 
-/*export const getUserDataFromCookie = async () => {
-    let jwt:any = await AsyncStorage.getItem('authToken');
-    const decoded = jwtDecode(jwt);
-    console.log(decoded);
-    return decoded;
-};*/
+const getUserDataFromCookie = async () => {
+    try {
+        let jwt: any = await AsyncStorage.getItem('authToken');
+        return jwtDecode(jwt);
+    } catch (e) {
+        return null;
+    }
+};
+
+export const getUserPremiumType = async () => {
+    let userData: any = await getUserDataFromCookie();
+    return userData?.premiumType;
+}
 
