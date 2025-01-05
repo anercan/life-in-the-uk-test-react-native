@@ -1,0 +1,12 @@
+{
+  "name": "LifeInTheUKClient",
+  "displayName": "Life In the UK 2025 Test",
+  "android": {
+    "package": "com.quizmarkt.lifeintheuk",
+    "versionCode": 10
+  },
+  "ios": {
+    "bundleIdentifier": "com.quizmarkt.lifeintheuk",
+    "buildNumber": "1.0.0"
+  }
+}

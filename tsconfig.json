@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "target": "ES2017", // or later
+    "lib": ["es2017", "dom"], // Ensure 'es2017' or later is included
+    "strict": true,
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true
+  }
+}

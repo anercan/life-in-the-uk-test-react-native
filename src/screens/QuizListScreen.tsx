@@ -1,0 +1,107 @@
+import React, {useCallback, useContext, useEffect, useState} from 'react';
+
+import {useTheme} from '../hooks/';
+import {AppText, Block} from '../components/';
+import {useFocusEffect, useRoute} from "@react-navigation/native";
+import {IQuizCard} from "../constants/types";
+import Tabs from "../components/Tabs";
+import ListCard from "../components/ListCard";
+import {TitleContext} from "../context/TitleContext";
+import useApiCaller from "../hooks/useApiCaller";
+import {BulletList} from 'react-content-loader/native'
+
+const QuizListScreen = ({navigation}) => {
+    const {apiCaller} = useApiCaller();
+    const route = useRoute();
+    const {quizGroupId, quizGroupTitle} = route.params;
+    const [tab, setTab] = useState<number>(0);
+    const [quizCards, setQuizCards] = useState([{}]);
+    const [filteredQuizCards, setFilteredQuizCards] = useState([{}]);
+    const {sizes} = useTheme();
+    const {setTitle} = useContext(TitleContext);
+    const [showLoader, setShowLoader] = useState(true);
+
+    useFocusEffect(
+        useCallback(() => {
+            setTitle(quizGroupTitle);
+
+            apiCaller('quiz/get-quizzes-with-user-data', 'POST', {pageSize: 25, page: 0, quizGroupId: quizGroupId})
+                .then(response => {
+                    setShowLoader(false);
+                    let dataList = response?.quizResponseWithUserDataList;
+                    setQuizCards(dataList);
+                    setFilteredQuizCards(dataList?.filter((card: IQuizCard) => card?.state !== 'COMPLETED'));
+                    if (filteredQuizCards.length == 0) {
+                        setTab(1);
+                    }
+                });
+        }, [])
+    )
+
+    useEffect(() => {
+        if (tab === 0) {
+            setFilteredQuizCards(quizCards.filter((card: IQuizCard) => card?.state !== 'COMPLETED'));
+        } else {
+            setFilteredQuizCards(quizCards.filter((card: IQuizCard) => card?.state === 'COMPLETED'));
+        }
+    }, [tab]);
+
+    const setTabChange = (filter: number) => {
+        setTab(filter);
+    };
+
+    const handleSelect = (card: IQuizCard, quizCardList: IQuizCard[]) => {
+        if (!card.locked) {
+            navigation.navigate('QuizScreen', {
+                quizId: card?.id,
+                quizGroupId: quizGroupId,
+                quizCardList: quizCardList,
+                isReviewPage: false
+            });
+        } else {
+            navigation.navigate('GetPremiumScreen');
+        }
+    }
+
+    return (
+        <Block>
+            <Block flex={1}>
+                <Tabs tabOneText={'Recents'} selectedTab={tab} tabTwoText={'Completed'} callback={setTabChange}/>
+            </Block>
+            <Block flex={9}>
+                {!showLoader ?
+                    <Block
+                        scroll
+                        showsVerticalScrollIndicator={false}
+                        contentContainerStyle={{paddingBottom: sizes.l}}
+                    >
+                        <Block
+                            marginTop={sizes.m}
+                            align={"center"}>
+                            {filteredQuizCards?.length > 0 ?
+                                filteredQuizCards.map((card: IQuizCard) => (
+                                    <ListCard
+                                        locked={card.locked}
+                                        title={card.name}
+                                        rightBottomTitle={'Difficulty: '}
+                                        rightBottomDesc={card.attributes?.difficulty}
+                                        rightTopText1={card.solvedCount + ''}
+                                        rightTopText2={card.questionCount + ''}
+                                        onPress={() => handleSelect(card, filteredQuizCards)}
+                                    />
+                                )) :
+                                <AppText h3 marginTop={sizes.sm} align={'center'}>
+                                    {tab === 1 ? 'There is no completed ' + quizGroupTitle + ' quiz!' : 'Congratulations, you solved them all!'}
+                                </AppText>
+                            }
+                        </Block>
+                    </Block>
+                    :
+                    <BulletList backgroundColor={'#c1c1c1'} height={sizes.base*22} width={sizes.base * 50} />
+                }
+            </Block>
+        </Block>
+    );
+};
+
+export default QuizListScreen;
