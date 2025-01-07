@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, StyleSheet, TouchableOpacity, Text, Image} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Text, Image, Linking} from 'react-native';
 import {
     GoogleSignin,
     isErrorWithCode,
@@ -31,7 +31,7 @@ const LoginScreen = ({navigation}) => {
             flex: 1,
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor:'#295780',
+            backgroundColor: '#295780',
         },
         iconImage: {
             width: sizes.base * 3,
@@ -68,7 +68,7 @@ const LoginScreen = ({navigation}) => {
             fontWeight: 'thin',
         },
         logoContainer: {
-            marginTop:sizes.xxxl,
+            marginTop: sizes.xxxl,
             width: sizes.base * 20, // Adjust size as needed
             height: sizes.base * 20,
             borderRadius: sizes.xxl,
@@ -76,10 +76,10 @@ const LoginScreen = ({navigation}) => {
             borderWidth: 2,
             borderColor: '#cecece',
             shadowColor: '#000',
-            shadowOffset: { width: 0, height: 4 },
+            shadowOffset: {width: 0, height: 4},
             shadowOpacity: 0.2,
             shadowRadius: 5,
-            marginBottom:sizes.base * 14,
+            marginBottom: sizes.base * 14,
             elevation: 5, // Drop shadow on Android
         },
         logo: {
@@ -91,7 +91,7 @@ const LoginScreen = ({navigation}) => {
 
     useEffect(() => {
         GoogleSignin.configure(getGoogleConfig());
-        getVersionInfo().then((r)=>setVersion(r.version+""))
+        getVersionInfo().then((r) => setVersion(r.version + ""))
         //hasPreviousSignIn();
     }, []);
 
@@ -159,8 +159,12 @@ const LoginScreen = ({navigation}) => {
                 </View>
                 <Text style={styles.text}>Login with Google</Text>
             </TouchableOpacity>
-            <View style={{marginTop:sizes.xxl}}>
+            <View style={{marginTop: sizes.xxl}}>
                 <AppText center={true} size={sizes.smallText} gray={true}>team@quizmarkt.com</AppText>
+                <AppText onPress={() => Linking.openURL('https://quizmarkt.com/life-in-the-uk/privacy-policy.html')}
+                         style={{textDecorationLine: 'underline'}} size={sizes.smallText} center={true} gray={true}>
+                    Privacy Policy
+                </AppText>
                 {version != '' && version != 'null' &&
                     <AppText center={true} size={sizes.smallText} gray={true}>{version}</AppText>
                 }

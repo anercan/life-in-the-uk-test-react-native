@@ -98,7 +98,7 @@ const GroupCard = (props: IGroupCard) => {
                 </Text>
             </View>
             <View style={styles.card}>
-                <Text style={styles.cardText}>{props.card?.title?.replaceAll(' ', '\n')}</Text>
+                <Text style={styles.cardText}>{props.card?.title?.replace(/(?<!\bof|is)\s/g, '\n')}</Text>
                 <Image style={{
                     position: 'absolute',
                     top: sizes.m,

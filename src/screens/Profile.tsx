@@ -1,5 +1,5 @@
 import React, {useCallback, useContext, useState} from 'react';
-import {Dimensions, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Dimensions, Linking, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import {AppText, Block, Button, Image} from '../components/';
 import {useTheme} from '../hooks/';
@@ -129,28 +129,28 @@ const Profile = ({navigation}) => {
                     borderRadius: sizes.m,
                     padding: sizes.s,
                     elevation: 4,
-                    marginBottom:sizes.xl,
+                    marginBottom: sizes.xl,
                     alignItems: 'center',
                     justifyContent: 'center',
-                    flexDirection:'column',
-                    flex:1
+                    flexDirection: 'column',
+                    flex: 1
                 }}>
                     <View style={{
                         backgroundColor: '#767474',
                         borderRadius: sizes.sm,
                         elevation: 4,
                         width: sizes.xl,
-                        height:sizes.xl,
+                        height: sizes.xl,
                         alignItems: 'center',
                         justifyContent: 'center',
-                        marginTop:-sizes.m ,
+                        marginTop: -sizes.m,
                     }}>
                         <MaterialCommunityIcons name="lock" color={'#afadad'} size={sizes.m}/>
                     </View>
-                    <View style={{justifyContent:'center'}}>
+                    <View style={{justifyContent: 'center'}}>
                         {premiumFeatures.map(feature => renderFeature(feature))}
                     </View>
-                    <View style={{justifyContent:'flex-end',marginBottom:sizes.s,flex:3,alignItems: 'center'}}>
+                    <View style={{justifyContent: 'flex-end', marginBottom: sizes.s, flex: 3, alignItems: 'center'}}>
                         <Button style={styles.upgradeButton} shadow={true}
                                 height={'60%'}
                                 width={sizes.base * 20} color={'#2c2f3d'}
@@ -164,8 +164,8 @@ const Profile = ({navigation}) => {
     }
 
     function getColor(index) {
-        const colorList = ['#c46666', '#82cdb9', '#deba86', '#8aa57e',
-            '#a97ab8', '#2d606c'];
+        const colorList = ['#c46666', '#82cdb9', '#deba86', '#7ea36d',
+            '#a97ab8', '#a39030', '#4a97aa', '#36458e', '#2d606c', '#2d606c'];
         return colorList[index];
     }
 
@@ -184,20 +184,20 @@ const Profile = ({navigation}) => {
     const getUserStatistics = () => {
         if (userData != null && userData.wrongsMap != null && Object.keys(userData.wrongsMap).length) {
             return (
-                <View style={{flexDirection:'column', marginHorizontal: sizes.s}}>
+                <View style={{flexDirection: 'column', marginHorizontal: sizes.s}}>
                     {incorrectMap?.length > 0 &&
-                        <View style={{flex:1,marginBottom: sizes.m}}>
-                            <AppText h4 align={"center"}>Distribution of Incorrect Answers by Topic</AppText>
+                        <View style={{flex: 1, marginBottom: sizes.m}}>
+                            <AppText h4 align={"center"}>Most Incorrect Answers by Subjects</AppText>
                             <View style={{
                                 borderColor: colors.primary,
                                 paddingVertical: sizes.xs,
                                 borderRadius: sizes.sm,
                                 borderWidth: 1,
-                                alignItems:'center',
+                                alignItems: 'center',
                             }}>
                                 <PieChart
                                     data={incorrectMap}
-                                    width={width/1.1}
+                                    width={width / 1.1}
                                     height={height / 6}
                                     chartConfig={{
                                         color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
@@ -211,34 +211,33 @@ const Profile = ({navigation}) => {
                             </View>
                         </View>
                     }
-                    <View style={{flex:1}}>
-                        <AppText h4 align={"center"} >Activity (Last 3 Months)</AppText>
+                    <View style={{flex: 1}}>
+                        <AppText h4 align={"center"}>Activity (Last 3 Months)</AppText>
                         <View style={{
                             borderColor: colors.primary,
                             paddingVertical: sizes.xs,
                             borderRadius: sizes.sm,
                             borderWidth: 1,
-                            alignItems:'center',
+                            alignItems: 'center',
                         }}>
-                                <ContributionGraph
-                                    values={activityData}
-                                    endDate={new Date()}
-                                    numDays={90}
-                                    accessor={"count"}
-                                    squareSize={height/45}
-                                    width={width / 1.2}
-                                    height={height / 4.3}
-                                    chartConfig={{
-                                        backgroundColor: "#e5e5e5",
-                                        backgroundGradientFrom: "#e5e5e5",
-                                        backgroundGradientTo: "#e5e5e5",
-                                        color: (opacity = 1) => `rgba(30, 110, 180, ${opacity})`,
-                                        labelColor: (opacity = 1) => `rgba(30, 30, 30, ${opacity})`,
-                                    }}
-                                    tooltipDataAttrs={(value) => {
-                                        return {};
-                                    }}
-                                />
+                            <ContributionGraph
+                                values={activityData}
+                                endDate={new Date()}
+                                numDays={90}
+                                accessor={"count"}
+                                squareSize={height / 45}
+                                width={width / 1.2}
+                                height={height / 4.3}
+                                chartConfig={{
+                                    backgroundGradientFrom: "#e5e5e5",
+                                    backgroundGradientTo: "#e5e5e5",
+                                    color: (opacity = 1) => `rgba(30, 110, 180, ${opacity})`,
+                                    labelColor: (opacity = 1) => `rgba(30, 30, 30, ${opacity})`,
+                                }}
+                                tooltipDataAttrs={(value) => {
+                                    return {rx:8,ry:8};
+                                }}
+                            />
                         </View>
                     </View>
                 </View>)
@@ -303,15 +302,18 @@ const Profile = ({navigation}) => {
                                         renderToHardwareTextureAndroid
                                     >
                                         <Block align="center">
-                                            <AppText  size={sizes.h3} semibold={true} p>{userData?.totalQuizCount}</AppText>
+                                            <AppText size={sizes.h3} semibold={true}
+                                                     p>{userData?.totalQuizCount}</AppText>
                                             <AppText>Total</AppText>
                                         </Block>
                                         <Block align="center">
-                                            <AppText size={sizes.h3} semibold={true} p>{userData?.userOngoingQuizCount}</AppText>
+                                            <AppText size={sizes.h3} semibold={true}
+                                                     p>{userData?.userOngoingQuizCount}</AppText>
                                             <AppText>Ongoing</AppText>
                                         </Block>
                                         <Block align="center">
-                                            <AppText  size={sizes.h3} semibold={true} p>{userData?.userSolvedQuizCount}</AppText>
+                                            <AppText size={sizes.h3} semibold={true}
+                                                     p>{userData?.userSolvedQuizCount}</AppText>
                                             <AppText>Solved</AppText>
                                         </Block>
                                     </Block>
@@ -322,34 +324,49 @@ const Profile = ({navigation}) => {
 
                         {isPremiumUser ?
 
-                            <View style={{marginTop:sizes.m}}>
+                            <View style={{marginTop: sizes.m}}>
                                 {getUserStatistics()}
                             </View>
 
                             :
 
-                            <View style={{flex:1,alignItems: 'center',marginTop: sizes.l + sizes.m}}>
-                                    {getSubscribePremiumContent()}
+                            <View style={{flex: 1, alignItems: 'center', marginTop: sizes.l + sizes.m}}>
+                                {getSubscribePremiumContent()}
                             </View>
 
                         }
 
                         {/* Logout Button */}
-                        <View style={{alignItems: 'center', justifyContent: 'flex-end', marginTop:'10%',marginBottom: sizes.xs}}>
-                            <Button radius={sizes.buttonRadius} width={'25%'} color={'#522f2f'} onPress={() => logoutInternal()}>
-                                <View style={{flexDirection: 'row',alignItems:'center'}}>
+                        <View style={{
+                            alignItems: 'center',
+                            justifyContent: 'flex-end',
+                            marginTop: '10%',
+                            marginBottom: sizes.xs
+                        }}>
+                            <Button radius={sizes.buttonRadius} width={'25%'} color={'#522f2f'}
+                                    onPress={() => logoutInternal()}>
+                                <View style={{flexDirection: 'row', alignItems: 'center'}}>
                                     <MaterialCommunityIcons name="logout" color={'#ffffff'} size={sizes.sm}/>
                                     <AppText size={sizes.smallText} color={'#ffffff'}> Logout </AppText>
                                 </View>
                             </Button>
+                            <View style={{justifyContent: 'flex-end'}}>
+                                <AppText
+                                    onPress={() => Linking.openURL('https://quizmarkt.com/life-in-the-uk/privacy-policy.html')}
+                                    style={{textDecorationLine: 'underline'}} size={sizes.smallText} center={true}
+                                    gray={true}>
+                                    Privacy Policy
+                                </AppText>
+                            </View>
                         </View>
+
                     </>
                     :
                     <ProfileLoader/>
                 }
             </View>
         </ScrollView>
-);
+    );
 };
 
 export interface ActivityData {

@@ -97,7 +97,7 @@ const SolvedQuizListScreen = ({navigation}) => {
                             {filteredQuizCards?.length > 0 ?
                                 filteredQuizCards?.map((card: any) => (
                                     <ListCard
-                                        title={card?.quiz?.name + ' - ' + card?.quizGroupName}
+                                        title={card?.quiz?.name}
                                         rightBottomTitle={'Difficulty: '}
                                         rightBottomDesc={card.quiz?.attributes?.difficulty}
                                         rightTopText1={tab === 0 ? card?.correctQuestionList?.length + card?.wrongQuestionList?.length : undefined}
