@@ -58,6 +58,17 @@ const Profile = ({navigation}) => {
         navigation.navigate('GetPremiumScreen');
     }
 
+    function getCount(data) {
+        if (data?.count) {
+            if (data.count == 0) {
+                return 0;
+            } else if (data.count > 0) {
+                return 1;
+            }
+        }
+        return 0;
+    }
+
     const getUserInfo = () => {
         apiCaller('profile/get-user-info')
             .then((profileResponse: any) => {
@@ -81,10 +92,9 @@ const Profile = ({navigation}) => {
                 }
                 if (profileResponse?.activityDataList) {
                     let activityDataList: ActivityData[] = [];
-
                     profileResponse?.activityDataList.forEach((data) => {
                         activityDataList.push({
-                            count: data.count,
+                            count: getCount(data),
                             date: data.date
                         } as ActivityData);
                     });

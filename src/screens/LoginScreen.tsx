@@ -10,12 +10,11 @@ import {AuthContext} from "../context/AuthContext";
 import useApiCaller from "../hooks/useApiCaller";
 import {useTheme} from "../hooks";
 import {AppText} from "../components";
-import {getVersion} from "react-native-device-info";
 import {getVersionInfo} from "../util/CheckVersion";
 
 function getGoogleConfig() {
     return {
-        scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
+        scopes: ['profile', 'email'],
         webClientId: '1017625843116-hhm7slkdg57nrc0vr8t3i5gagacdp40a.apps.googleusercontent.com', // client ID of type WEB for your server. Required to get the `idToken` on the user object, and for offline access.
     };
 }

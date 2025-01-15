@@ -68,7 +68,7 @@ const QuizGroupListScreen = ({navigation}) => {
                         {rows.map((row, rowIndex) => (
                             <View key={rowIndex} style={styles.row}>
                                 {row.map((card,index) => (
-                                    <View style={{marginRight: index == 0 ? sizes.sm : 0}}>
+                                    <View key={row + index} style={{marginRight: index == 0 ? sizes.sm : 0}}>
                                         <GroupCard
                                             card={card}
                                             onPress={() => onPressQuizGroupCard(card)}

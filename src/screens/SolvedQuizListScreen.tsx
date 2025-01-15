@@ -97,6 +97,7 @@ const SolvedQuizListScreen = ({navigation}) => {
                             {filteredQuizCards?.length > 0 ?
                                 filteredQuizCards?.map((card: any) => (
                                     <ListCard
+                                        key={card?.quiz?.name}
                                         title={card?.quiz?.name}
                                         rightBottomTitle={'Difficulty: '}
                                         rightBottomDesc={card.quiz?.attributes?.difficulty}

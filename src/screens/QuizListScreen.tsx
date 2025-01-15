@@ -81,6 +81,7 @@ const QuizListScreen = ({navigation}) => {
                             {filteredQuizCards?.length > 0 ?
                                 filteredQuizCards.map((card: IQuizCard) => (
                                     <ListCard
+                                        key={card.id}
                                         locked={card.locked}
                                         title={card.name}
                                         rightBottomTitle={'Difficulty: '}

@@ -109,7 +109,7 @@ const ListCard = (props:IQuizCard) => {
     });
 
     return (
-        <TouchableOpacity id={props?.id+''} onPress={props.onPress} style={styles.card}>
+        <TouchableOpacity key={props?.id+''} onPress={props.onPress} style={styles.card}>
                 <View style={styles.orderBoxContainer}>
                     <View style={props.rightTopText1 ? styles.orderBox : styles.orderBoxDate}>
                         {props.locked ?
