@@ -16,6 +16,7 @@ function getGoogleConfig() {
     return {
         scopes: ['profile', 'email'],
         webClientId: '1017625843116-hhm7slkdg57nrc0vr8t3i5gagacdp40a.apps.googleusercontent.com', // client ID of type WEB for your server. Required to get the `idToken` on the user object, and for offline access.
+        iosClientId:'1017625843116-3m6e8ejpaneolpur9ahvu0cahhrqi25n.apps.googleusercontent.com'
     };
 }
 
