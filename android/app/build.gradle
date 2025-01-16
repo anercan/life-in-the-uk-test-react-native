@@ -83,7 +83,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         missingDimensionStrategy ('store', 'play') //custom
-        versionCode 24
+        versionCode 27
         versionName "1.0"
     }
     signingConfigs {

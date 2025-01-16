@@ -29,6 +29,7 @@ const SolvedQuizListScreen = ({navigation}) => {
                     setQuizCards(dataList);
                     let onGoingQuizes = dataList?.filter((card: ISolvedQuizCard) => card?.state !== 'COMPLETED');
                     if (onGoingQuizes.length > 0) {
+                        setTab(0);
                         setFilteredQuizCards(onGoingQuizes);
                     } else {
                         setTab(1);

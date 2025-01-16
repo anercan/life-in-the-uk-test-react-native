@@ -20,3 +20,32 @@ android/app/lifeintheuk-prod.keystore
 
 # Ignore Gradle build output directory
 build
+
+.cxx/
+
+# Gradle files
+.gradle/
+build/
+local.properties
+.gradle/*
+
+# Android Studio specific files
+.idea/
+*.iml
+*.iws
+
+# User-specific files
+*.log
+*.swp
+*.swo
+
+# Android specific files
+/captures/
+/target/
+*.apk
+*.ap_
+*.aab
+*.keystore
+
+# NDK and CMake generated files
+.externalNativeBuild/
