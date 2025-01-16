@@ -49,3 +49,27 @@ local.properties
 
 # NDK and CMake generated files
 .externalNativeBuild/
+
+
+# Xcode
+DerivedData/
+*.xcodeproj/project.xcworkspace/
+xcuserdata/
+*.xcuserstate
+
+# CocoaPods
+Pods/
+Podfile.lock
+
+# Carthage
+Carthage/Build/
+
+# Swift Package Manager
+Packages/
+.swiftpm/
+
+# Other
+*.ds_store
+
+# User-specific files
+*.idea/
