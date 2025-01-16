@@ -28,6 +28,7 @@ build
 build/
 local.properties
 .gradle/*
+gradle.properties
 
 # Android Studio specific files
 .idea/
