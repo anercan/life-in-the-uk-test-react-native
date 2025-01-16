@@ -114,7 +114,7 @@ const SolvedQuizListScreen = ({navigation}) => {
                         </Block>
                     </Block>
                     :
-                    <BulletList backgroundColor={'#c1c1c1'} height={sizes.base*22} width={sizes.base * 50} />
+                    <BulletList style={{marginTop:sizes.s,marginLeft:sizes.sm}} backgroundColor={'#c1c1c1'} height={sizes.base*22} width={sizes.base * 50} />
                 }
             </Block>
         </Block>

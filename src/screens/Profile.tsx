@@ -12,19 +12,11 @@ import {isPremium} from "../util/jwtUtil";
 import useApiCaller from "../hooks/useApiCaller";
 import {getShortenText} from "../util/CommonUtil";
 import {ContributionGraph, PieChart} from "react-native-chart-kit";
-import ProfileLoader from "../components/ProfileLoader";
+import {Instagram} from 'react-content-loader/native'
 
 const isAndroid = Platform.OS === 'android';
 
 const {height, width} = Dimensions.get('window');
-
-export interface IncorrectData {
-    name: string,
-    incorrectCount: number,
-    color: string,
-    legendFontColor: string,
-    legendFontSize: number
-}
 
 const Profile = ({navigation}) => {
     const {apiCaller} = useApiCaller();
@@ -104,10 +96,6 @@ const Profile = ({navigation}) => {
     }
 
     const styles = StyleSheet.create({
-        upgradeButton: {
-            borderRadius: sizes.sm,
-            marginTop: sizes.md
-        },
         featureText: {
             marginVertical: sizes.s,
             fontSize: sizes.h3,
@@ -117,65 +105,63 @@ const Profile = ({navigation}) => {
         }
     });
 
-    const premiumFeatures = [
-        'Access to Premium+ questions',
-        'Get detailed statical data',
-        'Compare your test results with others',
-        'Early access to new features',
-        'Activity reports'
-    ];
-
-    const renderFeature = (item: any) => (
-        <>
-            <Text style={styles.featureText}>• {item}</Text>
-        </>
-    );
-
     const getSubscribePremiumContent = () => {
         return (
-            <TouchableOpacity activeOpacity={0.8} onPress={() => getPremiumScreen()}>
-                <View style={{
-                    backgroundColor: '#656464',
-                    borderRadius: sizes.m,
-                    padding: sizes.s,
-                    elevation: 4,
-                    marginBottom: sizes.xl,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexDirection: 'column',
-                    flex: 1
-                }}>
+            <View style={{flexDirection: 'column', marginHorizontal: sizes.s}}>
+                    <View style={{flex: 1, marginBottom: sizes.m}}>
+                        <AppText h4 align={"center"}>Most Incorrect Answers by Subjects</AppText>
+                        <View style={{
+                            borderColor: colors.primary,
+                            paddingVertical: sizes.xs,
+                            borderRadius: sizes.sm,
+                            borderWidth: 1,
+                            alignItems: 'center',
+                        }}>
+                            <Image
+                                resizeMode={"contain"}
+                                width={width / 1.2}
+                                height={height / 6}
+                                source={require('../../assets/pie-chart-blur.png')}
+                            />
+                            <View style={{alignItems: 'center'}}>
+                                <AppText onPress={() => getPremiumScreen()} style={{textDecorationLine: "underline"}}
+                                         size={sizes.text}
+                                         semibold
+                                         color={colors.primary}>View Premium+ Plan</AppText>
+                            </View>
+                        </View>
+                    </View>
+                }
+                <View style={{flex: 1}}>
+                    <AppText h4 align={"center"}>Activity (Last 3 Months)</AppText>
                     <View style={{
-                        backgroundColor: '#767474',
+                        borderColor: colors.primary,
+                        paddingVertical: sizes.xs,
                         borderRadius: sizes.sm,
-                        elevation: 4,
-                        width: sizes.xl,
-                        height: sizes.xl,
+                        borderWidth: 1,
                         alignItems: 'center',
-                        justifyContent: 'center',
-                        marginTop: -sizes.m,
                     }}>
-                        <MaterialCommunityIcons name="lock" color={'#afadad'} size={sizes.m}/>
-                    </View>
-                    <View style={{justifyContent: 'center'}}>
-                        {premiumFeatures.map(feature => renderFeature(feature))}
-                    </View>
-                    <View style={{justifyContent: 'flex-end', marginBottom: sizes.s, flex: 3, alignItems: 'center'}}>
-                        <Button style={styles.upgradeButton} shadow={true}
-                                height={'60%'}
-                                width={sizes.base * 20} color={'#2c2f3d'}
-                                onPress={() => getPremiumScreen()}>
-                            <AppText text color={'#ffffff'}>Get Premium+</AppText>
-                        </Button>
+                        <Image
+                            resizeMode={"contain"}
+                            width={width / 1.2}
+                            height={height / 5}
+                            source={require('../../assets/contribution-blur.png')}
+                        />
+                        <View style={{alignItems: 'center'}}>
+                            <AppText onPress={() => getPremiumScreen()} style={{textDecorationLine: "underline"}}
+                                     size={sizes.text}
+                                     semibold
+                                     color={colors.primary}>View Premium+ Plan</AppText>
+                        </View>
                     </View>
                 </View>
-            </TouchableOpacity>
+            </View>
         );
     }
 
     function getColor(index) {
-        const colorList = ['#c46666', '#82cdb9', '#deba86', '#7ea36d',
-            '#a97ab8', '#a39030', '#4a97aa', '#36458e', '#2d606c', '#2d606c'];
+        const colorList = ['#c26666', '#82cdb9', '#deba86', '#7ea36d',
+            '#a97ab8', '#a7953b', '#529aac', '#45518d', '#2d606c', '#2d606c'];
         return colorList[index];
     }
 
@@ -239,8 +225,8 @@ const Profile = ({navigation}) => {
                                 width={width / 1.2}
                                 height={height / 4.3}
                                 chartConfig={{
-                                    backgroundGradientFrom: "#e5e5e5",
-                                    backgroundGradientTo: "#e5e5e5",
+                                    backgroundGradientFrom: colors.background.toString(),
+                                    backgroundGradientTo: colors.background.toString(),
                                     color: (opacity = 1) => `rgba(30, 110, 180, ${opacity})`,
                                     labelColor: (opacity = 1) => `rgba(30, 30, 30, ${opacity})`,
                                 }}
@@ -340,7 +326,7 @@ const Profile = ({navigation}) => {
 
                             :
 
-                            <View style={{flex: 1, alignItems: 'center', marginTop: sizes.l + sizes.m}}>
+                            <View style={{marginTop: sizes.m}}>
                                 {getSubscribePremiumContent()}
                             </View>
 
@@ -350,17 +336,17 @@ const Profile = ({navigation}) => {
                         <View style={{
                             alignItems: 'center',
                             justifyContent: 'flex-end',
-                            marginTop: '10%',
+                            marginTop: '13%',
                             marginBottom: sizes.xs
                         }}>
-                            <Button radius={sizes.buttonRadius} width={'25%'} color={'#522f2f'}
+                            <Button radius={sizes.s} width={'25%'} color={'#76777d'}
                                     onPress={() => logoutInternal()}>
                                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                                     <MaterialCommunityIcons name="logout" color={'#ffffff'} size={sizes.sm}/>
                                     <AppText size={sizes.smallText} color={'#ffffff'}> Logout </AppText>
                                 </View>
                             </Button>
-                            <View style={{justifyContent: 'flex-end'}}>
+                            <View style={{marginTop: '5%', justifyContent: 'flex-end'}}>
                                 <AppText
                                     onPress={() => Linking.openURL('https://quizmarkt.com/life-in-the-uk/privacy-policy.html')}
                                     style={{textDecorationLine: 'underline'}} size={sizes.smallText} center={true}
@@ -372,7 +358,7 @@ const Profile = ({navigation}) => {
 
                     </>
                     :
-                    <ProfileLoader/>
+                    <Instagram backgroundColor={'#d5d5d5'} style={{marginLeft:sizes.sm}} />
                 }
             </View>
         </ScrollView>
@@ -382,6 +368,15 @@ const Profile = ({navigation}) => {
 export interface ActivityData {
     count: string,
     date: number,
+}
+
+
+export interface IncorrectData {
+    name: string,
+    incorrectCount: number,
+    color: string,
+    legendFontColor: string,
+    legendFontSize: number
 }
 
 export default Profile;

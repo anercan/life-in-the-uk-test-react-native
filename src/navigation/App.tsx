@@ -15,7 +15,7 @@ import {
     LoginScreen, GetPremiumScreen
 } from "../screens";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Feather from "react-native-vector-icons/Feather";
 import {AuthContext} from "../context/AuthContext";
 import {
     finishTransaction, flushFailedPurchasesCachedAsPendingAndroid, initConnection,
@@ -26,8 +26,7 @@ import {
 } from "react-native-iap";
 import useApiCaller from "../hooks/useApiCaller";
 import {checkVersionWithStoresInfo} from "../util/CheckVersion";
-import {THEME} from "../constants/theme";
-//import * as SplashScreen from 'expo-splash-screen';
+import {COLORS, normalizeFont, THEME} from "../constants/theme";
 
 export default () => {
     const {apiCaller} = useApiCaller();
@@ -44,21 +43,13 @@ export default () => {
 
     useEffect(() => {
         console.log("-----------------------AppTsx-----------------------");
-        //SplashScreen.preventAutoHideAsync();
         checkVersionWithStoresInfo();
         Platform.OS === 'android' && StatusBar.setTranslucent(true);
-        //hideSplashScreen();
         subscribeListener();
         return () => {
             StatusBar.setBarStyle('default');
         };
     }, []);
-
-
-    /*const hideSplashScreen = async () => {
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        SplashScreen.hideAsync(); // Hide the splash screen
-    };*/
 
     const subscribeListener = async () => {
         await initConnection().then((r) => {
@@ -96,7 +87,7 @@ export default () => {
     const styles = StyleSheet.create({
         container: {
             flex: 1,
-            backgroundColor: '#e5e5e5',
+            backgroundColor: COLORS.background,
         },
     });
 
@@ -125,7 +116,7 @@ const LoginStack = ({}) => (
 );
 
 function getScreenOptions() {
-    return {headerShown: false, cardStyle: {backgroundColor: '#e5e5e5'}};
+    return {headerShown: false, cardStyle: {backgroundColor: COLORS.background}};
 }
 
 export const QuizGroupListStack = () => {
@@ -164,16 +155,15 @@ const Tab = createBottomTabNavigator();
 
 export const TabMenu = () => {
     return (
+
         <Tab.Navigator
             initialRouteName="QuizGroupListStack"
             screenOptions={{
                 headerShown: false,
                 tabBarActiveTintColor: '#ffffff', // White color for active items
-                tabBarInactiveTintColor: '#d1d1d1', // Light gray color for inactive items
-                tabBarLabelStyle: {
-                    fontSize: 12, // Optional: customize font size
-                }, tabBarStyle: {
-                    backgroundColor: THEME.colors.primary, // Dark blue background
+                //tabBarInactiveTintColor: '#cbcaca', // Light gray color for inactive items
+                tabBarStyle: {
+                    backgroundColor: COLORS.primary, // Dark blue background
                     height: 80, // Custom height
                     paddingBottom: 4, // Optional: add padding for better item placement
                     paddingTop: 1, // Optional: add padding for better item placement
@@ -185,8 +175,13 @@ export const TabMenu = () => {
                 component={QuizGroupListStack}
                 options={{
                     tabBarLabel: 'Home',
+                    tabBarLabelStyle: {
+                        fontSize: normalizeFont(14),
+                        fontFamily: 'OpenSans-Regular',
+                        color: '#d9d8d8', // Optional: customize font size
+                    },
                     tabBarIcon: ({color, size}) => (
-                        <MaterialCommunityIcons name="home" color={color} size={size}/>
+                        <Feather name="home" color={color} size={size}/>
                     ),
                 }}
             />
@@ -194,9 +189,14 @@ export const TabMenu = () => {
                 name="SolvedQuizListScreens"
                 component={SolvedQuizListStack}
                 options={{
+                    tabBarLabelStyle: {
+                        fontSize: normalizeFont(14),
+                        fontFamily: 'OpenSans-Regular',
+                        color: '#d9d8d8', // Optional: customize font size
+                    },
                     tabBarLabel: 'My Quizzes',
                     tabBarIcon: ({color, size}) => (
-                        <MaterialCommunityIcons name="file-document-multiple" color={color} size={size}/>
+                        <Feather name="file-minus" color={color} size={size}/>
                     ),
                 }}
             />
@@ -215,9 +215,14 @@ export const TabMenu = () => {
                 name="ProfileScreens"
                 component={ProfileStack}
                 options={{
+                    tabBarLabelStyle: {
+                        fontSize: normalizeFont(14),
+                        fontFamily: 'OpenSans-Regular',
+                        color: '#d9d8d8', // Optional: customize font size
+                    },
                     tabBarLabel: 'Profile',
                     tabBarIcon: ({color, size}) => (
-                        <MaterialCommunityIcons name="account" color={color} size={size}/>
+                        <Feather name="user" color={color} size={size}/>
                     ),
                 }}
             />

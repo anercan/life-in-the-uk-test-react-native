@@ -80,7 +80,10 @@ const QuizGroupListScreen = ({navigation}) => {
                     </View>
                 </Block>
                 :
-                <BulletList style={{marginTop:sizes.s}} backgroundColor={'#c1c1c1'} height={sizes.base*20} width={sizes.base * 50} />
+                <>
+                    <BulletList style={{marginTop:sizes.l,marginLeft:sizes.sm}} backgroundColor={'#c1c1c1'} height={sizes.base*20} width={sizes.base * 50} />
+                </>
+
             }
         </Block>
     );

@@ -1,7 +1,8 @@
-import {AppText, Block, Button, Input} from "./index";
-import {StyleSheet, Text, View} from "react-native";
+import {AppText, Block} from "./index";
+import {StyleSheet} from "react-native";
 import React, {useEffect, useState} from "react";
 import {useTheme} from "../hooks";
+import {COLORS} from "../constants/theme";
 
 export interface IHeader {
     callback: (tabNumber: number) => void;
@@ -29,11 +30,11 @@ const Tabs = (props: IHeader) => {
         active: {
             borderRadius: sizes.m,
             paddingVertical: sizes.s,
-            backgroundColor: '#c7c7c7',
+            backgroundColor: '#cbcdce',
         },
         passive: {
             paddingVertical: sizes.s,
-            backgroundColor: '#e5e5e5',
+            backgroundColor: COLORS.background,
         },
     });
     return (

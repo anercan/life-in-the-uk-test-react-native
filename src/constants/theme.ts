@@ -128,9 +128,9 @@ export const COLORS: ThemeColors = {
   text: '#444444',
   // base colors
   /** UI color for #primary */
-  primary: '#1b3853',
+  primary: '#084a86',
   /** UI color for #secondary */
-  secondary: '#627594', // '#8392AB',
+  secondary: '#395e90', // '#8392AB',
   /** UI color for #tertiary */
   tertiary: '#E8AE4C',
 
@@ -158,7 +158,7 @@ export const COLORS: ThemeColors = {
 
   /** UI colors for navigation & card */
   card: '#f0f6db',
-  background: '#6ba7e3',
+  background: '#e9e9ec',
 
   /** UI color for shadowColor */
   shadow: '#000000',

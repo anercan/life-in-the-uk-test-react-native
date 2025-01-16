@@ -14,10 +14,10 @@ const GroupCard = (props: IGroupCard) => {
     const {fonts, sizes} = useTheme();
 
     const randomColors = [
-        '#9c6565', '#a7a87c',
-        '#676782', '#7b637b',
-        '#59606a', '#6e9790',
-        '#9a8d71', '#80927f',
+        '#c18b8b', '#5b7087',
+        '#7171aa', '#97839c',
+        '#6e7379', '#7295a1',
+        '#ad9773', '#80927f',
     ];
 
     const getRandomColor = () => {
@@ -105,7 +105,7 @@ const GroupCard = (props: IGroupCard) => {
                     left: 10,
                     zIndex: -2,
                     opacity: 0.1,
-                    transform: [{rotate: '-5deg'}] as any, // Rotate the image
+                    transform: [{rotate: '-3deg'}] as any, // Rotate the image
                     tintColor: 'white'
                 }}
                        source={images[getRandomNumber(Object.keys(images).length)]}>

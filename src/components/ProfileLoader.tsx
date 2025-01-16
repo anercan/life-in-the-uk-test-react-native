@@ -12,7 +12,7 @@ const ProfileLoader = props => {
         <ContentLoader
         speed={1}
         width={sizes.base *50}
-        height={sizes.base *55}
+        height={sizes.base *60}
         viewBox="10 0 450 500"
         backgroundColor="#bfbfc0"
         foregroundColor="#ecebeb"
@@ -21,7 +21,7 @@ const ProfileLoader = props => {
         <Rect x="41" y="3" rx="10" ry="10" width={width / 1.1} height={height / 5}/>
         <Rect x="41" y="200" rx="10" ry="10" width={width / 1.1} height={height / 7}/>
         <Rect x="41" y="350" rx="10" ry="10" width={width / 1.1} height={height / 7}/>
-        <Circle cx="227" cy="80" r="39"/>
+        <Circle cx="245" cy="80" r="39"/>
     </ContentLoader>);
 }
 

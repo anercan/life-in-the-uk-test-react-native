@@ -15,14 +15,13 @@ import {
 } from 'react-native-iap';
 import {AuthContext} from "../context/AuthContext";
 import useApiCaller from "../hooks/useApiCaller";
-import {checkVersionWithStoresInfo} from "../util/CheckVersion";
 
 //const items = Platform.select({android: ['level1'], ios: []});
 let monthlySubProductId = 'level1';
 
 const GetPremiumScreen = ({navigation}) => {
     const {apiCaller} = useApiCaller();
-    const {fonts,sizes} = useTheme();
+    const {fonts,sizes,colors} = useTheme();
     const {login} = useContext(AuthContext);
     const {setTitle} = useContext(TitleContext);
     const [product, setProduct] = useState<any>();
@@ -106,13 +105,13 @@ const GetPremiumScreen = ({navigation}) => {
         card: {
             flex:7,
             width: '80%',
-            backgroundColor: '#3d3c3c',
+            backgroundColor: '#626466',
             borderRadius: sizes.m,
             shadowColor: '#363535',
             shadowOffset: {width: 0, height: 5},
             shadowOpacity: 0.6,
             shadowRadius: 2,
-            elevation: 4,
+            elevation: 10,
             flexDirection:'column',
             marginBottom:'5%'
         },
@@ -125,7 +124,7 @@ const GetPremiumScreen = ({navigation}) => {
             fontFamily: fonts.medium,
         },
         priceText: {
-            fontSize: sizes.h3,
+            fontSize: sizes.h2,
             fontWeight: 'bold',
             marginBottom: sizes.m,
             textAlign: 'center',
@@ -133,7 +132,6 @@ const GetPremiumScreen = ({navigation}) => {
             fontFamily: fonts.medium,
         },
         featureList: {
-            backgroundColor: '#535353',
             borderRadius: sizes.m,
             marginTop: sizes.m,
             paddingTop: sizes.sm,
@@ -150,7 +148,7 @@ const GetPremiumScreen = ({navigation}) => {
             color: '#ffffff'
         },
         upgradeButton: {
-            backgroundColor: buttonDisable ? '#a5aaac' : '#013971',
+            backgroundColor: buttonDisable ? '#a5aaac' : colors.primary,
             paddingVertical: sizes.sm,
             paddingHorizontal: sizes.m,
             borderRadius: sizes.sm,
@@ -179,6 +177,7 @@ const GetPremiumScreen = ({navigation}) => {
         'Compare your test results with others',
         'Early access to new features',
         'Activity reports',
+        'More than 500 questions!',
         'Cancellation available anytime!'
     ];
 
@@ -200,10 +199,13 @@ const GetPremiumScreen = ({navigation}) => {
                     <View style={{justifyContent:'flex-start',flex:1.3}}>
                         <Text style={styles.headerText}>Unlock Premium+</Text>
                     </View>
-                    <View style={{justifyContent:'center',flex:3,backgroundColor:'#535353',borderRadius:sizes.sm,marginHorizontal:sizes.m,paddingVertical:'7%'}}>
-                        {premiumFeatures.map(feature => renderFeature(feature))}
-                    </View>
-                    <View style={{justifyContent:'flex-end',flex:1,marginTop:'5%'}}>
+                    <View style={{elevation:4,justifyContent:'center',flex:3,backgroundColor:'#6e7072',borderRadius:sizes.sm,marginHorizontal:sizes.m,paddingVertical:'7%'}}>
+                        {premiumFeatures.map((feature, index) => (
+                            <View key={index}>
+                                {renderFeature(feature)}
+                            </View>
+                        ))}                    </View>
+                    <View style={{justifyContent:'flex-end',flex:1,marginTop:'10%'}}>
                         <Text style={styles.priceText}>For Just {getProductPrice()} Monthly!</Text>
                     </View>
                 </View>
