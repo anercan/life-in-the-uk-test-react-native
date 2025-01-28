@@ -111,7 +111,7 @@ const Profile = ({navigation}) => {
                             resizeMode={"contain"}
                             width={width / 1.2}
                             height={height / 6}
-                            source={require('../../assets/pie-chart-blur.png')}
+                            source={require('../assets/images/pie-chart-blur.png')}
                         />
                         <View style={{alignItems: 'center'}}>
                             <AppText onPress={() => getPremiumScreen()} style={{textDecorationLine: "underline"}}
@@ -135,7 +135,7 @@ const Profile = ({navigation}) => {
                             resizeMode={"contain"}
                             width={width / 1.2}
                             height={height / 5}
-                            source={require('../../assets/contribution-blur.png')}
+                            source={require('../assets/images/contribution-blur.png')}
                         />
                         <View style={{alignItems: 'center'}}>
                             <AppText onPress={() => getPremiumScreen()} style={{textDecorationLine: "underline"}}
@@ -249,7 +249,7 @@ const Profile = ({navigation}) => {
                                 paddingBottom={sizes.l}
                                 radius={sizes.cardRadius}
                                 shadow={true}
-                                source={require('../../assets/img.png')}
+                                source={require('../assets/images/img.png')}
                             >
                                 {userData?.avatarUrl &&
                                     <Block flex={0} align="center">
