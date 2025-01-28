@@ -6,8 +6,6 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import {useNavigation} from '@react-navigation/native';
 import {getShortenText} from "../util/CommonUtil";
 
-const {height} = Dimensions.get('window');
-
 const Header = () => {
     const {getTitle} = useContext(TitleContext);
     const {fonts,colors,sizes} = useTheme();

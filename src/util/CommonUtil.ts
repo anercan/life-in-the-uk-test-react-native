@@ -5,3 +5,15 @@ export const getShortenText = (title: string | undefined, number: number) => {
     }
     return title;
 }
+
+export const capitalizeWords = (str) => {
+    return str
+        .split(' ')
+        .map((word) => {
+            if (word === 'and' || word === 'And') {
+                return word;
+            }
+            return word.charAt(0).toUpperCase() + word.slice(1)
+        })
+        .join(' ');
+}

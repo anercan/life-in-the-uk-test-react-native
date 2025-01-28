@@ -74,3 +74,5 @@ Packages/
 
 # User-specific files
 *.idea/
+
+GoogleService-Info.plist

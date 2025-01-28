@@ -7,8 +7,6 @@ interface IGroupCard {
     onPress?: () => void;
 }
 
-const {height, width} = Dimensions.get('window');
-
 const GroupCard = (props: IGroupCard) => {
 
     const {fonts, sizes} = useTheme();
@@ -36,9 +34,9 @@ const GroupCard = (props: IGroupCard) => {
             marginTop: -sizes.md,
             marginHorizontal: sizes.s,
             shadowColor: '#363535',
-            shadowOffset: {width: 0, height: 5},
-            shadowOpacity: 0.6,
-            shadowRadius: 2,
+            shadowOffset: {width: 0, height: 3},
+            shadowOpacity: 0.5,
+            shadowRadius: 3,
             elevation: 4,
         },
         cardText: {

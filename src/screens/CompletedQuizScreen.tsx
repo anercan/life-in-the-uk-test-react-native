@@ -53,13 +53,8 @@ const CompletedQuizScreen = ({navigation}) => {
         },
         staticsText: {
             color: '#424141',
-            fontSize: 16,
+            fontSize: sizes.text,
             fontFamily: fonts.thin,
-        },
-        quizName: {
-            color: '#404040',
-            fontSize: 20,
-            fontFamily: fonts.h1,
         },
         scoreBox: {
             justifyContent: 'center',
@@ -68,7 +63,7 @@ const CompletedQuizScreen = ({navigation}) => {
             alignItems: 'center',
             marginBottom: sizes.xl,
             padding: 1,
-            borderRadius: 100,
+            borderRadius: sizes.xxxl,
             margin: sizes.xs,
             backgroundColor: colors.primary,
             shadowColor: '#363535',
@@ -112,6 +107,15 @@ const CompletedQuizScreen = ({navigation}) => {
     }
 
     let totalCompletedUserQuizzes = completedStatics?.equalCount + completedStatics?.worseCount + completedStatics?.betterCount;
+
+    function getPercentage() {
+        const total = completedStatics?.equalCount + completedStatics?.worseCount + completedStatics?.betterCount;
+        if (total === 0 || !total) return '...';
+
+        const betterOrEqual = completedStatics?.betterCount + completedStatics?.equalCount;
+        return (betterOrEqual / total) * 100 + '%';
+    }
+
     return (
         <ScrollView>
             <View style={styles.container}>
@@ -138,9 +142,9 @@ const CompletedQuizScreen = ({navigation}) => {
                 </View>
                 {totalCompletedUserQuizzes > 1 &&
                     <View style={{paddingHorizontal:25,paddingBottom: height / 25}}>
-                        <Text style={styles.staticsText}>Your score is equal to or better
-                            than {completedStatics?.betterCount + completedStatics?.equalCount * 100 / totalCompletedUserQuizzes}% of people.
-                    </Text>
+                        <Text style={styles.staticsText}>
+                            Your score is better than {getPercentage()} of people.
+                        </Text>
                 </View>
                 }
                 {correctAnswerSize !== quizSize &&

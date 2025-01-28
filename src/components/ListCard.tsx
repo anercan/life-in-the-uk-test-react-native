@@ -1,5 +1,5 @@
-import React from 'react';
-import {Dimensions, View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import React, {useMemo} from 'react';
+import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 
 import {IQuizCard} from '../constants/types';
 import {useTheme} from "../hooks";
@@ -19,7 +19,7 @@ interface IQuizCard {
 const ListCard = (props:IQuizCard) => {
     const {fonts, colors, sizes} = useTheme();
 
-    const styles = StyleSheet.create({
+    const styles = useMemo(() => StyleSheet.create({
         card: {
             height: sizes.base * 10.6,
             width: '87%',
@@ -106,7 +106,7 @@ const ListCard = (props:IQuizCard) => {
             fontWeight: 'bold',
             color: !props.locked ? '#525252' : '#848383',
         }
-    });
+    }), []);
 
     return (
         <TouchableOpacity key={props?.id+''} onPress={props.onPress} style={styles.card}>

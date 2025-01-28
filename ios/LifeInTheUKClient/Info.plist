@@ -20,13 +20,23 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.1017625843116-3m6e8ejpaneolpur9ahvu0cahhrqi25n</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-	  <!-- Do not change NSAllowsArbitraryLoads to true, or you will risk app rejection! -->
 		<key>NSAllowsArbitraryLoads</key>
 		<false/>
 		<key>NSAllowsLocalNetworking</key>
@@ -48,5 +58,26 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+
+	<key>UIAppFonts</key>
+    	<array>
+    		<string>AntDesign.ttf</string>
+    		<string>Entypo.ttf</string>
+    		<string>EvilIcons.ttf</string>
+    		<string>Feather.ttf</string>
+    		<string>FontAwesome.ttf</string>
+    		<string>FontAwesome5_Brands.ttf</string>
+    		<string>FontAwesome5_Regular.ttf</string>
+    		<string>FontAwesome5_Solid.ttf</string>
+    		<string>Fontisto.ttf</string>
+    		<string>Foundation.ttf</string>
+    		<string>Ionicons.ttf</string>
+    		<string>MaterialCommunityIcons.ttf</string>
+    		<string>MaterialIcons.ttf</string>
+    		<string>Octicons.ttf</string>
+    		<string>SimpleLineIcons.ttf</string>
+    		<string>Zocial.ttf</string>
+    	</array>
+
 </dict>
 </plist>

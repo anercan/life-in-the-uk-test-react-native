@@ -1,8 +1,7 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
-import {Dimensions, FlatList, Platform, ScrollView, StatusBar, Text, TouchableOpacity} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {Platform, ScrollView, Text, TouchableOpacity} from 'react-native';
 import {View, StyleSheet} from 'react-native';
 import useTheme from "../hooks/useTheme";
-import {useFocusEffect} from "@react-navigation/native";
 import {TitleContext} from "../context/TitleContext";
 import {
     finishTransaction,
@@ -130,13 +129,6 @@ const GetPremiumScreen = ({navigation}) => {
             textAlign: 'center',
             color: '#e2e2e2',
             fontFamily: fonts.medium,
-        },
-        featureList: {
-            borderRadius: sizes.m,
-            marginTop: sizes.m,
-            paddingTop: sizes.sm,
-            marginHorizontal: sizes.xs,
-            marginBottom: sizes.base * 9
         },
         featureItem: {
             marginVertical: sizes.s,

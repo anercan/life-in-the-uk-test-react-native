@@ -28,11 +28,16 @@ const QuizListScreen = ({navigation}) => {
             apiCaller('quiz/get-quizzes-with-user-data', 'POST', {pageSize: 25, page: 0, quizGroupId: quizGroupId})
                 .then(response => {
                     setShowLoader(false);
-                    let dataList = response?.quizResponseWithUserDataList;
-                    setQuizCards(dataList);
-                    setFilteredQuizCards(dataList?.filter((card: IQuizCard) => card?.state !== 'COMPLETED'));
-                    if (filteredQuizCards.length == 0) {
+                    let quizList = response?.quizResponseWithUserDataList;
+                    setQuizCards(quizList);
+                    let onGoingQuizzes = quizList?.filter((card: IQuizCard) => card?.state !== 'COMPLETED');
+                    let completedQuizzes = quizList?.filter((card: IQuizCard) => card?.state == 'COMPLETED');
+                    if (onGoingQuizzes.length == 0) {
+                        setFilteredQuizCards(completedQuizzes)
                         setTab(1);
+                    } else {
+                        setFilteredQuizCards(onGoingQuizzes);
+                        setTab(0)
                     }
                 });
         }, [])

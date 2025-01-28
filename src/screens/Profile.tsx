@@ -10,7 +10,7 @@ import {useFocusEffect} from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import {isPremium} from "../util/jwtUtil";
 import useApiCaller from "../hooks/useApiCaller";
-import {getShortenText} from "../util/CommonUtil";
+import {capitalizeWords, getShortenText} from "../util/CommonUtil";
 import {ContributionGraph, PieChart} from "react-native-chart-kit";
 import {Instagram} from 'react-content-loader/native'
 
@@ -23,8 +23,8 @@ const Profile = ({navigation}) => {
     const {fonts, sizes, colors} = useTheme();
     const [userData, setUserData] = useState();
     const [isPremiumUser, setIsPremiumUser] = useState(false);
-    const [incorrectMap, setIncorrectMap] = useState<IncorrectData[]>([]);  // Array of IncorrectData objects
-    const [activityData, setActivityData] = useState<ActivityData[]>([]);  // Array of IncorrectData objects
+    const [incorrectMap, setIncorrectMap] = useState<IncorrectData[]>([]);
+    const [activityData, setActivityData] = useState<ActivityData[]>([]);
     const {logout} = useContext(AuthContext);
     const {setTitle} = useContext(TitleContext);
     const [showLoader, setShowLoader] = useState(true);
@@ -95,42 +95,32 @@ const Profile = ({navigation}) => {
             });
     }
 
-    const styles = StyleSheet.create({
-        featureText: {
-            marginVertical: sizes.s,
-            fontSize: sizes.h3,
-            textAlign: 'center',
-            fontFamily: fonts.thin,
-            color: '#ffffff'
-        }
-    });
-
     const getSubscribePremiumContent = () => {
         return (
             <View style={{flexDirection: 'column', marginHorizontal: sizes.s}}>
-                    <View style={{flex: 1, marginBottom: sizes.m}}>
-                        <AppText h4 align={"center"}>Most Incorrect Answers by Subjects</AppText>
-                        <View style={{
-                            borderColor: colors.primary,
-                            paddingVertical: sizes.xs,
-                            borderRadius: sizes.sm,
-                            borderWidth: 1,
-                            alignItems: 'center',
-                        }}>
-                            <Image
-                                resizeMode={"contain"}
-                                width={width / 1.2}
-                                height={height / 6}
-                                source={require('../../assets/pie-chart-blur.png')}
-                            />
-                            <View style={{alignItems: 'center'}}>
-                                <AppText onPress={() => getPremiumScreen()} style={{textDecorationLine: "underline"}}
-                                         size={sizes.text}
-                                         semibold
-                                         color={colors.primary}>View Premium+ Plan</AppText>
-                            </View>
+                <View style={{flex: 1, marginBottom: sizes.m}}>
+                    <AppText h4 align={"center"}>Most Incorrect Answers by Subjects</AppText>
+                    <View style={{
+                        borderColor: colors.primary,
+                        paddingVertical: sizes.xs,
+                        borderRadius: sizes.sm,
+                        borderWidth: 1,
+                        alignItems: 'center',
+                    }}>
+                        <Image
+                            resizeMode={"contain"}
+                            width={width / 1.2}
+                            height={height / 6}
+                            source={require('../../assets/pie-chart-blur.png')}
+                        />
+                        <View style={{alignItems: 'center'}}>
+                            <AppText onPress={() => getPremiumScreen()} style={{textDecorationLine: "underline"}}
+                                     size={sizes.text}
+                                     semibold
+                                     color={colors.primary}>View Premium+ Plan</AppText>
                         </View>
                     </View>
+                </View>
                 }
                 <View style={{flex: 1}}>
                     <AppText h4 align={"center"}>Activity (Last 3 Months)</AppText>
@@ -165,16 +155,66 @@ const Profile = ({navigation}) => {
         return colorList[index];
     }
 
-    function capitalizeWords(str) {
-        return str
-            .split(' ') // Split the string into an array of words
-            .map((word) => {
-                if (word === 'and' || word === 'And') {
-                    return word;
-                }
-                return word.charAt(0).toUpperCase() + word.slice(1)
-            }) // Capitalize each word
-            .join(' '); // Join the words back into a single string
+    const getTopicStatistics = () => {
+        return (
+            <View style={{flex: 1, marginBottom: sizes.m}}>
+                <AppText h4 align={"center"}>Most Incorrect Answers by Subjects</AppText>
+                <View style={{
+                    borderColor: colors.primary,
+                    paddingVertical: sizes.xs,
+                    borderRadius: sizes.sm,
+                    borderWidth: 1,
+                    alignItems: 'center',
+                }}>
+                    <PieChart
+                        data={incorrectMap}
+                        width={width / 1.1}
+                        height={height / 6}
+                        chartConfig={{
+                            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                        }}
+                        accessor={"incorrectCount"}
+                        backgroundColor={"transparent"}
+                        center={[sizes.xl, -sizes.xs]}
+                        absolute
+                        paddingLeft={-sizes.xxl + ""}
+                    />
+                </View>
+            </View>);
+    }
+
+    const getActivityData = () => {
+        return (
+            <View style={{flex: 1}}>
+                <AppText h4 align={"center"}>Activity (Last 3 Months)</AppText>
+                <View style={{
+                    borderColor: colors.primary,
+                    paddingVertical: sizes.xs,
+                    borderRadius: sizes.sm,
+                    borderWidth: 1,
+                    alignItems: 'center',
+                }}>
+                    <ContributionGraph
+                        values={activityData}
+                        endDate={new Date()}
+                        numDays={90}
+                        accessor={"count"}
+                        squareSize={height / 45}
+                        width={width / 1.2}
+                        height={height / 4.3}
+                        chartConfig={{
+                            backgroundGradientFrom: colors.background.toString(),
+                            backgroundGradientTo: colors.background.toString(),
+                            color: (opacity = 1) => `rgba(30, 110, 180, ${opacity})`,
+                            labelColor: (opacity = 1) => `rgba(30, 30, 30, ${opacity})`,
+                        }}
+                        tooltipDataAttrs={(value) => {
+                            return {rx: 8, ry: 8};
+                        }}
+                    />
+                </View>
+            </View>
+        );
     }
 
     const getUserStatistics = () => {
@@ -182,60 +222,9 @@ const Profile = ({navigation}) => {
             return (
                 <View style={{flexDirection: 'column', marginHorizontal: sizes.s}}>
                     {incorrectMap?.length > 0 &&
-                        <View style={{flex: 1, marginBottom: sizes.m}}>
-                            <AppText h4 align={"center"}>Most Incorrect Answers by Subjects</AppText>
-                            <View style={{
-                                borderColor: colors.primary,
-                                paddingVertical: sizes.xs,
-                                borderRadius: sizes.sm,
-                                borderWidth: 1,
-                                alignItems: 'center',
-                            }}>
-                                <PieChart
-                                    data={incorrectMap}
-                                    width={width / 1.1}
-                                    height={height / 6}
-                                    chartConfig={{
-                                        color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                                    }}
-                                    accessor={"incorrectCount"}
-                                    backgroundColor={"transparent"}
-                                    center={[sizes.xl, -sizes.xs]}
-                                    absolute
-                                    paddingLeft={-sizes.xxl + ""}
-                                />
-                            </View>
-                        </View>
+                        getTopicStatistics()
                     }
-                    <View style={{flex: 1}}>
-                        <AppText h4 align={"center"}>Activity (Last 3 Months)</AppText>
-                        <View style={{
-                            borderColor: colors.primary,
-                            paddingVertical: sizes.xs,
-                            borderRadius: sizes.sm,
-                            borderWidth: 1,
-                            alignItems: 'center',
-                        }}>
-                            <ContributionGraph
-                                values={activityData}
-                                endDate={new Date()}
-                                numDays={90}
-                                accessor={"count"}
-                                squareSize={height / 45}
-                                width={width / 1.2}
-                                height={height / 4.3}
-                                chartConfig={{
-                                    backgroundGradientFrom: colors.background.toString(),
-                                    backgroundGradientTo: colors.background.toString(),
-                                    color: (opacity = 1) => `rgba(30, 110, 180, ${opacity})`,
-                                    labelColor: (opacity = 1) => `rgba(30, 30, 30, ${opacity})`,
-                                }}
-                                tooltipDataAttrs={(value) => {
-                                    return {rx:8,ry:8};
-                                }}
-                            />
-                        </View>
-                    </View>
+                    {getActivityData()}
                 </View>)
         }
     }
@@ -319,27 +308,23 @@ const Profile = ({navigation}) => {
                         </View>
 
                         {isPremiumUser ?
-
                             <View style={{marginTop: sizes.m}}>
                                 {getUserStatistics()}
                             </View>
-
                             :
-
                             <View style={{marginTop: sizes.m}}>
                                 {getSubscribePremiumContent()}
                             </View>
-
                         }
 
                         {/* Logout Button */}
                         <View style={{
                             alignItems: 'center',
                             justifyContent: 'flex-end',
-                            marginTop: '13%',
-                            marginBottom: sizes.xs
+                            marginTop: '15%',
+                            marginBottom: sizes.s
                         }}>
-                            <Button radius={sizes.s} width={'25%'} color={'#76777d'}
+                            <Button radius={sizes.s} width={'35%'} color={'#76777d'}
                                     onPress={() => logoutInternal()}>
                                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                                     <MaterialCommunityIcons name="logout" color={'#ffffff'} size={sizes.sm}/>
@@ -358,7 +343,7 @@ const Profile = ({navigation}) => {
 
                     </>
                     :
-                    <Instagram backgroundColor={'#d5d5d5'} style={{marginLeft:sizes.sm}} />
+                    <Instagram backgroundColor={'#d5d5d5'} style={{marginLeft: sizes.sm}}/>
                 }
             </View>
         </ScrollView>
@@ -369,7 +354,6 @@ export interface ActivityData {
     count: string,
     date: number,
 }
-
 
 export interface IncorrectData {
     name: string,

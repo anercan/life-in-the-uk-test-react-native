@@ -18,7 +18,7 @@ const ButtonCard = (props: IButton) => {
             borderRadius: sizes.sm,
             paddingHorizontal:sizes.m,
             paddingVertical:sizes.sm,
-            width:sizes.xxxxl,
+            width: sizes.base * 20,
             margin: sizes.s,
             shadowColor: '#363535',
             shadowOffset: {width: 0, height: 1},
