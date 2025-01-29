@@ -11,7 +11,7 @@ import useApiCaller from "../hooks/useApiCaller";
 import {BulletList} from 'react-content-loader/native'
 
 const QuizListScreen = ({navigation}) => {
-    const {apiCaller} = useApiCaller();
+    const {apiCaller, showLoader} = useApiCaller();
     const route = useRoute();
     const {quizGroupId, quizGroupTitle} = route.params;
     const [tab, setTab] = useState<number>(0);
@@ -19,7 +19,6 @@ const QuizListScreen = ({navigation}) => {
     const [filteredQuizCards, setFilteredQuizCards] = useState([{}]);
     const {sizes} = useTheme();
     const {setTitle} = useContext(TitleContext);
-    const [showLoader, setShowLoader] = useState(true);
 
     useFocusEffect(
         useCallback(() => {
@@ -27,7 +26,6 @@ const QuizListScreen = ({navigation}) => {
 
             apiCaller('quiz/get-quizzes-with-user-data', 'POST', {pageSize: 25, page: 0, quizGroupId: quizGroupId})
                 .then(response => {
-                    setShowLoader(false);
                     let quizList = response?.quizResponseWithUserDataList;
                     setQuizCards(quizList);
                     let onGoingQuizzes = quizList?.filter((card: IQuizCard) => card?.state !== 'COMPLETED');
@@ -103,7 +101,7 @@ const QuizListScreen = ({navigation}) => {
                         </Block>
                     </Block>
                     :
-                    <BulletList backgroundColor={'#c1c1c1'} height={sizes.base*22} width={sizes.base * 50} />
+                    <BulletList backgroundColor={'#c1c1c1'} height={sizes.base * 22} width={sizes.base * 50}/>
                 }
             </Block>
         </Block>

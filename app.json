@@ -1,6 +1,6 @@
 {
   "name": "LifeInTheUKClient",
-  "displayName": "Life In the UK 2025 Test",
+  "displayName": "Life in the UK Test 2025",
   "android": {
     "package": "com.quizmarkt.lifeintheuk",
     "versionCode": 10

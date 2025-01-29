@@ -11,20 +11,18 @@ import useApiCaller from "../hooks/useApiCaller";
 import {BulletList} from 'react-content-loader/native'
 
 const SolvedQuizListScreen = ({navigation}) => {
-    const {apiCaller} = useApiCaller();
+    const {apiCaller, loading} = useApiCaller();
     const [tab, setTab] = useState<number>(0);
     const [quizCards, setQuizCards] = useState([{}]);
     const [filteredQuizCards, setFilteredQuizCards] = useState([{}]);
     const {sizes} = useTheme();
     const {setTitle} = useContext(TitleContext);
-    const [showLoader, setShowLoader] = useState(true);
 
     useFocusEffect(
         useCallback(() => {
             setTitle('My Quizzes');
             apiCaller('user-quiz/get-user-quiz-list')
                 .then(response => {
-                    setShowLoader(false);
                     let dataList = response?.userQuizResponseList;
                     setQuizCards(dataList);
                     let onGoingQuizes = dataList?.filter((card: ISolvedQuizCard) => card?.state !== 'COMPLETED');
@@ -86,7 +84,7 @@ const SolvedQuizListScreen = ({navigation}) => {
                 <Tabs tabOneText={'Recents'} selectedTab={tab} tabTwoText={'Completed'} callback={setTabChange}/>
             </Block>
             <Block flex={9}>
-                {!showLoader ?
+                {!loading ?
                     <Block
                         scroll
                         showsVerticalScrollIndicator={false}
@@ -115,7 +113,8 @@ const SolvedQuizListScreen = ({navigation}) => {
                         </Block>
                     </Block>
                     :
-                    <BulletList style={{marginTop:sizes.s,marginLeft:sizes.sm}} backgroundColor={'#c1c1c1'} height={sizes.base*22} width={sizes.base * 50} />
+                    <BulletList style={{marginTop: sizes.s, marginLeft: sizes.sm}} backgroundColor={'#c1c1c1'}
+                                height={sizes.base * 22} width={sizes.base * 50}/>
                 }
             </Block>
         </Block>

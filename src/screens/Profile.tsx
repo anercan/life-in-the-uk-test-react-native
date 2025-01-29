@@ -1,5 +1,12 @@
 import React, {useCallback, useContext, useState} from 'react';
-import {Dimensions, Linking, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+    Dimensions,
+    Linking,
+    Platform,
+    ScrollView,
+    TouchableOpacity,
+    View
+} from 'react-native';
 
 import {AppText, Block, Button, Image} from '../components/';
 import {useTheme} from '../hooks/';
@@ -19,7 +26,7 @@ const isAndroid = Platform.OS === 'android';
 const {height, width} = Dimensions.get('window');
 
 const Profile = ({navigation}) => {
-    const {apiCaller} = useApiCaller();
+    const {apiCaller, showLoader} = useApiCaller();
     const {fonts, sizes, colors} = useTheme();
     const [userData, setUserData] = useState();
     const [isPremiumUser, setIsPremiumUser] = useState(false);
@@ -27,7 +34,6 @@ const Profile = ({navigation}) => {
     const [activityData, setActivityData] = useState<ActivityData[]>([]);
     const {logout} = useContext(AuthContext);
     const {setTitle} = useContext(TitleContext);
-    const [showLoader, setShowLoader] = useState(true);
 
     useFocusEffect(
         useCallback(() => {
@@ -64,7 +70,6 @@ const Profile = ({navigation}) => {
     const getUserInfo = () => {
         apiCaller('profile/get-user-info')
             .then((profileResponse: any) => {
-                setShowLoader(false);
                 setUserData(profileResponse);
                 if (profileResponse?.wrongsMap) {
                     let incorrectDataList: IncorrectData[] = [];
@@ -107,12 +112,16 @@ const Profile = ({navigation}) => {
                         borderWidth: 1,
                         alignItems: 'center',
                     }}>
-                        <Image
-                            resizeMode={"contain"}
-                            width={width / 1.2}
-                            height={height / 6}
-                            source={require('../assets/images/pie-chart-blur.png')}
-                        />
+
+                        <TouchableOpacity onPress={() => getPremiumScreen()}>
+                            <Image
+                                resizeMode={"contain"}
+                                width={width / 1.2}
+                                height={height / 6}
+                                source={require('../assets/images/pie-chart-blur.png')}
+                            />
+                        </TouchableOpacity>
+
                         <View style={{alignItems: 'center'}}>
                             <AppText onPress={() => getPremiumScreen()} style={{textDecorationLine: "underline"}}
                                      size={sizes.text}
@@ -131,12 +140,14 @@ const Profile = ({navigation}) => {
                         borderWidth: 1,
                         alignItems: 'center',
                     }}>
-                        <Image
-                            resizeMode={"contain"}
-                            width={width / 1.2}
-                            height={height / 5}
-                            source={require('../assets/images/contribution-blur.png')}
-                        />
+                        <TouchableOpacity onPress={() => getPremiumScreen()}>
+                            <Image
+                                resizeMode={"contain"}
+                                width={width / 1.2}
+                                height={height / 5}
+                                source={require('../assets/images/contribution-blur.png')}
+                            />
+                        </TouchableOpacity>
                         <View style={{alignItems: 'center'}}>
                             <AppText onPress={() => getPremiumScreen()} style={{textDecorationLine: "underline"}}
                                      size={sizes.text}
