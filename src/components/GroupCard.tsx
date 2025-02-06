@@ -48,7 +48,7 @@ const GroupCard = (props: IGroupCard) => {
         orderBox: {
             zIndex: 1,
             height: sizes.l,
-            width: sizes.l,
+            width: getCountLength() > 3 ? sizes.xl : sizes.l,
             justifyContent: "center",
             alignItems: 'center',
             borderRadius: sizes.sm,
@@ -81,8 +81,12 @@ const GroupCard = (props: IGroupCard) => {
         return Math.floor(Math.random() * number) + 1;
     };
 
+    function getCountLength() {
+        return props.card?.userSolvedCount?.toString()?.length + props.card?.quizQuantity?.toString()?.length;
+    }
+
     return (
-        <TouchableOpacity id={`card-${props?.card?.id}`} onPress={props.onPress} >
+        <TouchableOpacity id={`card-${props?.card?.id}`} onPress={props.onPress}>
             <View style={styles.orderBox}>
                 <Text style={{color: '#ecebeb', fontSize: sizes.h3}}>
                     {props.card?.userSolvedCount}
@@ -112,6 +116,5 @@ const GroupCard = (props: IGroupCard) => {
         </TouchableOpacity>
     );
 };
-
 
 export default GroupCard;
