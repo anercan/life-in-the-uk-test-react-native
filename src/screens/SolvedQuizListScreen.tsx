@@ -94,9 +94,9 @@ const SolvedQuizListScreen = ({navigation}) => {
                             marginTop={sizes.m}
                             align={"center"}>
                             {filteredQuizCards?.length > 0 ?
-                                filteredQuizCards?.map((card: any) => (
+                                filteredQuizCards?.map((card: any,index) => (
                                     <ListCard
-                                        key={card?.quiz?.name}
+                                        key={index}
                                         title={card?.quiz?.name}
                                         rightBottomTitle={'Difficulty: '}
                                         rightBottomDesc={card.quiz?.attributes?.difficulty}

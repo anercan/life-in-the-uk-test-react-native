@@ -22,7 +22,7 @@ function getGoogleConfig() {
 
 const LoginScreen = ({navigation}) => {
     const {apiCaller} = useApiCaller();
-    const {login} = useContext(AuthContext);
+    const {login,autoLogin} = useContext(AuthContext);
     const {fonts, sizes, colors} = useTheme();
     const [version, setVersion] = useState("");
 
@@ -92,7 +92,9 @@ const LoginScreen = ({navigation}) => {
     useEffect(() => {
         GoogleSignin.configure(getGoogleConfig());
         getVersionInfo().then((r) => setVersion(r.version + ""))
-        //hasPreviousSignIn();
+        if (autoLogin) {
+            hasPreviousSignIn();
+        }
     }, []);
 
     const googleSignIn = async () => {

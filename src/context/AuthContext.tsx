@@ -6,6 +6,7 @@ export const AuthContext = createContext({});
 
 export const AuthProvider = ({children}) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [autoLogin, setAutoLogin] = useState(true);
 
     useEffect(() => {
         checkLoginStatus().then(r => console.log(r));
@@ -30,13 +31,14 @@ export const AuthProvider = ({children}) => {
     };
 
     const logout = async () => {
+        setAutoLogin(false);
         console.log("Logout internal called");
         AsyncStorage.removeItem('authToken')
             .then(() => setIsLoggedIn(false));
     };
 
     return (
-        <AuthContext.Provider value={{isLoggedIn, login, logout}}>
+        <AuthContext.Provider value={{isLoggedIn,autoLogin, login, logout}}>
             {children}
         </AuthContext.Provider>
     );

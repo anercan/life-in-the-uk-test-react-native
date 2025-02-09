@@ -22,7 +22,7 @@ const QuizGroupListScreen = ({navigation}) => {
             flexDirection: 'row',
             flexWrap: 'wrap',
             justifyContent: 'center',
-            padding: sizes.s,
+            padding: sizes.m,
         },
         row: {
             flexDirection: 'row',

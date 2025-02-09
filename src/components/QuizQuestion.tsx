@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView} from 'react-native';
 import {IAnswerResponse, IQuizQuestion} from "../constants/types";
 import {useTheme} from "../hooks";
@@ -10,9 +10,33 @@ const {width} = Dimensions.get('window');
 const QuizQuestion = (props: IQuizQuestion) => {
     const {fonts,sizes,colors} = useTheme();
     const [isAnswered, setAnswered] = useState(false);
-    const [selectedId, setSelectedId] = useState(0);
+    const [selectedId, setSelectedId] = useState<number>();
 
-    const styles = StyleSheet.create({
+    useEffect(() => {
+        setAnswered(props.isAnswered);
+        if (props.selectedId != null && props.selectedId !== 0) {
+            setSelectedId(props.selectedId);
+        }
+    }, [props.id]);
+
+    const handleSelect = (answer: IAnswerResponse) => {
+        setAnswered(true);
+        setSelectedId(answer.id);
+        props.onSelect(answer.id);
+    }
+
+    const getBackgroundColor = (id: number) => {
+        if (!props.isAnswered) {
+            return '#e0dbda'; // cevaplanmamışsa, varsayılan renk
+        }
+        let selectedAnswer = id === selectedId;
+        if (selectedAnswer) {
+            return id === props.correctAnswerId ? '#45975c' : '#bf5c63'; // doğru cevap yeşil, yanlış kırmızı
+        }
+        return id === props.correctAnswerId ? '#45975c' : '#e0dbda'; // doğru cevap yeşil, geri kalan gri
+    }
+
+    const styles = useMemo(() => StyleSheet.create({
         box: {
             padding: sizes.s,
             paddingBottom:sizes.m,
@@ -86,36 +110,7 @@ const QuizQuestion = (props: IQuizQuestion) => {
             fontFamily: fonts.text,
             fontSize: sizes.text
         }
-    });
-
-    const handleSelect = (answer: IAnswerResponse) => {
-        setAnswered(true);
-        setSelectedId(answer.id);
-        props.onSelect(answer.id);
-    }
-
-    useEffect(() => {
-        setAnswered(props.isAnswered);
-        if (props.selectedId != null && props.selectedId !== 0) {
-            setSelectedId(props.selectedId);
-        }
-    }, [props.id]);
-
-    function getBackgroundColor(id: number) {
-        let selectedAnswer = id === selectedId;
-        if (isAnswered && selectedAnswer) {
-            if (id === props.correctAnswerId) {
-                return '#45975c';
-            } else {
-                return '#bf5c63';
-            }
-        } else if (isAnswered) {
-            if (id === props.correctAnswerId) {
-                return '#45975c';
-            }
-        }
-        return '#e0dbda';
-    }
+    }),[]);
 
     const answers = (answerList: IAnswerResponse[]) => {
         if (props.isReviewPage) {
