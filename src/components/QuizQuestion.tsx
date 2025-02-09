@@ -110,7 +110,7 @@ const QuizQuestion = (props: IQuizQuestion) => {
             fontFamily: fonts.text,
             fontSize: sizes.text
         }
-    }),[]);
+    }),[props.explanation,props.isReviewPage]);
 
     const answers = (answerList: IAnswerResponse[]) => {
         if (props.isReviewPage) {

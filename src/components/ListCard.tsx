@@ -106,7 +106,7 @@ const ListCard = (props:IQuizCard) => {
             fontWeight: 'bold',
             color: !props.locked ? '#525252' : '#848383',
         }
-    }), []);
+    }), [props.locked]);
 
     return (
         <TouchableOpacity key={props?.id+''} onPress={props.onPress} style={styles.card}>
