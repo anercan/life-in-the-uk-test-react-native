@@ -1,9 +1,5 @@
 import React, { useContext, useEffect, useState} from 'react';
-
-import {
-    ITheme,
-} from '../constants/types';
-
+import {ITheme} from '../constants/types';
 import {light} from '../constants';
 
 export const DataContext = React.createContext({});

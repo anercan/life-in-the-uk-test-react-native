@@ -9,7 +9,7 @@ export const AuthProvider = ({children}) => {
     const [autoLogin, setAutoLogin] = useState(true);
 
     useEffect(() => {
-        checkLoginStatus().then(r => console.log(r));
+        checkLoginStatus();
     }, []);
 
     const checkLoginStatus = async () => {
