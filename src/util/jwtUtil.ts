@@ -20,6 +20,15 @@ export const isLevel1Premium = () => {
     return 'LEVEL1' === userData['premium-type'];
 }
 
+export const getUserId = async () => {
+    try {
+        let userData: any = await getUserDataFromCookie();
+        return userData['user-id'];
+    } catch (e) {
+        return null;
+    }
+}
+
 export const isPremium = async () => {
     try {
         let premiumType: any = await getUserPremiumType();

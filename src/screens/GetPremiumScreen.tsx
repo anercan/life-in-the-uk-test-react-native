@@ -14,6 +14,8 @@ import {
 } from 'react-native-iap';
 import {AuthContext} from "../context/AuthContext";
 import useApiCaller from "../hooks/useApiCaller";
+import analytics from "@react-native-firebase/analytics";
+import {getUserId} from "../util/jwtUtil";
 
 //const items = Platform.select({android: ['level1'], ios: []});
 let monthlySubProductId = 'level1';
@@ -31,11 +33,19 @@ const GetPremiumScreen = ({navigation}) => {
     useEffect(() => {
         init();
         setTitle('Subscription');
+        logEvent();
         return () => {
             purchaseUpdateSubscription?.remove();
             purchaseErrorSubscription?.remove();
         };
     }, []);
+
+    const logEvent = () => {
+        analytics().logScreenView({
+            screen_name: 'Get Premium',
+            screen_class: 'GetPremium'
+        });
+    }
 
     async function init() {
         initConnection().then(() => {
@@ -49,12 +59,20 @@ const GetPremiumScreen = ({navigation}) => {
         });
     }
 
+    function logSubscribtion() {
+        try {
+            getUserId().then(userId => analytics().logEvent('subscription', {userId: userId}));
+        } catch (e) {
+        }
+    }
+
     const consumeGooglePlayDeliveryResult = async (purchaseResult: Purchase, serviceResult: unknown) => {
         if (serviceResult) {
             setButtonDisable(true);
             login(serviceResult.jwt);
             await finishTransaction({purchase: purchaseResult, isConsumable: false})
             navigation.navigate('Profile');
+            logSubscribtion();
         } else {
             setButtonDisable(false);
         }

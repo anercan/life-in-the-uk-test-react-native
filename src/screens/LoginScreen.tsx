@@ -11,6 +11,9 @@ import useApiCaller from "../hooks/useApiCaller";
 import {useTheme} from "../hooks";
 import {AppText} from "../components";
 import {getVersionInfo} from "../util/CheckVersion";
+import crashlytics from '@react-native-firebase/crashlytics';
+import {getUserId} from "../util/jwtUtil";
+import analytics from "@react-native-firebase/analytics";
 
 function getGoogleConfig() {
     return {
@@ -90,6 +93,7 @@ const LoginScreen = ({navigation}) => {
     });
 
     useEffect(() => {
+        crashlytics().log('App mounted');
         GoogleSignin.configure(getGoogleConfig());
         getVersionInfo().then((r) => setVersion(r.version + ""))
         if (autoLogin) {
@@ -135,10 +139,19 @@ const LoginScreen = ({navigation}) => {
         }
     };
 
+    function loginEvent() {
+        try {
+            analytics().logLogin({method: 'Google'});
+            getUserId().then(id => crashlytics().setUserId(id));
+        } catch (e) {
+        }
+    }
+
     const loginWithGoogle = (response: any) => {
         apiCaller('user-management/google-sign-in', 'POST', {token: response?.data?.idToken, appId: 1})
             .then((response) => {
                 login(response.jwt);
+                loginEvent();
             })
             .catch(() => alert('Login Failed'));
     }

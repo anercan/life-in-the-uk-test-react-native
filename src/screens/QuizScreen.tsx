@@ -7,6 +7,7 @@ import {useTheme} from "../hooks";
 import {useSwipe} from "../hooks/useSwipe";
 import {TitleContext} from "../context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
+import analytics from "@react-native-firebase/analytics";
 
 const {height, width} = Dimensions.get('window');
 
@@ -116,7 +117,7 @@ const QuizScreen = ({navigation}) => {
                 quizName: quiz.name,
                 quizSize: quiz?.userQuiz?.correctQuestionList.length + quiz?.userQuiz?.wrongQuestionList?.length,
                 correctAnswerSize: quiz?.userQuiz?.correctQuestionList.length,
-                quizCardList: [],
+                quizCardList: quizCardList,
                 quizGroupId: quizGroupId,
                 quizId: quizId
             };
@@ -176,9 +177,20 @@ const QuizScreen = ({navigation}) => {
         apiCaller('user-quiz/create-update-user-quiz', 'POST', data);
     }
 
-    function handleAnswer(id) {
+    const logEvent = (eventName) => {
+        try {
+            analytics().logEvent(eventName, {
+                quizName: quiz.name,
+                quizId: quizId
+            });
+        } catch (e) {
+        }
+    }
+
+    const handleAnswer = (id) => {
         updateAnswerMap(activeQuestion.id, id);
         updateUserQuizData(id);
+        logEvent('solve_answer');
     }
 
     const updateAnswerMap = (key, value) => {

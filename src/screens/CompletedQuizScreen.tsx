@@ -113,7 +113,8 @@ const CompletedQuizScreen = ({navigation}) => {
         if (total === 0 || !total) return '...';
 
         const betterOrEqual = completedStatics?.betterCount + completedStatics?.equalCount;
-        return (betterOrEqual / total) * 100 + '%';
+        let number = ((betterOrEqual / total) * 100)?.toFixed(2);
+        return number + '%';
     }
 
     return (
