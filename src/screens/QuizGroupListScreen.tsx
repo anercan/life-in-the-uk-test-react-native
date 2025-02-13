@@ -3,10 +3,10 @@ import React, {useCallback, useContext, useState} from 'react';
 import {useTheme} from '../hooks/';
 import {Block} from '../components/';
 import {StyleSheet, View} from "react-native";
-import {IQuizGroupCard} from "../constants/types";
+import {IQuizGroupCard} from "constants/types";
 import {GroupCard} from "../components";
 import {useFocusEffect} from "@react-navigation/native";
-import {TitleContext} from "../context/TitleContext";
+import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
 import {BulletList} from 'react-content-loader/native'
 

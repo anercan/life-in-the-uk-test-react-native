@@ -3,10 +3,10 @@ import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {useTheme} from '../hooks/';
 import {AppText, Block} from '../components/';
 import {useFocusEffect} from "@react-navigation/native";
-import {ISolvedQuizCard} from "../constants/types";
+import {ISolvedQuizCard} from "constants/types";
 import Tabs from "../components/Tabs";
 import ListCard from "../components/ListCard";
-import {TitleContext} from "../context/TitleContext";
+import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
 import {BulletList} from 'react-content-loader/native'
 

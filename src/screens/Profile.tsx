@@ -11,13 +11,13 @@ import {
 import {AppText, Block, Button, Image} from '../components/';
 import {useTheme} from '../hooks/';
 import {GoogleSignin} from "@react-native-google-signin/google-signin";
-import {AuthContext} from "../context/AuthContext";
-import {TitleContext} from "../context/TitleContext";
+import {AuthContext} from "context/AuthContext";
+import {TitleContext} from "context/TitleContext";
 import {useFocusEffect} from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import {isPremium} from "../util/jwtUtil";
+import {isPremium} from "util/jwtUtil";
 import useApiCaller from "../hooks/useApiCaller";
-import {capitalizeWords, getShortenText} from "../util/CommonUtil";
+import {capitalizeWords, getShortenText} from "util/CommonUtil";
 import {ContributionGraph, PieChart} from "react-native-chart-kit";
 import {Instagram} from 'react-content-loader/native'
 
@@ -26,9 +26,9 @@ const isAndroid = Platform.OS === 'android';
 const {height, width} = Dimensions.get('window');
 
 const Profile = ({navigation}) => {
-    const {apiCaller, showLoader} = useApiCaller();
-    const {fonts, sizes, colors} = useTheme();
-    const [userData, setUserData] = useState();
+    const {apiCaller, loading} = useApiCaller();
+    const {sizes, colors} = useTheme();
+    const [userData, setUserData] = useState<UserDataResponse>();
     const [isPremiumUser, setIsPremiumUser] = useState(false);
     const [incorrectMap, setIncorrectMap] = useState<IncorrectData[]>([]);
     const [activityData, setActivityData] = useState<ActivityData[]>([]);
@@ -56,7 +56,7 @@ const Profile = ({navigation}) => {
         navigation.navigate('GetPremiumScreen');
     }
 
-    function getCount(data) {
+    function getCount(data:ActivityData) {
         if (data?.count) {
             if (data.count == 0) {
                 return 0;
@@ -89,7 +89,7 @@ const Profile = ({navigation}) => {
                 }
                 if (profileResponse?.activityDataList) {
                     let activityDataList: ActivityData[] = [];
-                    profileResponse?.activityDataList.forEach((data) => {
+                    profileResponse?.activityDataList.forEach((data: ActivityData) => {
                         activityDataList.push({
                             count: getCount(data),
                             date: data.date
@@ -130,7 +130,7 @@ const Profile = ({navigation}) => {
                         </View>
                     </View>
                 </View>
-                }
+
                 <View style={{flex: 1}}>
                     <AppText h4 align={"center"}>Activity (Last 3 Months)</AppText>
                     <View style={{
@@ -219,7 +219,7 @@ const Profile = ({navigation}) => {
                             color: (opacity = 1) => `rgba(30, 110, 180, ${opacity})`,
                             labelColor: (opacity = 1) => `rgba(30, 30, 30, ${opacity})`,
                         }}
-                        tooltipDataAttrs={(value) => {
+                        tooltipDataAttrs={() => {
                             return {rx: 8, ry: 8};
                         }}
                     />
@@ -238,6 +238,7 @@ const Profile = ({navigation}) => {
                     {getActivityData()}
                 </View>)
         }
+        return <></>
     }
 
     return (
@@ -249,7 +250,7 @@ const Profile = ({navigation}) => {
                 marginHorizontal: sizes.s,
                 flex: 1
             }}>
-                {!showLoader ?
+                {!loading ?
                     <>
                         {/* Profile Image and Stats */}
                         <View style={{marginHorizontal: sizes.xs}}>
@@ -362,8 +363,17 @@ const Profile = ({navigation}) => {
 };
 
 export interface ActivityData {
-    count: string,
-    date: number,
+    count: number,
+    date:string
+}
+
+interface UserDataResponse {
+    userSolvedQuizCount: number;
+    userOngoingQuizCount: number;
+    totalQuizCount: number;
+    avatarUrl: string;
+    wrongsMap: Record<string, number>;
+    activityDataList: ActivityData[];
 }
 
 export interface IncorrectData {

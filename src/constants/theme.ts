@@ -7,7 +7,7 @@ import {ITheme,
   ThemeWeights,
 } from './types';
 
-const {width, height} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 // Scale based on device dimensions
 const scale = width / 375;

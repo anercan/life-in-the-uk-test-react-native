@@ -1,22 +1,31 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Animated, Dimensions, StyleSheet, View} from 'react-native';
-import {useRoute} from "@react-navigation/native";
+import {RouteProp, useRoute} from "@react-navigation/native";
 import QuizQuestion from "../components/QuizQuestion";
 import * as Progress from 'react-native-progress';
 import {useTheme} from "../hooks";
-import {useSwipe} from "../hooks/useSwipe";
-import {TitleContext} from "../context/TitleContext";
+import {useSwipe} from "hooks/useSwipe";
+import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
 import analytics from "@react-native-firebase/analytics";
 
 const {height, width} = Dimensions.get('window');
+
+type QuizParams = {
+    isReviewPage: boolean;
+    quizCardList: any[];
+    quizGroupId: number;
+    quizId: number;
+};
+
+type QuizScreenRootProps = RouteProp<{ QuizScreen: QuizParams }, 'QuizScreen'>;
 
 const QuizScreen = ({navigation}) => {
     const {apiCaller} = useApiCaller();
     const {setTitle} = useContext(TitleContext);
     const {onTouchStart, onTouchEnd} = useSwipe(onSwipeLeft, onSwipeRight, 14);
     const shakeAnimation = new Animated.Value(0);
-    const route = useRoute();
+    const route = useRoute<QuizScreenRootProps>();
     const {fonts, colors, sizes} = useTheme();
     const {quizId, quizGroupId, quizCardList, isReviewPage} = route.params;
 
@@ -210,7 +219,7 @@ const QuizScreen = ({navigation}) => {
         <>
             <View onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} style={styles.container}>
                 <View style={styles.progressBar}>
-                    <Progress.Bar height={sizes.sm} color={colors.primary} style={styles.customProgressBar}
+                    <Progress.Bar height={sizes.sm} color={String(colors.primary)} style={styles.customProgressBar}
                                   progress={activeQuestion?.counter / questionList?.length || 0}
                                   width={width / 1.12}/>
                 </View>

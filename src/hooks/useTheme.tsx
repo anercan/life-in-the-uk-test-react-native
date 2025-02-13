@@ -1,9 +1,9 @@
 import React from 'react';
 
 import {defaultTheme} from '../constants/';
-import {ITheme, IThemeProvider} from '../constants/types';
+import {ITheme, IThemeProvider} from 'constants/types';
 
-export const ThemeContext = React.createContext({});
+export const ThemeContext = React.createContext(null);
 
 export const ThemeProvider = ({
   children,

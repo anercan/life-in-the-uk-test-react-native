@@ -1,20 +1,20 @@
-import { useContext, useState } from "react";
-import { AuthContext } from "../context/AuthContext";
+import {useContext, useState} from "react";
+import {AuthContext} from "context/AuthContext";
 import ApiCallerInternal from "../util/ApiCaller";
 
 const useApiCaller = () => {
-    const { logout } = useContext(AuthContext);
+    const {logout} = useContext(AuthContext);
     const [loading, setLoading] = useState(false);
 
-    const apiCaller = async (endpoint, method = "GET", data = null) => {
+    const apiCaller = async (endpoint, method = "GET", data: any = null) => {
         setLoading(true);
         try {
-            const response = await ApiCallerInternal(endpoint, method, data);
+            const response: any = await ApiCallerInternal(endpoint, method, data);
             if (response.status === 401) {
                 await logout();
             }
             return response;
-        } catch (error) {
+        } catch (error: any) {
             if (error.status === 401) {
                 await logout();
             }
@@ -25,7 +25,7 @@ const useApiCaller = () => {
         }
     };
 
-    return { apiCaller, loading };
+    return {apiCaller, loading};
 };
 
 export default useApiCaller;

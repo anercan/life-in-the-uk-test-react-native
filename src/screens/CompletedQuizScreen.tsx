@@ -1,17 +1,27 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
-import {useRoute} from "@react-navigation/native";
+import {RouteProp, useRoute} from "@react-navigation/native";
 import {ButtonCard} from "../components";
 import {useTheme} from "../hooks";
 import * as Progress from 'react-native-progress';
-import {TitleContext} from "../context/TitleContext";
+import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
-import {isPremium} from "../util/jwtUtil";
 
 const {height} = Dimensions.get('window');
 
+type QuizParams = {
+    quizName: string;
+    quizSize: number;
+    correctAnswerSize: number;
+    quizCardList: any[];
+    quizGroupId: number;
+    quizId: number;
+};
+
+type QuizRouteProp = RouteProp<{ CompletedQuizScreen: QuizParams }, 'CompletedQuizScreen'>;
+
 const CompletedQuizScreen = ({navigation}) => {
-    const route = useRoute();
+    const route = useRoute<QuizRouteProp>();
     const {apiCaller} = useApiCaller();
     const {quizName, quizSize, correctAnswerSize, quizCardList, quizGroupId, quizId} = route.params;
     const {fonts,colors,sizes} = useTheme();
@@ -20,12 +30,9 @@ const CompletedQuizScreen = ({navigation}) => {
     const [completedStatics, setCompletedStatics] = useState({betterCount:0,equalCount:0,worseCount:0});
 
     const getStaticalData = async ()  => {
-        let isPremiumUser = await isPremium();
-        if (isPremiumUser) {
-            apiCaller('user-quiz/get-completed-quiz-statics?quizId=' + quizId).then((response: any) => {
-                setCompletedStatics(response);
-            });
-        }
+        apiCaller('user-quiz/get-completed-quiz-statics?quizId=' + quizId).then((response: any) => {
+            setCompletedStatics(response);
+        });
     }
 
     useEffect(() => {

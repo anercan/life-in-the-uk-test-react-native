@@ -1,15 +1,15 @@
 import React, { useContext, useEffect, useState} from 'react';
-import {ITheme} from '../constants/types';
-import {light} from '../constants';
+import {ITheme} from 'constants/types';
+import {defaultTheme} from '../constants';
 
 export const DataContext = React.createContext({});
 
 export const DataProvider = ({children}: { children: React.ReactNode }) => {
-    const [theme, setTheme] = useState<ITheme>(light);
+    const [theme, setTheme] = useState<ITheme>(defaultTheme);
 
     // change theme based on isDark updates
     useEffect(() => {
-        setTheme(light);
+        setTheme(defaultTheme);
     }, []);
 
     const contextValue = {
@@ -22,4 +22,4 @@ export const DataProvider = ({children}: { children: React.ReactNode }) => {
     );
 };
 
-export const useData = () => useContext(DataContext) as IUseData;
+export const useData = () => useContext(DataContext) as any;

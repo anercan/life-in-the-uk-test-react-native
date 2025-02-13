@@ -1,8 +1,6 @@
-import React, {createContext, useState, useEffect} from 'react';
+import React, {createContext, useState} from 'react';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-export const TitleContext = createContext({});
+export const TitleContext = createContext(null);
 
 export const TitleProvider = ({children}) => {
     const [title, setTitleInternal] = useState('');

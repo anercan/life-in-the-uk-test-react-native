@@ -2,7 +2,7 @@ import React, {useCallback, useContext, useEffect, useState} from 'react';
 
 import {useTheme} from '../hooks/';
 import {AppText, Block} from '../components/';
-import {useFocusEffect, useRoute} from "@react-navigation/native";
+import {RouteProp, useFocusEffect, useRoute} from "@react-navigation/native";
 import {IQuizCard} from "../constants/types";
 import Tabs from "../components/Tabs";
 import ListCard from "../components/ListCard";
@@ -10,9 +10,16 @@ import {TitleContext} from "../context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
 import {BulletList} from 'react-content-loader/native'
 
+type QuizParams = {
+    quizGroupTitle: number;
+    quizGroupId: number;
+};
+
+type QuizListProp = RouteProp<{ QuizListProp: QuizParams }, 'QuizListProp'>;
+
 const QuizListScreen = ({navigation}) => {
-    const {apiCaller, showLoader} = useApiCaller();
-    const route = useRoute();
+    const {apiCaller, loading} = useApiCaller();
+    const route = useRoute<QuizListProp>();
     const {quizGroupId, quizGroupTitle} = route.params;
     const [tab, setTab] = useState<number>(0);
     const [quizCards, setQuizCards] = useState([{}]);
@@ -72,7 +79,7 @@ const QuizListScreen = ({navigation}) => {
                 <Tabs tabOneText={'Ongoing'} selectedTab={tab} tabTwoText={'Completed'} callback={setTabChange}/>
             </Block>
             <Block flex={9}>
-                {!showLoader ?
+                {!loading ?
                     <Block
                         scroll
                         showsVerticalScrollIndicator={false}

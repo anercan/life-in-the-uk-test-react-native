@@ -6,13 +6,13 @@ import {
     isNoSavedCredentialFoundResponse,
     isSuccessResponse,
 } from '@react-native-google-signin/google-signin';
-import {AuthContext} from "../context/AuthContext";
+import {AuthContext} from "context/AuthContext";
 import useApiCaller from "../hooks/useApiCaller";
 import {useTheme} from "../hooks";
 import {AppText} from "../components";
-import {getVersionInfo} from "../util/CheckVersion";
+import {getVersionInfo} from "util/CheckVersion";
 import crashlytics from '@react-native-firebase/crashlytics';
-import {getUserId} from "../util/jwtUtil";
+import {getUserId} from "util/jwtUtil";
 import analytics from "@react-native-firebase/analytics";
 
 function getGoogleConfig() {
@@ -23,10 +23,10 @@ function getGoogleConfig() {
     };
 }
 
-const LoginScreen = ({navigation}) => {
+const LoginScreen = () => {
     const {apiCaller} = useApiCaller();
     const {login,autoLogin} = useContext(AuthContext);
-    const {fonts, sizes, colors} = useTheme();
+    const {fonts, sizes} = useTheme();
     const [version, setVersion] = useState("");
 
     const styles = StyleSheet.create({
@@ -103,7 +103,7 @@ const LoginScreen = ({navigation}) => {
 
     const googleSignIn = async () => {
         try {
-            let hasPlayServices = await GoogleSignin.hasPlayServices();
+            //await GoogleSignin.hasPlayServices();
             const response: any = await GoogleSignin.signIn();
             if (isSuccessResponse(response)) {
                 loginWithGoogle(response);

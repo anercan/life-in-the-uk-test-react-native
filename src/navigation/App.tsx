@@ -16,7 +16,7 @@ import {
 } from "../screens";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import Feather from "react-native-vector-icons/Feather";
-import {AuthContext} from "../context/AuthContext";
+import {AuthContext} from "context/AuthContext";
 import {
     finishTransaction, flushFailedPurchasesCachedAsPendingAndroid, initConnection,
     ProductPurchase,
@@ -25,21 +25,20 @@ import {
     SubscriptionPurchase
 } from "react-native-iap";
 import useApiCaller from "../hooks/useApiCaller";
-import {checkVersionWithStoresInfo} from "../util/CheckVersion";
-import {COLORS, normalizeFont, THEME} from "../constants/theme";
+import {checkVersionWithStoresInfo} from "util/CheckVersion";
+import {COLORS, normalizeFont} from "constants/theme";
 
 export default () => {
     const {apiCaller} = useApiCaller();
-    const {theme, setTheme} = useData();
+    const {theme} = useData();
     const {login, isLoggedIn} = useContext(AuthContext);
-    let purchaseUpdateSubscription;
-        /*useFonts({
-        'OpenSans-Light': theme.assets.OpenSansLight,
-        'OpenSans-Regular': theme.assets.OpenSansRegular,
-        'OpenSans-SemiBold': theme.assets.OpenSansSemiBold,
-        'OpenSans-ExtraBold': theme.assets.OpenSansExtraBold,
-        'OpenSans-Bold': theme.assets.OpenSansBold,
-    });*/
+    /*useFonts({
+    'OpenSans-Light': theme.assets.OpenSansLight,
+    'OpenSans-Regular': theme.assets.OpenSansRegular,
+    'OpenSans-SemiBold': theme.assets.OpenSansSemiBold,
+    'OpenSans-ExtraBold': theme.assets.OpenSansExtraBold,
+    'OpenSans-Bold': theme.assets.OpenSansBold,
+});*/
 
     useEffect(() => {
         console.log("-----------------------AppTsx-----------------------");
@@ -52,7 +51,7 @@ export default () => {
     }, []);
 
     const subscribeListener = async () => {
-        await initConnection().then((r) => {
+        await initConnection().then(() => {
             flushFailedPurchasesCachedAsPendingAndroid().then(() => subscriptionListener())
         });
     }
@@ -65,7 +64,7 @@ export default () => {
     }
 
     const subscriptionListener = () => {
-        purchaseUpdateSubscription = purchaseUpdatedListener((purchase: SubscriptionPurchase | ProductPurchase) => {
+        purchaseUpdatedListener((purchase: SubscriptionPurchase | ProductPurchase) => {
                 console.log('subscriptionListener called')
                 const receipt = purchase?.transactionReceipt;
                 if (receipt) {
@@ -80,9 +79,9 @@ export default () => {
         );
     }
 
-   /* if (!fontsLoaded) {
-        return null;
-    }*/
+    /* if (!fontsLoaded) {
+         return null;
+     }*/
 
     const styles = StyleSheet.create({
         container: {

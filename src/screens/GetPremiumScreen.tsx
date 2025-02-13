@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Platform, ScrollView, Text, TouchableOpacity} from 'react-native';
 import {View, StyleSheet} from 'react-native';
 import useTheme from "../hooks/useTheme";
-import {TitleContext} from "../context/TitleContext";
+import {TitleContext} from "context/TitleContext";
 import {
     finishTransaction,
     flushFailedPurchasesCachedAsPendingAndroid,
@@ -12,10 +12,10 @@ import {
     purchaseUpdatedListener,
     requestSubscription, SubscriptionPurchase
 } from 'react-native-iap';
-import {AuthContext} from "../context/AuthContext";
+import {AuthContext} from "context/AuthContext";
 import useApiCaller from "../hooks/useApiCaller";
 import analytics from "@react-native-firebase/analytics";
-import {getUserId} from "../util/jwtUtil";
+import {getUserId} from "util/jwtUtil";
 
 //const items = Platform.select({android: ['level1'], ios: []});
 let monthlySubProductId = 'level1';
@@ -28,7 +28,7 @@ const GetPremiumScreen = ({navigation}) => {
     const [product, setProduct] = useState<any>();
     const [buttonDisable, setButtonDisable] = useState<boolean>(false);
     let purchaseErrorSubscription;
-    let purchaseUpdateSubscription = null;
+    let purchaseUpdateSubscription:any = null;
 
     useEffect(() => {
         init();
@@ -66,7 +66,7 @@ const GetPremiumScreen = ({navigation}) => {
         }
     }
 
-    const consumeGooglePlayDeliveryResult = async (purchaseResult: Purchase, serviceResult: unknown) => {
+    const consumeGooglePlayDeliveryResult = async (purchaseResult: Purchase, serviceResult: any) => {
         if (serviceResult) {
             setButtonDisable(true);
             login(serviceResult.jwt);
@@ -94,6 +94,11 @@ const GetPremiumScreen = ({navigation}) => {
 
         purchaseErrorSubscription = purchaseErrorListener(
             (error: PurchaseError) => {
+                analytics().logEvent('error_purchase', {
+                    errorName: error.name,
+                    errorMessage: error?.message,
+                    errorCode: error.code
+                })
                 setButtonDisable(false)
             },
         );
