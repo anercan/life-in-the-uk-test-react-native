@@ -24,6 +24,7 @@
     "@react-native-firebase/analytics": "19.3.0",
     "@react-native-firebase/crashlytics": "19.3.0",
     "@react-native-firebase/app": "19.3.0",
+    "@react-native-firebase/messaging": "19.3.0",
     "@react-native-google-signin/google-signin": "^13.0.1",
     "@react-navigation/bottom-tabs": "7.0.0-rc.30",
     "@react-navigation/native": "7.0.0-rc.18",

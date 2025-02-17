@@ -3,7 +3,6 @@ import {View, StyleSheet, TouchableOpacity, Text, Image, Linking} from 'react-na
 import {
     GoogleSignin,
     isErrorWithCode,
-    isNoSavedCredentialFoundResponse,
     isSuccessResponse,
 } from '@react-native-google-signin/google-signin';
 import {AuthContext} from "context/AuthContext";
@@ -14,18 +13,20 @@ import {getVersionInfo} from "util/CheckVersion";
 import crashlytics from '@react-native-firebase/crashlytics';
 import {getUserId} from "util/jwtUtil";
 import analytics from "@react-native-firebase/analytics";
+import {PermissionsAndroid, Platform} from 'react-native';
+import messaging from '@react-native-firebase/messaging';
 
 function getGoogleConfig() {
     return {
         scopes: ['profile', 'email'],
         webClientId: '1017625843116-hhm7slkdg57nrc0vr8t3i5gagacdp40a.apps.googleusercontent.com', // client ID of type WEB for your server. Required to get the `idToken` on the user object, and for offline access.
-        iosClientId:'1017625843116-3m6e8ejpaneolpur9ahvu0cahhrqi25n.apps.googleusercontent.com'
+        iosClientId: '1017625843116-3m6e8ejpaneolpur9ahvu0cahhrqi25n.apps.googleusercontent.com'
     };
 }
 
 const LoginScreen = () => {
     const {apiCaller} = useApiCaller();
-    const {login,autoLogin} = useContext(AuthContext);
+    const {login, autoLogin} = useContext(AuthContext);
     const {fonts, sizes} = useTheme();
     const [version, setVersion] = useState("");
 
@@ -95,11 +96,22 @@ const LoginScreen = () => {
     useEffect(() => {
         crashlytics().log('App mounted');
         GoogleSignin.configure(getGoogleConfig());
-        getVersionInfo().then((r) => setVersion(r.version + ""))
+        checkAppVersion();
+        requestNotificationPermission();
         if (autoLogin) {
             hasPreviousSignIn();
         }
     }, []);
+
+    const checkAppVersion = () => {
+        getVersionInfo().then((r) => setVersion(r.version))
+    }
+
+    const requestNotificationPermission = async () => {
+        if (Platform.OS === 'android' && Platform.Version >= 33) {
+            await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+        }
+    }
 
     const googleSignIn = async () => {
         try {
@@ -108,7 +120,7 @@ const LoginScreen = () => {
             if (isSuccessResponse(response)) {
                 loginWithGoogle(response);
             } else {
-                console.log('error', response)
+                alert('Login Failed!')
             }
         } catch (error) {
             if (isErrorWithCode(error)) {
@@ -124,11 +136,8 @@ const LoginScreen = () => {
             const response: any = await GoogleSignin.signInSilently();
             if (isSuccessResponse(response)) {
                 loginWithGoogle(response);
-            } else if (isNoSavedCredentialFoundResponse(response)) {
-                // user has not signed in yet
             }
         } catch (error) {
-            // handle errror
         }
     };
 
@@ -142,13 +151,30 @@ const LoginScreen = () => {
     function loginEvent() {
         try {
             analytics().logLogin({method: 'Google'});
-            getUserId().then(id => crashlytics().setUserId(id));
+            getUserId().then(id => {
+                crashlytics().setUserId(id);
+                analytics().setUserId(id);
+            });
         } catch (e) {
         }
     }
 
-    const loginWithGoogle = (response: any) => {
-        apiCaller('user-management/google-sign-in', 'POST', {token: response?.data?.idToken, appId: 1})
+    const fireBaseToken = async () => {
+        let token = await messaging().getToken();
+        return token?.toString();
+    };
+
+    const loginWithGoogle = async (response: any) => {
+        let signInRequest = {
+            token: response?.data?.idToken,
+            appId: 1,
+            deviceInfo: {
+                token: await fireBaseToken(),
+                osType: Platform.OS === 'android' ? 'ANDROID' : 'IOS'
+            }
+        }
+
+        apiCaller('user-management/google-sign-in', 'POST', signInRequest)
             .then((response) => {
                 login(response.jwt);
                 loginEvent();
@@ -160,7 +186,7 @@ const LoginScreen = () => {
         <View style={styles.container}>
             <View style={styles.logoContainer}>
                 <Image
-                    source={require('../assets/images/lifeintheukapp-logo.png')} // Replace with your app's logo path
+                    source={require('../assets/images/lifeintheukapp-logo.png')}
                     style={styles.logo}
                 />
             </View>

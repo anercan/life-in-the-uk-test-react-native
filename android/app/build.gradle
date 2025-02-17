@@ -83,8 +83,8 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         missingDimensionStrategy ('store', 'play') //custom
-        versionCode 27
-        versionName "1.0"
+        versionCode 36
+        versionName "1.4"
     }
     signingConfigs {
         debug {
@@ -129,8 +129,10 @@ dependencies {
      implementation "androidx.credentials:credentials:1.2.2" //custom olabilir belki
      implementation "androidx.credentials:credentials-play-services-auth:1.2.2" //custom
      implementation "com.google.android.libraries.identity.googleid:googleid:1.1.1" //custom
-     implementation platform('com.google.firebase:firebase-bom:33.6.0')//custom
-     implementation "com.google.firebase:firebase-analytics:17.4.1" //custom
+     implementation 'com.google.firebase:firebase-analytics:19.3.0'
+     implementation 'com.google.firebase:firebase-crashlytics:19.3.0'
 }
 
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'

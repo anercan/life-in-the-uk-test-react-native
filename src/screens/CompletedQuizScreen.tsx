@@ -6,6 +6,7 @@ import {useTheme} from "../hooks";
 import * as Progress from 'react-native-progress';
 import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
+import {isPremium} from "util/jwtUtil";
 
 const {height} = Dimensions.get('window');
 
@@ -30,9 +31,12 @@ const CompletedQuizScreen = ({navigation}) => {
     const [completedStatics, setCompletedStatics] = useState({betterCount:0,equalCount:0,worseCount:0});
 
     const getStaticalData = async ()  => {
-        apiCaller('user-quiz/get-completed-quiz-statics?quizId=' + quizId).then((response: any) => {
-            setCompletedStatics(response);
-        });
+        let isPremiumUser = await isPremium();
+        if (isPremiumUser) {
+            apiCaller('user-quiz/get-completed-quiz-statics?quizId=' + quizId).then((response: any) => {
+                setCompletedStatics(response);
+            });
+        }
     }
 
     useEffect(() => {
