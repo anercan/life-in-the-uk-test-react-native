@@ -30,6 +30,7 @@ import {COLORS, normalizeFont} from "constants/theme";
 import crashlytics from "@react-native-firebase/crashlytics";
 import AppOnboarding from "components/Onboarding";
 import {checkFirstLaunch} from "util/CommonUtil";
+import analytics from "@react-native-firebase/analytics";
 
 export default () => {
     const {apiCaller} = useApiCaller();
@@ -42,7 +43,7 @@ export default () => {
         checkVersionWithStoresInfo();
         Platform.OS === 'android' && StatusBar.setTranslucent(true);
         subscribeListener();
-        checkFirstLaunch().then((isFirst:boolean)=> setIsFirstLaunch(isFirst))
+        checkFirstLaunch().then((isFirst: boolean) => setIsFirstLaunch(isFirst))
         return () => {
             StatusBar.setBarStyle('default');
         };
@@ -86,8 +87,9 @@ export default () => {
 
     const getScreen = () => {
         if (isFirstLaunch) {
+            analytics()?.logEvent('first_launch', {date: new Date()})
             return <AppOnboarding onDone={() => setIsFirstLaunch(false)}/>
-        } else if(isLoggedIn) {
+        } else if (isLoggedIn) {
             return <TabMenu/>
         } else {
             return <LoginScreen/>

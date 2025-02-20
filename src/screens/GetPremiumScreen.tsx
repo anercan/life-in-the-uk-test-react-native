@@ -16,20 +16,20 @@ import {AuthContext} from "context/AuthContext";
 import useApiCaller from "../hooks/useApiCaller";
 import analytics from "@react-native-firebase/analytics";
 import {getUserId} from "util/jwtUtil";
-import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import Animated, {FadeIn, FadeOut} from "react-native-reanimated";
 import {getBillingPeriod, isFreeTrialEligible} from "util/CommonUtil";
 
 let monthlySubProductId = 'level1';
 
 const GetPremiumScreen = ({navigation}) => {
     const {apiCaller} = useApiCaller();
-    const {fonts,sizes,colors} = useTheme();
+    const {fonts, sizes, colors} = useTheme();
     const {login} = useContext(AuthContext);
     const {setTitle} = useContext(TitleContext);
     const [product, setProduct] = useState<any>();
     const [buttonDisable, setButtonDisable] = useState<boolean>(false);
     let purchaseErrorSubscription;
-    let purchaseUpdateSubscription:any = null;
+    let purchaseUpdateSubscription: any = null;
 
     useEffect(() => {
         init();
@@ -95,6 +95,7 @@ const GetPremiumScreen = ({navigation}) => {
         purchaseErrorSubscription = purchaseErrorListener(
             (error: PurchaseError) => {
                 analytics().logEvent('error_purchase', {
+                    userId: getUserId(),
                     errorName: error.name,
                     errorMessage: error?.message,
                     errorCode: error.code
@@ -132,7 +133,7 @@ const GetPremiumScreen = ({navigation}) => {
         'More than 500 official questions',
     ];
 
-    const renderFeature = (item:any) => (
+    const renderFeature = (item: any) => (
         <View style={styles.featureItem}>
             <Text style={styles.featureText}>• {item}</Text>
         </View>
@@ -148,7 +149,7 @@ const GetPremiumScreen = ({navigation}) => {
         title: {
             color: colors.primary,
             fontSize: 28,
-            fontFamily:fonts.p,
+            fontFamily: fonts.p,
             fontWeight: "bold",
             marginBottom: sizes.m,
         },
@@ -171,17 +172,17 @@ const GetPremiumScreen = ({navigation}) => {
             color: colors.primary,
             fontSize: sizes.h2,
             fontWeight: "bold",
-            fontFamily:fonts.p,
+            fontFamily: fonts.p,
             marginBottom: sizes.s,
         },
         planPrice: {
             color: "#062e5a",
             fontSize: sizes.p,
             fontWeight: 'bold',
-            fontFamily:fonts.p,
+            fontFamily: fonts.p,
             marginBottom: sizes.sm,
-            marginTop:sizes.s,
-            textDecorationLine:'underline'
+            marginTop: sizes.s,
+            textDecorationLine: 'underline'
         },
         freeTrialText: {
             color: "#1a5ba0",
@@ -190,7 +191,7 @@ const GetPremiumScreen = ({navigation}) => {
             fontFamily: fonts.p,
             marginBottom: sizes.sm,
         },
-        planDescription: {marginBottom:sizes.sm},
+        planDescription: {marginBottom: sizes.sm},
         button: {
             padding: sizes.sm,
             borderRadius: sizes.m,
@@ -206,7 +207,7 @@ const GetPremiumScreen = ({navigation}) => {
         buttonText: {
             color: "white",
             fontSize: sizes.h3,
-            fontFamily:fonts.text,
+            fontFamily: fonts.text,
             fontWeight: "bold",
         },
         featureItem: {
