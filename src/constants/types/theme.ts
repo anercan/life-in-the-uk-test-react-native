@@ -3,10 +3,8 @@ import {
   ColorValue,
   FlexStyle,
   ImageSourcePropType,
-  ScaledSize,
   TextStyle,
 } from 'react-native';
-import {normalizeFont} from "../theme";
 
 // Spacing types
 export interface ISpacing

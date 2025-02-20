@@ -1,26 +1,24 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView} from 'react-native';
-import {IAnswerResponse, IQuizQuestion} from "../constants/types";
+import {IAnswerResponse, IQuizQuestion} from "constants/types";
 import {useTheme} from "../hooks";
 import Image from "./Image";
 import {AppText} from "./index";
+import Animated, { FadeIn } from "react-native-reanimated";
 
 const {width} = Dimensions.get('window');
 
 const QuizQuestion = (props: IQuizQuestion) => {
     const {fonts,sizes,colors} = useTheme();
-    const [isAnswered, setAnswered] = useState(false);
     const [selectedId, setSelectedId] = useState<number>();
 
     useEffect(() => {
-        setAnswered(props.isAnswered);
         if (props.selectedId != null && props.selectedId !== 0) {
             setSelectedId(props.selectedId);
         }
     }, [props.id]);
 
     const handleSelect = (answer: IAnswerResponse) => {
-        setAnswered(true);
         setSelectedId(answer.id);
         props.onSelect(answer.id);
     }
@@ -69,7 +67,7 @@ const QuizQuestion = (props: IQuizQuestion) => {
             padding: sizes.m,
             borderRadius: sizes.s,
             margin: sizes.s,
-            marginBottom: props.explanation && props.isReviewPage ? sizes.l : sizes.xl,
+            marginBottom: sizes.l ,
             backgroundColor: '#c1c0c0',
             shadowColor: '#363535',
             shadowOffset: {width: 0, height: 1},
@@ -110,7 +108,7 @@ const QuizQuestion = (props: IQuizQuestion) => {
             fontFamily: fonts.text,
             fontSize: sizes.text
         }
-    }),[props.explanation,props.isReviewPage]);
+    }),[]);
 
     const answers = (answerList: IAnswerResponse[]) => {
         if (props.isReviewPage) {
@@ -119,7 +117,7 @@ const QuizQuestion = (props: IQuizQuestion) => {
 
         return answerList?.map((answer) => (
             <TouchableOpacity
-                disabled={isAnswered}
+                disabled={props.isAnswered}
                 key={answer.id}
                 onPress={() => handleSelect(answer)}>
                 <View style={{...styles.answerBox, backgroundColor: getBackgroundColor(answer.id)}}>
@@ -140,8 +138,19 @@ const QuizQuestion = (props: IQuizQuestion) => {
                         <Text style={styles.questionText}>{props.content}</Text>
                     </View>
                     {answers(props.answersList)}
-                    { (props.questionOrder == 0 && !props.isReviewPage && isAnswered) &&
-                        <View>
+                    {(props.isAnswered && props.selectedId != props.correctAnswerId && props.explanation?.trim()?.length > 0) ?
+                        <Animated.View entering={FadeIn} style={styles.explanationBox}>
+                            <AppText h4>
+                                Explanation
+                            </AppText>
+                            <Text style={styles.explanationText}>
+                                {props.explanation}
+                            </Text>
+                        </Animated.View>
+                        : ''
+                    }
+                    { (props.questionOrder == 0 && !props.isReviewPage && props.isAnswered) &&
+                        <Animated.View entering={FadeIn}>
                             <Image
                                 width={sizes.xxl}
                                 height={sizes.xxl}
@@ -150,18 +159,7 @@ const QuizQuestion = (props: IQuizQuestion) => {
                                 color={colors.primary}
                                 source={require('../assets/images/swipe.png')}
                             />
-                        </View>
-                    }
-                    {(props.isReviewPage && props.explanation?.trim()?.length > 0) ?
-                        <View style={styles.explanationBox}>
-                            <AppText h4>
-                                Explanation
-                            </AppText>
-                            <Text style={styles.explanationText}>
-                                {props.explanation}
-                            </Text>
-                        </View>
-                        : ''
+                        </Animated.View>
                     }
                 </View>
             </ScrollView>

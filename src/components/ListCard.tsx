@@ -1,12 +1,11 @@
 import React, {useMemo} from 'react';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 
-import {IQuizCard} from '../constants/types';
 import {useTheme} from "../hooks";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import {getShortenText} from "../util/CommonUtil";
+import {getShortenText} from "util/CommonUtil";
 
-interface IQuizCard {
+interface IListCard {
     title?: string | undefined,
     rightTopText1?: string | undefined,
     rightTopText2?: string | undefined,
@@ -16,7 +15,7 @@ interface IQuizCard {
     onPress?: () => void;
 }
 
-const ListCard = (props:IQuizCard) => {
+const ListCard = (props:IListCard) => {
     const {fonts, colors, sizes} = useTheme();
 
     const styles = useMemo(() => StyleSheet.create({
@@ -109,7 +108,7 @@ const ListCard = (props:IQuizCard) => {
     }), [props.locked]);
 
     return (
-        <TouchableOpacity key={props?.id+''} onPress={props.onPress} style={styles.card}>
+        <TouchableOpacity onPress={props.onPress} style={styles.card}>
                 <View style={styles.orderBoxContainer}>
                     <View style={props.rightTopText1 ? styles.orderBox : styles.orderBoxDate}>
                         {props.locked ?
@@ -129,7 +128,7 @@ const ListCard = (props:IQuizCard) => {
                     <Text style={styles.title}>{getShortenText(props.title, 30)}</Text>
                 </View>
                 <View style={styles.infoContainer}>
-                    {(props.rightBottomTitle || this.props.rightBottomDesc) &&
+                    {(props.rightBottomTitle || props.rightBottomDesc) &&
                         <View style={styles.rightBottom}>
                             <Text style={styles.rightBottomTextOne}>{props.rightBottomTitle}
                                 <Text style={styles.rightBottomTextTwo}>{props.rightBottomDesc}</Text></Text>

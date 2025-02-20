@@ -1,5 +1,5 @@
 import {checkVersion} from "react-native-check-version";
-import {Alert, Linking} from "react-native";
+import {Alert, BackHandler, Linking} from "react-native";
 
 export async function getVersionInfo() {
     return await checkVersion({platform: "android", country: 'uk'});
@@ -7,10 +7,10 @@ export async function getVersionInfo() {
 
 export const checkVersionWithStoresInfo = async () => {
     try {
-        const version = await getVersionInfo();
-        console.log("Got version info:", version);
+        const versionInfo = await getVersionInfo();
+        console.log("Got version info:", versionInfo);
 
-        if (version.needsUpdate && version.url) {
+        if (versionInfo.needsUpdate && /^\d+\.\d+(\.0)?$/.test(versionInfo.version) && versionInfo.url) {
             Alert.alert(
                 'Update Available',
                 'A new version of the app is available. Please update to the latest version.',
@@ -18,11 +18,13 @@ export const checkVersionWithStoresInfo = async () => {
                     {
                         text: 'Update Now',
                         onPress: () => {
-                            Linking.openURL(version.url);
+                            Linking.openURL(versionInfo.url);
+                            setTimeout(() => BackHandler.exitApp(), 1000);
                         },
                     },
-                    // {text: 'Later'},
-                ]
+                ], {
+                    cancelable: false
+                }
             );
         }
     } catch (error) {

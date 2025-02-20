@@ -106,7 +106,7 @@ const Profile = ({navigation}) => {
                 <View style={{flex: 1, marginBottom: sizes.m}}>
                     <AppText h4 align={"center"}>Most Incorrect Answers by Subjects</AppText>
                     <View style={{
-                        borderColor: colors.primary,
+                        borderColor: '#6f6e6e',
                         paddingVertical: sizes.xs,
                         borderRadius: sizes.sm,
                         borderWidth: 1,
@@ -134,7 +134,7 @@ const Profile = ({navigation}) => {
                 <View style={{flex: 1}}>
                     <AppText h4 align={"center"}>Activity (Last 3 Months)</AppText>
                     <View style={{
-                        borderColor: colors.primary,
+                        borderColor: '#6f6e6e',
                         paddingVertical: sizes.xs,
                         borderRadius: sizes.sm,
                         borderWidth: 1,
@@ -171,7 +171,7 @@ const Profile = ({navigation}) => {
             <View style={{flex: 1, marginBottom: sizes.m}}>
                 <AppText h4 align={"center"}>Most Incorrect Answers by Subjects</AppText>
                 <View style={{
-                    borderColor: colors.primary,
+                    borderColor: '#6f6e6e',
                     paddingVertical: sizes.xs,
                     borderRadius: sizes.sm,
                     borderWidth: 1,
@@ -199,7 +199,7 @@ const Profile = ({navigation}) => {
             <View style={{flex: 1}}>
                 <AppText h4 align={"center"}>Activity (Last 3 Months)</AppText>
                 <View style={{
-                    borderColor: colors.primary,
+                    borderColor: '#6f6e6e',
                     paddingVertical: sizes.xs,
                     borderRadius: sizes.sm,
                     borderWidth: 1,

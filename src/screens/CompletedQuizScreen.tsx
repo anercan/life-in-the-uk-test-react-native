@@ -6,7 +6,6 @@ import {useTheme} from "../hooks";
 import * as Progress from 'react-native-progress';
 import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
-import {isPremium} from "util/jwtUtil";
 
 const {height} = Dimensions.get('window');
 
@@ -25,18 +24,15 @@ const CompletedQuizScreen = ({navigation}) => {
     const route = useRoute<QuizRouteProp>();
     const {apiCaller} = useApiCaller();
     const {quizName, quizSize, correctAnswerSize, quizCardList, quizGroupId, quizId} = route.params;
-    const {fonts,colors,sizes} = useTheme();
+    const {fonts, colors, sizes} = useTheme();
     const [isNextQuizExist, setNextQuizExist] = useState(true);
-    const { setTitle } = useContext(TitleContext);
-    const [completedStatics, setCompletedStatics] = useState({betterCount:0,equalCount:0,worseCount:0});
+    const {setTitle} = useContext(TitleContext);
+    const [completedStatics, setCompletedStatics] = useState({betterCount: 0, equalCount: 0, worseCount: 0});
 
-    const getStaticalData = async ()  => {
-        let isPremiumUser = await isPremium();
-        if (isPremiumUser) {
-            apiCaller('user-quiz/get-completed-quiz-statics?quizId=' + quizId).then((response: any) => {
-                setCompletedStatics(response);
-            });
-        }
+    const getStaticalData = async () => {
+        apiCaller('user-quiz/get-completed-quiz-statics?quizId=' + quizId).then((response: any) => {
+            setCompletedStatics(response);
+        });
     }
 
     useEffect(() => {
@@ -50,7 +46,7 @@ const CompletedQuizScreen = ({navigation}) => {
         container: {
             flex: 1,
             alignItems: 'center',
-            paddingBottom:sizes.sm
+            paddingBottom: sizes.sm
         },
         text: {
             color: '#424141',
@@ -88,7 +84,7 @@ const CompletedQuizScreen = ({navigation}) => {
     const getNextQuiz = () => {
         try {
             let indexOfCurrentQuiz = quizCardList?.findIndex(quiz => quiz.name === quizName);
-            return quizCardList[indexOfCurrentQuiz + 1].locked ? undefined : quizCardList[indexOfCurrentQuiz + 1];
+            return quizCardList[indexOfCurrentQuiz + 1];
         } catch (e) {
             return undefined;
         }
@@ -96,12 +92,17 @@ const CompletedQuizScreen = ({navigation}) => {
 
     const onPressNextQuiz = () => {
         let nextQuiz = getNextQuiz();
-        navigation.navigate('QuizScreen', {
-            quizId: nextQuiz?.id,
-            quizGroupId: quizGroupId,
-            quizCardList: quizCardList,
-            isReviewPage: false
-        })
+        if(nextQuiz?.locked) {
+            navigation.navigate('GetPremiumScreen');
+        } else {
+            navigation.navigate('QuizScreen', {
+                quizId: nextQuiz?.id,
+                quizGroupId: quizGroupId,
+                quizCardList: quizCardList,
+                isReviewPage: false
+            })
+        }
+
     }
 
     const onPressReview = () => {
@@ -114,7 +115,7 @@ const CompletedQuizScreen = ({navigation}) => {
     }
 
     function getScoreText() {
-        return Math.round(correctAnswerSize * 100 / quizSize)+'%';
+        return Math.round(correctAnswerSize * 100 / quizSize) + '%';
     }
 
     let totalCompletedUserQuizzes = completedStatics?.equalCount + completedStatics?.worseCount + completedStatics?.betterCount;
@@ -149,15 +150,15 @@ const CompletedQuizScreen = ({navigation}) => {
                 </View>
                 <View style={{paddingBottom: sizes.xl}}>
                     <Text style={styles.scoreText}>{correctAnswerSize}
-                        <Text style={{...styles.scoreText,fontSize:sizes.md}}>/{quizSize}</Text>
+                        <Text style={{...styles.scoreText, fontSize: sizes.md}}>/{quizSize}</Text>
                     </Text>
                 </View>
                 {totalCompletedUserQuizzes > 1 &&
-                    <View style={{paddingHorizontal:25,paddingBottom: height / 25}}>
+                    <View style={{paddingHorizontal: 25, paddingBottom: height / 25}}>
                         <Text style={styles.staticsText}>
                             Your score is better than {getPercentage()} of people.
                         </Text>
-                </View>
+                    </View>
                 }
                 {correctAnswerSize !== quizSize &&
                     <ButtonCard onPress={onPressReview} buttonText={'Review'}/>

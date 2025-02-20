@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, Modal as RNModal, ViewStyle, Platform} from 'react-native';
 
 import {useTheme} from '../hooks/';
-import {IModalProps} from '../constants/types';
+import {IModalProps} from 'constants/types';
 
 import Block from './Block';
 import Button from './Button';
@@ -36,7 +36,7 @@ const Modal = ({
             top={0}
             right={0}
             position="absolute"
-            onPress={() => onRequestClose?.()}>
+            onPress={onRequestClose}>
             <Image source={assets.close} color={colors.white} />
           </Button>
           <Block

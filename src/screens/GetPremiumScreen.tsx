@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Platform, ScrollView, Text, TouchableOpacity} from 'react-native';
+import {Platform, Text, TouchableOpacity} from 'react-native';
 import {View, StyleSheet} from 'react-native';
 import useTheme from "../hooks/useTheme";
 import {TitleContext} from "context/TitleContext";
@@ -16,8 +16,9 @@ import {AuthContext} from "context/AuthContext";
 import useApiCaller from "../hooks/useApiCaller";
 import analytics from "@react-native-firebase/analytics";
 import {getUserId} from "util/jwtUtil";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import {getBillingPeriod, isFreeTrialEligible} from "util/CommonUtil";
 
-//const items = Platform.select({android: ['level1'], ios: []});
 let monthlySubProductId = 'level1';
 
 const GetPremiumScreen = ({navigation}) => {
@@ -47,7 +48,7 @@ const GetPremiumScreen = ({navigation}) => {
         });
     }
 
-    async function init() {
+    const init = async () => {
         initConnection().then(() => {
             getSubscriptions({'skus': [monthlySubProductId]})
                 .then((r: any) => {
@@ -59,7 +60,7 @@ const GetPremiumScreen = ({navigation}) => {
         });
     }
 
-    function logSubscribtion() {
+    const logSubscribtion = () => {
         try {
             getUserId().then(userId => analytics().logEvent('subscription', {userId: userId}));
         } catch (e) {
@@ -68,7 +69,6 @@ const GetPremiumScreen = ({navigation}) => {
 
     const consumeGooglePlayDeliveryResult = async (purchaseResult: Purchase, serviceResult: any) => {
         if (serviceResult) {
-            setButtonDisable(true);
             login(serviceResult.jwt);
             await finishTransaction({purchase: purchaseResult, isConsumable: false})
             navigation.navigate('Profile');
@@ -78,7 +78,7 @@ const GetPremiumScreen = ({navigation}) => {
         }
     }
 
-    function subscriptionListener() {
+    const subscriptionListener = () => {
         purchaseUpdateSubscription = purchaseUpdatedListener((purchase: SubscriptionPurchase | ProductPurchase) => {
                 const receipt = purchase?.transactionReceipt;
                 if (receipt) {
@@ -117,83 +117,19 @@ const GetPremiumScreen = ({navigation}) => {
         requestSubscription(request)
     }
 
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            flexDirection:'column',
-            marginTop:sizes.xl,
-            alignItems:"center"
-        },
-        card: {
-            flex:7,
-            width: '80%',
-            backgroundColor: '#626466',
-            borderRadius: sizes.m,
-            shadowColor: '#363535',
-            shadowOffset: {width: 0, height: 5},
-            shadowOpacity: 0.6,
-            shadowRadius: 2,
-            elevation: 10,
-            flexDirection:'column',
-            marginBottom:'5%'
-        },
-        headerText: {
-            fontSize: sizes.h1,
-            fontWeight: 'bold',
-            marginVertical: sizes.m,
-            textAlign: 'center',
-            color: '#ffffff',
-            fontFamily: fonts.medium,
-        },
-        priceText: {
-            fontSize: sizes.h2,
-            fontWeight: 'bold',
-            marginBottom: sizes.m,
-            textAlign: 'center',
-            color: '#e2e2e2',
-            fontFamily: fonts.medium,
-        },
-        featureItem: {
-            marginVertical: sizes.s,
-        },
-        featureText: {
-            fontSize: sizes.h3,
-            textAlign: 'center',
-            fontFamily: fonts.thin,
-            color: '#ffffff'
-        },
-        upgradeButton: {
-            backgroundColor: buttonDisable ? '#a5aaac' : colors.primary,
-            paddingVertical: sizes.sm,
-            paddingHorizontal: sizes.m,
-            borderRadius: sizes.sm,
-            shadowColor: '#959595',
-            shadowOffset: {width: 0, height: 5},
-            shadowOpacity: 0.6,
-            shadowRadius: 2,
-            elevation: 4,
-        },
-        upgradeButtonText: {
-            color: '#fff',
-            fontSize: sizes.p,
-            fontFamily: fonts.medium,
-        },
-        footerText: {
-            marginTop: sizes.xs,
-            fontSize: sizes.h5,
-            color: '#888',
-            textAlign: 'center',
-        },
-    });
+    const getProductOffer = () => {
+        let billingPeriod = getBillingPeriod(product?.subscriptionOfferDetails[0]?.pricingPhases.pricingPhaseList[0]?.billingPeriod);
+        let formattedPrice = product?.subscriptionOfferDetails[0]?.pricingPhases.pricingPhaseList[0]?.formattedPrice;
+        return formattedPrice + '/' + billingPeriod;
+    }
 
     const premiumFeatures = [
-        'Access to Premium+ questions',
+        'Access to Premium+ quizzes',
         'Get detailed statical data',
         'Compare your test results with others',
         'Early access to new features',
         'Activity reports',
-        'More than 500 questions!',
-        'Cancellation available anytime!'
+        'More than 500 official questions',
     ];
 
     const renderFeature = (item:any) => (
@@ -202,40 +138,114 @@ const GetPremiumScreen = ({navigation}) => {
         </View>
     );
 
-    function getProductPrice() {
-        let formattedPrice = product?.subscriptionOfferDetails[0]?.pricingPhases.pricingPhaseList[0]?.formattedPrice;
-        return <>{formattedPrice}</>;
-    }
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            marginTop: sizes.xxl,
+            alignItems: "center",
+            padding: sizes.m,
+        },
+        title: {
+            color: colors.primary,
+            fontSize: 28,
+            fontFamily:fonts.p,
+            fontWeight: "bold",
+            marginBottom: sizes.m,
+        },
+        planContainer: {
+            width: "100%",
+            alignItems: "center",
+        },
+        plan: {
+            padding: sizes.m,
+            borderRadius: sizes.m,
+            backgroundColor: "#fafafa",
+            shadowColor: "#000",
+            shadowOpacity: 0.1,
+            shadowRadius: 10,
+            elevation: 5,
+            alignItems: "center",
+            width: "90%",
+        },
+        planTitle: {
+            color: colors.primary,
+            fontSize: sizes.h2,
+            fontWeight: "bold",
+            fontFamily:fonts.p,
+            marginBottom: sizes.s,
+        },
+        planPrice: {
+            color: "#062e5a",
+            fontSize: sizes.p,
+            fontWeight: 'bold',
+            fontFamily:fonts.p,
+            marginBottom: sizes.sm,
+            marginTop:sizes.s,
+            textDecorationLine:'underline'
+        },
+        freeTrialText: {
+            color: "#1a5ba0",
+            fontSize: sizes.h2,
+            fontWeight: 'bold',
+            fontFamily: fonts.p,
+            marginBottom: sizes.sm,
+        },
+        planDescription: {marginBottom:sizes.sm},
+        button: {
+            padding: sizes.sm,
+            borderRadius: sizes.m,
+            marginTop: sizes.m,
+            width: "65%",
+            alignItems: "center",
+            backgroundColor: buttonDisable ? '#bababa' : colors.primary,
+            shadowColor: "#000",
+            shadowOpacity: 0.2,
+            shadowRadius: 5,
+            elevation: 5,
+        },
+        buttonText: {
+            color: "white",
+            fontSize: sizes.h3,
+            fontFamily:fonts.text,
+            fontWeight: "bold",
+        },
+        featureItem: {
+            marginVertical: sizes.s,
+        },
+        featureText: {
+            fontSize: sizes.h3,
+            textAlign: 'center',
+            fontFamily: fonts.p,
+            color: "#4f5257",
+        },
+    });
 
     return (
-        <ScrollView>
-            <View style={styles.container}>
-                <View style={styles.card}>
-                    <View style={{justifyContent:'flex-start',flex:1.3}}>
-                        <Text style={styles.headerText}>Unlock Premium+</Text>
-                    </View>
-                    <View style={{elevation:4,justifyContent:'center',flex:3,backgroundColor:'#6e7072',borderRadius:sizes.sm,marginHorizontal:sizes.m,paddingVertical:'7%'}}>
+        <View style={styles.container}>
+            <Text style={styles.title}>Premium+ Plan</Text>
+
+            <Animated.View entering={FadeIn} exiting={FadeOut} style={styles.planContainer}>
+                <View style={styles.plan}>
+                    <Text style={styles.planTitle}>Unlock Full Access</Text>
+                    {isFreeTrialEligible(product)}
+                    <Text style={styles.planPrice}>{getProductOffer()}</Text>
+                    <View style={styles.planDescription}>
                         {premiumFeatures.map((feature, index) => (
                             <View key={index}>
                                 {renderFeature(feature)}
                             </View>
-                        ))}                    </View>
-                    <View style={{justifyContent:'flex-end',flex:1,marginTop:'10%'}}>
-                        <Text style={styles.priceText}>For Just {getProductPrice()} Monthly!</Text>
+                        ))}
                     </View>
                 </View>
-                <View style={{flex:5,justifyContent:'flex-start'}}>
-                    <TouchableOpacity accessible={true}
-                                      accessibilityLabel="Unlock Premium Subscription"
-                                      style={styles.upgradeButton}
-                                      disabled={buttonDisable}
-                                      onPress={handleUpgrade}>
-                        <Text style={styles.upgradeButtonText}>Unlock Premium+</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.footerText}>Terms and Conditions apply</Text>
-                </View>
-            </View>
-        </ScrollView>
+            </Animated.View>
+
+            <TouchableOpacity disabled={buttonDisable} onPress={handleUpgrade} style={styles.button}>
+                <Text style={styles.buttonText}>
+                    {isFreeTrialEligible(product) ? 'Start Free Trial!' : 'Upgrade Now'}
+                </Text>
+            </TouchableOpacity>
+        </View>
     );
+
 };
 export default GetPremiumScreen

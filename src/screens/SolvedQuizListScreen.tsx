@@ -8,7 +8,6 @@ import Tabs from "../components/Tabs";
 import ListCard from "../components/ListCard";
 import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
-import {BulletList} from 'react-content-loader/native'
 
 const SolvedQuizListScreen = ({navigation}) => {
     const {apiCaller, loading} = useApiCaller();
@@ -113,8 +112,7 @@ const SolvedQuizListScreen = ({navigation}) => {
                         </Block>
                     </Block>
                     :
-                    <BulletList style={{marginTop: sizes.s, marginLeft: sizes.sm}} backgroundColor={'#c1c1c1'}
-                                height={sizes.base * 22} width={sizes.base * 50}/>
+                    <></>
                 }
             </Block>
         </Block>

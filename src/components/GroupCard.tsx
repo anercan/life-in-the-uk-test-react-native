@@ -1,33 +1,24 @@
 import React from 'react';
-import {View, Text, StyleSheet, Dimensions, Image, Platform, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, ImageProps} from 'react-native';
 import {useTheme} from "../hooks";
+import Image from "components/Image";
 
 interface IGroupCard {
     card: any,
     onPress?: () => void;
+    backgroundColor:string
+    backgroundImage:ImageProps
 }
 
 const GroupCard = (props: IGroupCard) => {
 
     const {fonts, sizes} = useTheme();
 
-    const randomColors = [
-        '#c18b8b', '#5b7087',
-        '#7171aa', '#97839c',
-        '#6e7379', '#7295a1',
-        '#ad9773', '#80927f',
-    ];
-
-    const getRandomColor = () => {
-        const randomIndex = Math.floor(Math.random() * randomColors.length);
-        return randomColors[randomIndex];
-    };
-
     const styles = StyleSheet.create({
         card: {
             width: sizes.base * 21,
             height: sizes.base * 18,
-            backgroundColor: getRandomColor(),
+            backgroundColor: props.backgroundColor,
             borderRadius: sizes.m,
             alignItems: 'center',
             justifyContent: 'center',
@@ -63,24 +54,6 @@ const GroupCard = (props: IGroupCard) => {
         },
     });
 
-    const images = {
-        1: require('../assets/icons/groupIcons/icon-1.png'),
-        2: require('../assets/icons/groupIcons/icon-2.png'),
-        3: require('../assets/icons/groupIcons/icon-3.png'),
-        4: require('../assets/icons/groupIcons/icon-4.png'),
-        5: require('../assets/icons/groupIcons/icon-5.png'),
-        6: require('../assets/icons/groupIcons/icon-6.png'),
-        7: require('../assets/icons/groupIcons/icon-7.png'),
-        8: require('../assets/icons/groupIcons/icon-8.png'),
-        9: require('../assets/icons/groupIcons/icon-9.png'),
-        10: require('../assets/icons/groupIcons/icon-10.png'),
-        11: require('../assets/icons/groupIcons/icon-11.png'),
-        12: require('../assets/icons/groupIcons/icon-12.png')
-    };
-    const getRandomNumber = (number: number) => {
-        return Math.floor(Math.random() * number) + 1;
-    };
-
     function getCountLength() {
         return props.card?.userSolvedCount?.toString()?.length + props.card?.quizQuantity?.toString()?.length;
     }
@@ -110,7 +83,7 @@ const GroupCard = (props: IGroupCard) => {
                     transform: [{rotate: '-3deg'}] as any, // Rotate the image
                     tintColor: 'white'
                 }}
-                       source={images[getRandomNumber(Object.keys(images).length)]}>
+                       source={props.backgroundImage}>
                 </Image>
             </View>
         </TouchableOpacity>

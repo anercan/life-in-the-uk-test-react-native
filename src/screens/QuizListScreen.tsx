@@ -3,12 +3,11 @@ import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {useTheme} from '../hooks/';
 import {AppText, Block} from '../components/';
 import {RouteProp, useFocusEffect, useRoute} from "@react-navigation/native";
-import {IQuizCard} from "../constants/types";
+import {IQuizCard} from "constants/types";
 import Tabs from "../components/Tabs";
 import ListCard from "../components/ListCard";
-import {TitleContext} from "../context/TitleContext";
+import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
-import {BulletList} from 'react-content-loader/native'
 
 type QuizParams = {
     quizGroupTitle: number;
@@ -108,7 +107,7 @@ const QuizListScreen = ({navigation}) => {
                         </Block>
                     </Block>
                     :
-                    <BulletList backgroundColor={'#c1c1c1'} height={sizes.base * 22} width={sizes.base * 50}/>
+                    <></>
                 }
             </Block>
         </Block>

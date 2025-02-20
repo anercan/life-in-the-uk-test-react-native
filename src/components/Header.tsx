@@ -1,10 +1,10 @@
 import React, {useContext} from 'react';
-import {View, Text, StyleSheet, StatusBar, Dimensions, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, StatusBar, TouchableOpacity} from 'react-native';
 import {useTheme} from "../hooks";
-import {TitleContext} from "../context/TitleContext";
+import {TitleContext} from "context/TitleContext";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import {useNavigation} from '@react-navigation/native';
-import {getShortenText} from "../util/CommonUtil";
+import {getShortenText} from "util/CommonUtil";
 
 const Header = () => {
     const {getTitle} = useContext(TitleContext);

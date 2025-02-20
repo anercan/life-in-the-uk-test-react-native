@@ -27,74 +27,10 @@ function getGoogleConfig() {
 const LoginScreen = () => {
     const {apiCaller} = useApiCaller();
     const {login, autoLogin} = useContext(AuthContext);
-    const {fonts, sizes} = useTheme();
+    const {fonts, sizes,colors} = useTheme();
     const [version, setVersion] = useState("");
 
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#295780',
-        },
-        iconImage: {
-            width: sizes.base * 3,
-            height: sizes.base * 3,
-        },
-        button: {
-            flexDirection: 'row',
-            alignItems: 'center',
-            backgroundColor: '#4285F4',
-            height: sizes.xl,
-            width: sizes.base * 30,
-            paddingVertical: sizes.xs,
-            paddingHorizontal: sizes.xs,
-            borderRadius: sizes.md,
-            shadowColor: '#000',
-            shadowOffset: {width: 0, height: 3},
-            shadowOpacity: 0.3,
-            shadowRadius: 5,
-            elevation: 5,
-        },
-        iconContainer: {
-            backgroundColor: '#fff',
-            borderRadius: sizes.xxxl,
-            width: sizes.base * 5,
-            height: sizes.base * 5,
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginRight: sizes.sm,
-        },
-        text: {
-            color: '#fff',
-            fontFamily: fonts.p,
-            fontSize: sizes.text,
-            fontWeight: 'thin',
-        },
-        logoContainer: {
-            marginTop: sizes.xxxl,
-            width: sizes.base * 20, // Adjust size as needed
-            height: sizes.base * 20,
-            borderRadius: sizes.xxl,
-            overflow: 'hidden',
-            borderWidth: 2,
-            borderColor: '#cecece',
-            shadowColor: '#000',
-            shadowOffset: {width: 0, height: 4},
-            shadowOpacity: 0.2,
-            shadowRadius: 5,
-            marginBottom: sizes.base * 14,
-            elevation: 5, // Drop shadow on Android
-        },
-        logo: {
-            width: '100%',
-            height: '100%',
-            resizeMode: 'cover', // Ensures the image scales to fill the circle
-        },
-    });
-
     useEffect(() => {
-        crashlytics().log('App mounted');
         GoogleSignin.configure(getGoogleConfig());
         checkAppVersion();
         requestNotificationPermission();
@@ -181,6 +117,69 @@ const LoginScreen = () => {
             })
             .catch(() => alert('Login Failed'));
     }
+
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: colors.primary,
+        },
+        iconImage: {
+            width: sizes.base * 3,
+            height: sizes.base * 3,
+        },
+        button: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            backgroundColor: '#4285F4',
+            height: sizes.xl,
+            width: sizes.base * 30,
+            paddingVertical: sizes.xs,
+            paddingHorizontal: sizes.xs,
+            borderRadius: sizes.md,
+            shadowColor: '#000',
+            shadowOffset: {width: 0, height: 3},
+            shadowOpacity: 0.3,
+            shadowRadius: 5,
+            elevation: 5,
+        },
+        iconContainer: {
+            backgroundColor: '#fff',
+            borderRadius: sizes.xxxl,
+            width: sizes.base * 5,
+            height: sizes.base * 5,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginRight: sizes.sm,
+        },
+        text: {
+            color: '#fff',
+            fontFamily: fonts.p,
+            fontSize: sizes.text,
+            fontWeight: 'thin',
+        },
+        logoContainer: {
+            marginTop: sizes.xxxl,
+            width: sizes.base * 20, // Adjust size as needed
+            height: sizes.base * 20,
+            borderRadius: sizes.xxl,
+            overflow: 'hidden',
+            borderWidth: 2,
+            borderColor: '#cecece',
+            shadowColor: '#000',
+            shadowOffset: {width: 0, height: 4},
+            shadowOpacity: 0.2,
+            shadowRadius: 5,
+            marginBottom: sizes.base * 14,
+            elevation: 5, // Drop shadow on Android
+        },
+        logo: {
+            width: '100%',
+            height: '100%',
+            resizeMode: 'cover', // Ensures the image scales to fill the circle
+        },
+    });
 
     return (
         <View style={styles.container}>

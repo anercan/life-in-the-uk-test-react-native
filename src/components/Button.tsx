@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 
 import useTheme from '../hooks/useTheme';
-import {IButtonProps} from '../constants/types';
+import {IButtonProps} from 'constants/types';
 
 const Button = ({
   id = 'Button',
@@ -208,13 +208,6 @@ const Button = ({
   }*/
 
   if (social) {
-    const socialIcon =
-      social === 'facebook'
-        ? 'logo-facebook'
-        : social === 'twitter'
-        ? 'logo-twitter'
-        : 'logo-dribbble';
-
     return (
       <TouchableOpacity
         {...buttonID}

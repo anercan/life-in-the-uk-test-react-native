@@ -1,7 +1,7 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Platform, StatusBar} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import {useData, ThemeProvider} from '../hooks';
+import {useData, ThemeProvider} from 'hooks';
 import {View, StyleSheet} from 'react-native';
 import Header from "../components/Header";
 import {createStackNavigator} from "@react-navigation/stack";
@@ -27,24 +27,22 @@ import {
 import useApiCaller from "../hooks/useApiCaller";
 import {checkVersionWithStoresInfo} from "util/CheckVersion";
 import {COLORS, normalizeFont} from "constants/theme";
+import crashlytics from "@react-native-firebase/crashlytics";
+import AppOnboarding from "components/Onboarding";
+import {checkFirstLaunch} from "util/CommonUtil";
 
 export default () => {
     const {apiCaller} = useApiCaller();
     const {theme} = useData();
     const {login, isLoggedIn} = useContext(AuthContext);
-    /*useFonts({
-    'OpenSans-Light': theme.assets.OpenSansLight,
-    'OpenSans-Regular': theme.assets.OpenSansRegular,
-    'OpenSans-SemiBold': theme.assets.OpenSansSemiBold,
-    'OpenSans-ExtraBold': theme.assets.OpenSansExtraBold,
-    'OpenSans-Bold': theme.assets.OpenSansBold,
-});*/
+    const [isFirstLaunch, setIsFirstLaunch] = useState<boolean | null>(null);
 
     useEffect(() => {
-        console.log("-----------------------AppTsx-----------------------");
+        crashlytics().log('App mounted');
         checkVersionWithStoresInfo();
         Platform.OS === 'android' && StatusBar.setTranslucent(true);
         subscribeListener();
+        checkFirstLaunch().then((isFirst:boolean)=> setIsFirstLaunch(isFirst))
         return () => {
             StatusBar.setBarStyle('default');
         };
@@ -79,10 +77,6 @@ export default () => {
         );
     }
 
-    /* if (!fontsLoaded) {
-         return null;
-     }*/
-
     const styles = StyleSheet.create({
         container: {
             flex: 1,
@@ -90,12 +84,22 @@ export default () => {
         },
     });
 
+    const getScreen = () => {
+        if (isFirstLaunch) {
+            return <AppOnboarding onDone={() => setIsFirstLaunch(false)}/>
+        } else if(isLoggedIn) {
+            return <TabMenu/>
+        } else {
+            return <LoginScreen/>
+        }
+    }
+
     return (
         <ThemeProvider theme={theme}>
             <View style={styles.container}>
                 <NavigationContainer>
                     <Header/>
-                    {isLoggedIn ? <TabMenu/> : <LoginStack/>}
+                    {getScreen()}
                 </NavigationContainer>
             </View>
         </ThemeProvider>
@@ -104,17 +108,7 @@ export default () => {
 
 const Stack = createStackNavigator();
 
-const LoginStack = ({}) => (
-    <Stack.Navigator>
-        <Stack.Screen
-            name="Login"
-            component={LoginScreen}
-            options={{headerShown: false}}
-        />
-    </Stack.Navigator>
-);
-
-function getScreenOptions() {
+const getScreenOptions = () => {
     return {headerShown: false, cardStyle: {backgroundColor: COLORS.background}};
 }
 

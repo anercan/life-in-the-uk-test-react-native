@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Dimensions, TouchableOpacity, StyleSheet, StyleProp, ViewStyle,} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, StyleProp, ViewStyle,} from 'react-native';
 
 import useTheme from '../hooks/useTheme';
 

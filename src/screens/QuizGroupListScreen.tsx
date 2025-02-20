@@ -9,6 +9,7 @@ import {useFocusEffect} from "@react-navigation/native";
 import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
 import {BulletList} from 'react-content-loader/native'
+import {groupCardBackgroundImages, randomColors} from "util/CommonUtil";
 
 const QuizGroupListScreen = ({navigation}) => {
     const {apiCaller} = useApiCaller();
@@ -68,8 +69,10 @@ const QuizGroupListScreen = ({navigation}) => {
                         {rows.map((row, rowIndex) => (
                             <View key={rowIndex} style={styles.row}>
                                 {row.map((card,index) => (
-                                    <View key={row + index} style={{marginRight: index == 0 ? sizes.sm : 0}}>
+                                    <View key={row +''+ index} style={{marginRight: index == 0 ? sizes.sm : 0}}>
                                         <GroupCard
+                                            backgroundImage={groupCardBackgroundImages[(rowIndex * row.length) + index]}
+                                            backgroundColor={randomColors[(rowIndex * row.length) + index]}
                                             card={card}
                                             onPress={() => onPressQuizGroupCard(card)}
                                         />

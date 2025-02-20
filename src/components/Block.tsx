@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 
 import useTheme from '../hooks/useTheme';
-import {IBlockProps} from '../constants/types';
+import {IBlockProps} from 'constants/types';
 
 const Block = (props: IBlockProps) => {
   const {
@@ -58,16 +58,11 @@ const Block = (props: IBlockProps) => {
     align,
     flex = 1,
     wrap,
-    blur,
-    intensity,
-    tint,
     position,
     right,
     left,
     top,
     bottom,
-    end,
-    start,
     ...rest
   } = props;
   const {colors, sizes} = useTheme();

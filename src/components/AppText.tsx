@@ -43,8 +43,6 @@ const Typography = (props: ITextProps) => {
     left,
     top,
     bottom,
-    start,
-    end,
     marginBottom,
     marginTop,
     marginHorizontal,
@@ -59,7 +57,7 @@ const Typography = (props: ITextProps) => {
     paddingLeft,
     ...rest
   } = props;
-  const {colors, sizes, lines, weights, fonts} = useTheme();
+  const {colors, sizes, weights, fonts} = useTheme();
 
   const colorIndex = primary
     ? 'primary'
