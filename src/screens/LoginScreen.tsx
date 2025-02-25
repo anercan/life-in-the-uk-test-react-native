@@ -123,7 +123,7 @@ const LoginScreen = () => {
             flex: 1,
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: colors.primary,
+            backgroundColor: colors.background,
         },
         iconImage: {
             width: sizes.base * 3,

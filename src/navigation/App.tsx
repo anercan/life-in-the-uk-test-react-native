@@ -111,7 +111,7 @@ export default () => {
 const Stack = createStackNavigator();
 
 const getScreenOptions = () => {
-    return {headerShown: false, cardStyle: {backgroundColor: COLORS.background}};
+    return {headerShown: false, cardStyle: {backgroundColor: COLORS.secondaryBackground}};
 }
 
 export const QuizGroupListStack = () => {
@@ -158,8 +158,8 @@ export const TabMenu = () => {
                 tabBarActiveTintColor: '#ffffff', // White color for active items
                 //tabBarInactiveTintColor: '#cbcaca', // Light gray color for inactive items
                 tabBarStyle: {
-                    backgroundColor: COLORS.primary, // Dark blue background
-                    height: 80, // Custom height
+                    backgroundColor: COLORS.background, // Dark blue background
+                    height: 70, // Custom height
                     paddingBottom: 4, // Optional: add padding for better item placement
                     paddingTop: 1, // Optional: add padding for better item placement
                 },

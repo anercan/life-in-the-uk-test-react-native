@@ -18,7 +18,7 @@ const Header = () => {
     const styles = StyleSheet.create({
         headerContainer: {
             height: sizes.base * 13,
-            backgroundColor: colors.primary,
+            backgroundColor: colors.background,
             justifyContent: 'center',
             alignItems: 'center',
 
@@ -45,7 +45,7 @@ const Header = () => {
 
     return (
         <View style={styles.headerContainer}>
-            <StatusBar backgroundColor={colors.primary}/>
+            <StatusBar backgroundColor={colors.background}/>
             <View style={styles.row}>
                 {navigation.canGoBack() &&
                     <TouchableOpacity onPress={handleBackPress} style={styles.backButton}>

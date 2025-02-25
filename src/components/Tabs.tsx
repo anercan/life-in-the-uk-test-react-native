@@ -2,7 +2,6 @@ import {AppText, Block} from "./index";
 import {StyleSheet} from "react-native";
 import React, {useEffect, useState} from "react";
 import {useTheme} from "../hooks";
-import {COLORS} from "../constants/theme";
 
 export interface IHeader {
     callback: (tabNumber: number) => void;
@@ -13,7 +12,7 @@ export interface IHeader {
 
 const Tabs = (props: IHeader) => {
     const [tab, setTab] = useState<number>(0);
-    const {fonts, sizes} = useTheme();
+    const {sizes,colors} = useTheme();
 
     useEffect(() => {
         if (props.selectedTab != undefined) {
@@ -34,7 +33,7 @@ const Tabs = (props: IHeader) => {
         },
         passive: {
             paddingVertical: sizes.s,
-            backgroundColor: COLORS.background,
+            backgroundColor: colors.secondaryBackground,
         },
     });
     return (
@@ -65,5 +64,5 @@ const Tabs = (props: IHeader) => {
             </Block>
     );
 }
-export default Tabs;
+export default React.memo(Tabs);
 

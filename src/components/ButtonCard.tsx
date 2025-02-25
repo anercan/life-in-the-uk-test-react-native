@@ -14,7 +14,7 @@ const ButtonCard = (props: IButton) => {
 
     const styles = StyleSheet.create({
         card: {
-            backgroundColor: colors.primary,
+            backgroundColor: colors.background,
             borderRadius: sizes.sm,
             paddingHorizontal:sizes.m,
             paddingVertical:sizes.sm,
