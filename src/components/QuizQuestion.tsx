@@ -2,14 +2,14 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView} from 'react-native';
 import {IAnswerResponse, IQuizQuestion} from "constants/types";
 import {useTheme} from "../hooks";
-import Image from "./Image";
 import {AppText} from "./index";
 import Animated, { FadeIn } from "react-native-reanimated";
+import SwipeIndicator from "components/SwipeIndicator";
 
 const {width} = Dimensions.get('window');
 
 const QuizQuestion = (props: IQuizQuestion) => {
-    const {fonts,sizes,colors} = useTheme();
+    const {fonts,sizes} = useTheme();
     const [selectedId, setSelectedId] = useState<number>();
 
     useEffect(() => {
@@ -150,16 +150,7 @@ const QuizQuestion = (props: IQuizQuestion) => {
                         : ''
                     }
                     { (props.questionOrder == 0 && !props.isReviewPage && props.isAnswered) &&
-                        <Animated.View entering={FadeIn}>
-                            <Image
-                                width={sizes.xxl}
-                                height={sizes.xxl}
-                                marginTop={sizes.m}
-                                marginBottom={sizes.sm}
-                                color={colors.primary}
-                                source={require('../assets/images/swipe.png')}
-                            />
-                        </Animated.View>
+                        <SwipeIndicator/>
                     }
                 </View>
             </ScrollView>

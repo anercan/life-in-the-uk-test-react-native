@@ -1,10 +1,16 @@
 import Onboarding from 'react-native-onboarding-swiper';
 import Image from "components/Image";
 import {useTheme} from "hooks";
+import {useContext, useEffect} from "react";
+import {TitleContext} from "context/TitleContext";
 
 const AppOnboarding = ({onDone}) => {
-
+    const {setTitle} = useContext(TitleContext);
     const {colors,fonts} = useTheme();
+
+    useEffect(() => {
+        setTitle('');
+    }, []);
 
     return (
         <Onboarding

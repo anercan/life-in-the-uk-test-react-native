@@ -28,6 +28,7 @@ const CompletedQuizScreen = ({navigation}) => {
     const [isNextQuizExist, setNextQuizExist] = useState(true);
     const {setTitle} = useContext(TitleContext);
     const [completedStatics, setCompletedStatics] = useState({betterCount: 0, equalCount: 0, worseCount: 0});
+    const [progress, setProgress] = useState(0);
 
     const getStaticalData = async () => {
         apiCaller('user-quiz/get-completed-quiz-statics?quizId=' + quizId).then((response: any) => {
@@ -36,7 +37,8 @@ const CompletedQuizScreen = ({navigation}) => {
     }
 
     useEffect(() => {
-        setTitle(quizName)
+        setTitle(quizName);
+        setProgress(correctAnswerSize / quizSize);
         let nextQuiz = getNextQuiz();
         setNextQuizExist(nextQuiz !== undefined);
         getStaticalData();
@@ -59,9 +61,9 @@ const CompletedQuizScreen = ({navigation}) => {
             fontFamily: fonts.thin
         },
         staticsText: {
-            color: '#424141',
+            color: '#565758',
             fontSize: sizes.text,
-            fontFamily: fonts.thin,
+            fontFamily: fonts.p,
         },
         scoreBox: {
             justifyContent: 'center',
@@ -146,7 +148,7 @@ const CompletedQuizScreen = ({navigation}) => {
                         showsText={true}
                         formatText={() => getScoreText()}
                         size={sizes.base * 20}
-                        progress={correctAnswerSize / quizSize}/>
+                        progress={progress}/>
                 </View>
                 <View style={{paddingBottom: sizes.xl}}>
                     <Text style={styles.scoreText}>{correctAnswerSize}
@@ -156,7 +158,7 @@ const CompletedQuizScreen = ({navigation}) => {
                 {totalCompletedUserQuizzes > 1 &&
                     <View style={{paddingHorizontal: 25, paddingBottom: height / 25}}>
                         <Text style={styles.staticsText}>
-                            Your score is better than {getPercentage()} of people.
+                            You scored higher than {getPercentage()} of people!
                         </Text>
                     </View>
                 }

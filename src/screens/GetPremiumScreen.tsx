@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Platform, Text, TouchableOpacity} from 'react-native';
+import {Platform, ScrollView, Text, TouchableOpacity} from 'react-native';
 import {View, StyleSheet} from 'react-native';
 import useTheme from "../hooks/useTheme";
 import {TitleContext} from "context/TitleContext";
@@ -16,7 +16,7 @@ import {AuthContext} from "context/AuthContext";
 import useApiCaller from "../hooks/useApiCaller";
 import analytics from "@react-native-firebase/analytics";
 import {getUserId} from "util/jwtUtil";
-import Animated, {FadeIn, FadeOut} from "react-native-reanimated";
+import Animated, {FadeIn} from "react-native-reanimated";
 import {getBillingPeriod, isFreeTrialEligible} from "util/CommonUtil";
 
 let monthlySubProductId = 'level1';
@@ -28,10 +28,13 @@ const GetPremiumScreen = ({navigation}) => {
     const {setTitle} = useContext(TitleContext);
     const [product, setProduct] = useState<any>();
     const [buttonDisable, setButtonDisable] = useState<boolean>(false);
+    const [isCardEntering, setCardEntering] = useState<boolean>(true);
     let purchaseErrorSubscription;
     let purchaseUpdateSubscription: any = null;
-
     useEffect(() => {
+        setTimeout(() => {
+            setCardEntering(false);
+        }, 1000);
         init();
         setTitle('Subscription');
         logEvent();
@@ -60,10 +63,14 @@ const GetPremiumScreen = ({navigation}) => {
         });
     }
 
-    const logSubscribtion = () => {
+    const logSubscription = () => {
         try {
-            getUserId().then(userId => analytics().logEvent('subscription', {userId: userId}));
+            getUserId().then(userId => {
+                    analytics().logEvent('subscription', {userId: userId})
+                }
+            );
         } catch (e) {
+            console.log('Analytic Error');
         }
     }
 
@@ -72,7 +79,7 @@ const GetPremiumScreen = ({navigation}) => {
             login(serviceResult.jwt);
             await finishTransaction({purchase: purchaseResult, isConsumable: false})
             navigation.navigate('Profile');
-            logSubscribtion();
+            logSubscription();
         } else {
             setButtonDisable(false);
         }
@@ -94,12 +101,14 @@ const GetPremiumScreen = ({navigation}) => {
 
         purchaseErrorSubscription = purchaseErrorListener(
             (error: PurchaseError) => {
-                analytics().logEvent('error_purchase', {
-                    userId: getUserId(),
-                    errorName: error.name,
-                    errorMessage: error?.message,
-                    errorCode: error.code
-                })
+                getUserId().then(userId => {
+                    analytics().logEvent('error_purchase', {
+                        userId: userId,
+                        errorName: error?.name,
+                        errorMessage: error?.message,
+                        errorCode: error?.code
+                    });
+                });
                 setButtonDisable(false)
             },
         );
@@ -140,15 +149,9 @@ const GetPremiumScreen = ({navigation}) => {
     );
 
     const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            marginTop: sizes.xxl,
-            alignItems: "center",
-            padding: sizes.m,
-        },
         title: {
             color: colors.primary,
-            fontSize: 28,
+            fontSize: sizes.h1,
             fontFamily: fonts.p,
             fontWeight: "bold",
             marginBottom: sizes.m,
@@ -159,14 +162,14 @@ const GetPremiumScreen = ({navigation}) => {
         },
         plan: {
             padding: sizes.m,
-            borderRadius: sizes.m,
+            borderRadius: sizes.sm,
             backgroundColor: "#fafafa",
             shadowColor: "#000",
             shadowOpacity: 0.1,
             shadowRadius: 10,
-            elevation: 5,
             alignItems: "center",
             width: "90%",
+            elevation: isCardEntering ? 0 : 1
         },
         planTitle: {
             color: colors.primary,
@@ -194,15 +197,15 @@ const GetPremiumScreen = ({navigation}) => {
         planDescription: {marginBottom: sizes.sm},
         button: {
             padding: sizes.sm,
-            borderRadius: sizes.m,
-            marginTop: sizes.m,
-            width: "65%",
+            borderRadius: sizes.sm,
+            marginTop: sizes.md,
+            width: "50%",
             alignItems: "center",
             backgroundColor: buttonDisable ? '#bababa' : colors.primary,
             shadowColor: "#000",
             shadowOpacity: 0.2,
             shadowRadius: 5,
-            elevation: 5,
+            elevation: isCardEntering ? 0 : 3,
         },
         buttonText: {
             color: "white",
@@ -222,14 +225,16 @@ const GetPremiumScreen = ({navigation}) => {
     });
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Premium+ Plan</Text>
-
-            <Animated.View entering={FadeIn} exiting={FadeOut} style={styles.planContainer}>
+        <ScrollView contentContainerStyle={{
+            marginTop: sizes.xl,
+            alignItems: 'center',
+            padding: sizes.s,
+        }}>
+            <Animated.View entering={FadeIn.duration(400)} style={styles.planContainer}>
+                <Text style={styles.title}>Premium+ Plan</Text>
                 <View style={styles.plan}>
                     <Text style={styles.planTitle}>Unlock Full Access</Text>
-                    {isFreeTrialEligible(product)}
-                    <Text style={styles.planPrice}>{getProductOffer()}</Text>
+                    <Text style={styles.planPrice}>{getProductOffer() || '...'}</Text>
                     <View style={styles.planDescription}>
                         {premiumFeatures.map((feature, index) => (
                             <View key={index}>
@@ -238,14 +243,13 @@ const GetPremiumScreen = ({navigation}) => {
                         ))}
                     </View>
                 </View>
+                <TouchableOpacity disabled={buttonDisable} onPress={handleUpgrade} style={styles.button}>
+                    <Text style={styles.buttonText}>
+                        {isFreeTrialEligible(product) ? 'Start Free Trial!' : 'Upgrade Now'}
+                    </Text>
+                </TouchableOpacity>
             </Animated.View>
-
-            <TouchableOpacity disabled={buttonDisable} onPress={handleUpgrade} style={styles.button}>
-                <Text style={styles.buttonText}>
-                    {isFreeTrialEligible(product) ? 'Start Free Trial!' : 'Upgrade Now'}
-                </Text>
-            </TouchableOpacity>
-        </View>
+        </ScrollView>
     );
 
 };
