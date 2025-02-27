@@ -214,8 +214,8 @@ const Profile = ({navigation}) => {
                         width={width / 1.2}
                         height={height / 4.3}
                         chartConfig={{
-                            backgroundGradientFrom: colors.background.toString(),
-                            backgroundGradientTo: colors.background.toString(),
+                            backgroundGradientFrom: colors.secondaryBackground.toString(),
+                            backgroundGradientTo: colors.secondaryBackground.toString(),
                             color: (opacity = 1) => `rgba(30, 110, 180, ${opacity})`,
                             labelColor: (opacity = 1) => `rgba(30, 30, 30, ${opacity})`,
                         }}
