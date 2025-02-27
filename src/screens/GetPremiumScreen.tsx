@@ -85,6 +85,15 @@ const GetPremiumScreen = ({navigation}) => {
         }
     }
 
+    const logBackendError = (e) => {
+        getUserId().then(userId => {
+            analytics().logEvent('error_purchase_backend', {
+                userId: userId,
+                error: e
+            });
+        });
+    }
+
     const subscriptionListener = () => {
         purchaseUpdateSubscription = purchaseUpdatedListener((purchase: SubscriptionPurchase | ProductPurchase) => {
                 const receipt = purchase?.transactionReceipt;
@@ -93,7 +102,8 @@ const GetPremiumScreen = ({navigation}) => {
                         apiCaller('user-management/google-play-subscribe', 'POST', purchase)
                             .then(async (deliveryResult) => {
                                 await consumeGooglePlayDeliveryResult(purchase, deliveryResult);
-                            });
+                            })
+                            .catch(e => logBackendError(e));
                     }
                 }
             },
@@ -227,6 +237,7 @@ const GetPremiumScreen = ({navigation}) => {
     return (
         <ScrollView contentContainerStyle={{
             marginTop: sizes.xl,
+            marginBottom:sizes.xl,
             alignItems: 'center',
             padding: sizes.s,
         }}>
