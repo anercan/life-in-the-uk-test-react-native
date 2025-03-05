@@ -3,7 +3,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const BASE_URL = 'https://api.quizmarkt.com/quizmarkt-base';
 //const BASE_URL = 'http://10.0.2.2:9092/quizmarkt-base';
 
-const ApiCallerInternal = async (endpoint, method = 'GET', data = null) => {
+export interface ApiResponse {
+    data?:any,
+    status?:{code?:number,message?:string}
+}
+
+const ApiCallerInternal = async (endpoint, method = 'GET', data = null): Promise<ApiResponse> => {
     const url = `${BASE_URL}/${endpoint}`;
 
     const headers = {

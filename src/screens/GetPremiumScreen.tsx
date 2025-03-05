@@ -245,7 +245,7 @@ const GetPremiumScreen = ({navigation}) => {
                 <Text style={styles.title}>Premium+ Plan</Text>
                 <View style={styles.plan}>
                     <Text style={styles.planTitle}>Unlock Full Access</Text>
-                    <Text style={styles.planPrice}>{getProductOffer() || '...'}</Text>
+                    <Text style={styles.planPrice}>{product && getProductOffer()}</Text>
                     <View style={styles.planDescription}>
                         {premiumFeatures.map((feature, index) => (
                             <View key={index}>
