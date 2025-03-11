@@ -17,7 +17,7 @@ import {useFocusEffect} from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import {isPremium} from "util/jwtUtil";
 import useApiCaller from "../hooks/useApiCaller";
-import {capitalizeWords, getShortenText} from "util/CommonUtil";
+import {capitalizeWords, getShortenText} from "util/commonUtil";
 import {ContributionGraph, PieChart} from "react-native-chart-kit";
 import {Instagram} from 'react-content-loader/native'
 
@@ -26,7 +26,7 @@ const isAndroid = Platform.OS === 'android';
 const {height, width} = Dimensions.get('window');
 
 const Profile = ({navigation}) => {
-    const {apiCaller, loading} = useApiCaller();
+    const {apiCaller, loading} = useApiCaller(navigation);
     const {sizes, colors} = useTheme();
     const [userData, setUserData] = useState<UserDataResponse>();
     const [isPremiumUser, setIsPremiumUser] = useState(false);
@@ -37,7 +37,7 @@ const Profile = ({navigation}) => {
 
     useFocusEffect(
         useCallback(() => {
-            setTitle('My Profile');
+            setTitle('Profile');
             const checkPremiumStatus = async () => {
                 const premium = await isPremium();
                 setIsPremiumUser(premium);
@@ -56,7 +56,7 @@ const Profile = ({navigation}) => {
         navigation.navigate('GetPremiumScreen');
     }
 
-    function getCount(data:ActivityData) {
+    function getCount(data: ActivityData) {
         if (data?.count) {
             if (data.count == 0) {
                 return 0;
@@ -286,35 +286,45 @@ const Profile = ({navigation}) => {
                                 marginHorizontal="8%"
                                 color="rgba(255,255,255,0.2)"
                             >
-                                <TouchableOpacity activeOpacity={0.9}
-                                                  onPress={() => navigation.navigate('SolvedQuizListScreens')}>
-                                    <Block
-                                        row
-                                        flex={0}
-                                        radius={sizes.sm}
-                                        color={'#c9c9c9'}
-                                        overflow="hidden"
-                                        justify="space-evenly"
-                                        paddingVertical={sizes.sm}
-                                        renderToHardwareTextureAndroid
-                                    >
-                                        <Block align="center">
-                                            <AppText size={sizes.h3} semibold={true}
+
+                                <Block
+                                    row
+                                    flex={0}
+                                    radius={sizes.sm}
+                                    color={'#c9c9c9'}
+                                    overflow="hidden"
+                                    justify="space-evenly"
+                                    paddingVertical={sizes.sm}
+                                    renderToHardwareTextureAndroid
+                                >
+                                    <Block>
+                                        <TouchableOpacity style={{alignItems: 'center'}}
+                                                          onPress={() => navigation.reset({
+                                                              index: 0,
+                                                              routes: [{name: 'QuizGroupListStack'}]
+                                                          })}>
+                                            <AppText size={sizes.p} semibold={true}
                                                      p>{userData?.totalQuizCount}</AppText>
                                             <AppText>Total</AppText>
-                                        </Block>
-                                        <Block align="center">
-                                            <AppText size={sizes.h3} semibold={true}
+                                        </TouchableOpacity>
+                                    </Block>
+                                    <Block>
+                                        <TouchableOpacity style={{alignItems: 'center'}}
+                                                          onPress={() => navigation.navigate('SolvedQuizListScreens')}>
+                                            <AppText size={sizes.p} semibold={true}
                                                      p>{userData?.userOngoingQuizCount}</AppText>
                                             <AppText>Ongoing</AppText>
-                                        </Block>
-                                        <Block align="center">
-                                            <AppText size={sizes.h3} semibold={true}
+                                        </TouchableOpacity>
+                                    </Block>
+                                    <Block>
+                                        <TouchableOpacity style={{alignItems: 'center'}}
+                                                          onPress={() => navigation.navigate('SolvedQuizListScreens')}>
+                                            <AppText size={sizes.p} semibold={true}
                                                      p>{userData?.userSolvedQuizCount}</AppText>
                                             <AppText>Solved</AppText>
-                                        </Block>
+                                        </TouchableOpacity>
                                     </Block>
-                                </TouchableOpacity>
+                                </Block>
 
                             </Block>
                         </View>
@@ -364,7 +374,7 @@ const Profile = ({navigation}) => {
 
 export interface ActivityData {
     count: number,
-    date:string
+    date: string
 }
 
 interface UserDataResponse {

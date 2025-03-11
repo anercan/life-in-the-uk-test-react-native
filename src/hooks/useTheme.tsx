@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {defaultTheme} from '../constants/';
+import {defaultTheme} from '../constants/theme';
 import {ITheme, IThemeProvider} from 'constants/types';
 
 export const ThemeContext = React.createContext(null);

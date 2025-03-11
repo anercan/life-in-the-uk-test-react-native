@@ -1,11 +1,11 @@
 import {Dimensions, PixelRatio, Platform} from 'react-native';
 import {ITheme,
   ThemeAssets, ThemeColors,
-  ThemeFonts, ThemeGradients,
+  ThemeFonts,
   ThemeIcons,
   ThemeLineHeights, ThemeSizes, ThemeSpacing,
   ThemeWeights,
-} from './types';
+} from '../types';
 
 const {width} = Dimensions.get('window');
 
@@ -45,49 +45,49 @@ export const WEIGHTS: ThemeWeights = {
 };
 
 export const ICONS: ThemeIcons = {
-  apple: require('../assets/icons/apple.png'),
-  google: require('../assets/icons/google.png'),
-  facebook: require('../assets/icons/facebook.png'),
-  arrow: require('../assets/icons/arrow.png'),
-  articles: require('../assets/icons/articles.png'),
-  basket: require('../assets/icons/basket.png'),
-  bell: require('../assets/icons/bell.png'),
-  calendar: require('../assets/icons/calendar.png'),
-  chat: require('../assets/icons/chat.png'),
-  check: require('../assets/icons/check.png'),
-  clock: require('../assets/icons/clock.png'),
-  close: require('../assets/icons/close.png'),
-  components: require('../assets/icons/components.png'),
-  document: require('../assets/icons/document.png'),
-  documentation: require('../assets/icons/documentation.png'),
-  extras: require('../assets/icons/extras.png'),
-  flight: require('../assets/icons/flight.png'),
-  home: require('../assets/icons/home.png'),
-  hotel: require('../assets/icons/hotel.png'),
-  image: require('../assets/icons/image.png'),
-  location: require('../assets/icons/location.png'),
-  menu: require('../assets/icons/menu.png'),
-  more: require('../assets/icons/more.png'),
-  notification: require('../assets/icons/notification.png'),
-  office: require('../assets/icons/office.png'),
-  payment: require('../assets/icons/payment.png'),
-  profile: require('../assets/icons/profile.png'),
-  register: require('../assets/icons/register.png'),
-  rental: require('../assets/icons/rental.png'),
-  search: require('../assets/icons/search.png'),
-  settings: require('../assets/icons/settings.png'),
-  star: require('../assets/icons/star.png'),
-  train: require('../assets/icons/train.png'),
-  users: require('../assets/icons/users.png'),
-  warning: require('../assets/icons/warning.png'),
+  apple: require('../../assets/icons/apple.png'),
+  google: require('../../assets/icons/google.png'),
+  facebook: require('../../assets/icons/facebook.png'),
+  arrow: require('../../assets/icons/arrow.png'),
+  articles: require('../../assets/icons/articles.png'),
+  basket: require('../../assets/icons/basket.png'),
+  bell: require('../../assets/icons/bell.png'),
+  calendar: require('../../assets/icons/calendar.png'),
+  chat: require('../../assets/icons/chat.png'),
+  check: require('../../assets/icons/check.png'),
+  clock: require('../../assets/icons/clock.png'),
+  close: require('../../assets/icons/close.png'),
+  components: require('../../assets/icons/components.png'),
+  document: require('../../assets/icons/document.png'),
+  documentation: require('../../assets/icons/documentation.png'),
+  extras: require('../../assets/icons/extras.png'),
+  flight: require('../../assets/icons/flight.png'),
+  home: require('../../assets/icons/home.png'),
+  hotel: require('../../assets/icons/hotel.png'),
+  image: require('../../assets/icons/image.png'),
+  location: require('../../assets/icons/location.png'),
+  menu: require('../../assets/icons/menu.png'),
+  more: require('../../assets/icons/more.png'),
+  notification: require('../../assets/icons/notification.png'),
+  office: require('../../assets/icons/office.png'),
+  payment: require('../../assets/icons/payment.png'),
+  profile: require('../../assets/icons/profile.png'),
+  register: require('../../assets/icons/register.png'),
+  rental: require('../../assets/icons/rental.png'),
+  search: require('../../assets/icons/search.png'),
+  settings: require('../../assets/icons/settings.png'),
+  star: require('../../assets/icons/star.png'),
+  train: require('../../assets/icons/train.png'),
+  users: require('../../assets/icons/users.png'),
+  warning: require('../../assets/icons/warning.png'),
 };
 
 export const ASSETS: ThemeAssets = {
-  OpenSansLight: require('../assets/fonts/OpenSans-Light.ttf'),
-  OpenSansRegular: require('../assets/fonts/OpenSans-Regular.ttf'),
-  OpenSansSemiBold: require('../assets/fonts/OpenSans-SemiBold.ttf'),
-  OpenSansExtraBold: require('../assets/fonts/OpenSans-ExtraBold.ttf'),
-  OpenSansBold: require('../assets/fonts/OpenSans-Bold.ttf'),
+  OpenSansLight: require('../../assets/fonts/OpenSans-Light.ttf'),
+  OpenSansRegular: require('../../assets/fonts/OpenSans-Regular.ttf'),
+  OpenSansSemiBold: require('../../assets/fonts/OpenSans-SemiBold.ttf'),
+  OpenSansExtraBold: require('../../assets/fonts/OpenSans-ExtraBold.ttf'),
+  OpenSansBold: require('../../assets/fonts/OpenSans-Bold.ttf'),
 };
 
 export const FONTS: ThemeFonts = {
@@ -144,8 +144,6 @@ export const COLORS: ThemeColors = {
   // gray variations
   /** UI color for #gray */
   gray: '#A7A8AE',
-  darkGray: '#4f4f52',
-
   // colors variations
   /** UI color for #danger */
   danger: '#9e0202',
@@ -163,7 +161,6 @@ export const COLORS: ThemeColors = {
 
   /** UI color for shadowColor */
   shadow: '#000000',
-  overlay: 'rgba(0,0,0,0.3)',
 
   /** UI color for input borderColor on focus */
   focus: '#b2f6f6',
@@ -177,11 +174,6 @@ export const COLORS: ThemeColors = {
   checkbox: ['#3A416F', '#141727'],
   checkboxIcon: '#FFFFFF',
 
-  /** social colors */
-  facebook: '#3B5998',
-  twitter: '#55ACEE',
-  dribbble: '#b2f6f6',
-
   /** icon tint color */
   icon: '#8392AB',
 
@@ -192,28 +184,6 @@ export const COLORS: ThemeColors = {
   link: '#b2f6f6',
 };
 
-export const GRADIENTS: ThemeGradients = {
-  primary: ['#b2f6f6', '#7928CA'],
-  secondary: ['#A8B8D8', '#627594'],
-  info: ['#21D4FD', '#2152FF'],
-  success: ['#98EC2D', '#17AD37'],
-  warning: ['#FBCF33', '#F53939'],
-  danger: ['#FF667C', '#EA0606'],
-
-  light: ['#EBEFF4', '#CED4DA'],
-  dark: ['#3A416F', '#141727'],
-
-  white: [String(COLORS.white), '#ffffff'],
-  black: [String(COLORS.black), '#141727'],
-
-  divider: ['rgba(255,255,255,0.3)', 'rgba(102, 116, 142, 0.6)'],
-  menu: [
-    'rgba(255, 255, 255, 0.2)',
-    'rgba(112, 125, 149, 0.5)',
-    'rgba(255, 255, 255, 0.2)',
-  ],
-};
-
 export const SIZES: ThemeSizes = {
   // global sizes
   base: normalize(7),
@@ -222,7 +192,7 @@ export const SIZES: ThemeSizes = {
 
   // font sizes
   h1: normalizeFont(22),
-  h2: normalizeFont(18),
+  h2: normalizeFont(19),
   h3: normalizeFont(16),
   h4: normalizeFont(15),
   h5: normalizeFont(14),
@@ -293,7 +263,6 @@ export const SPACING: ThemeSpacing = {
 
 export const THEME: ITheme = {
   colors: COLORS,
-  gradients: GRADIENTS,
   sizes: {...SIZES, ...SPACING},
   assets: {...ICONS, ...ASSETS},
   icons: ICONS,

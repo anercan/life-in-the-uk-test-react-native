@@ -1,8 +1,8 @@
 import {useContext, useState} from "react";
 import {AuthContext} from "context/AuthContext";
-import ApiCallerInternal, {ApiResponse} from "../util/ApiCaller";
+import ApiCallerInternal, {ApiResponse} from "../util/apiCaller";
 
-const useApiCaller = () => {
+const useApiCaller = (navigator?) => {
     const {logout} = useContext(AuthContext);
     const [loading, setLoading] = useState(false);
 
@@ -10,6 +10,9 @@ const useApiCaller = () => {
         setLoading(true);
         try {
             const response: ApiResponse = await ApiCallerInternal(endpoint, method, data);
+            if (response?.status?.code === -3 && navigator) {
+                navigator?.navigate('GetPremiumScreen');
+            }
             return response?.data;
         } catch (error: any) {
             if (error.status === 401) {

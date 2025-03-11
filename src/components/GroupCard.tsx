@@ -58,17 +58,20 @@ const GroupCard = (props: IGroupCard) => {
         return props.card?.userSolvedCount?.toString()?.length + props.card?.quizQuantity?.toString()?.length;
     }
 
+    function getProgress() {
+        return Math.round((props.card?.userSolvedCount / props.card?.quizQuantity) * 100);
+    }
+
     return (
         <TouchableOpacity id={`card-${props?.card?.id}`} onPress={props.onPress}>
             <View style={styles.orderBox}>
-                <Text style={{color: '#ecebeb', fontSize: sizes.h3}}>
-                    {props.card?.userSolvedCount}
-                    /
+                <Text style={{color: '#ecebeb', fontSize: sizes.h2}}>
+                    {getProgress()}
                     <Text style={{
                         color: '#ecebeb',
                         fontSize: sizes.h4
                     }}>
-                        {props.card?.quizQuantity}
+                        %
                     </Text>
                 </Text>
             </View>

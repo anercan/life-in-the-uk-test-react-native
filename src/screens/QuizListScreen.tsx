@@ -75,7 +75,7 @@ const QuizListScreen = ({navigation}) => {
     return (
         <Block>
             <Block flex={1}>
-                <Tabs tabOneText={'Ongoing'} selectedTab={tab} tabTwoText={'Completed'} callback={setTabChange}/>
+                <Tabs tabOneText={'Recent'} selectedTab={tab} tabTwoText={'Completed'} callback={setTabChange}/>
             </Block>
             <Block flex={9}>
                 {!loading ?

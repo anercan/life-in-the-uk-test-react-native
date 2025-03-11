@@ -12,7 +12,7 @@ import Block from './Block';
 import Text from './AppText';
 
 import useTheme from '../hooks/useTheme';
-import {IInputProps} from '../constants/types';
+import {IInputProps} from 'constants/types';
 
 const Input = ({
   id = 'Input',

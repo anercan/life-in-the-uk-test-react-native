@@ -21,7 +21,7 @@ type QuizParams = {
 type QuizScreenRootProps = RouteProp<{ QuizScreen: QuizParams }, 'QuizScreen'>;
 
 const QuizScreen = ({navigation}) => {
-    const {apiCaller} = useApiCaller();
+    const {apiCaller} = useApiCaller(navigation);
     const {setTitle} = useContext(TitleContext);
     const {onTouchStart, onTouchEnd} = useSwipe(onSwipeLeft, onSwipeRight, 14);
     const shakeAnimation = new Animated.Value(0);
@@ -67,11 +67,6 @@ const QuizScreen = ({navigation}) => {
                 } else {
                     setQuestionList(quizResponse?.questionList);
                     setActiveQuestionState(quizResponse?.questionList, getQuestionCount(quizResponse?.userQuiz));
-                }
-            })
-            .catch(error => {
-                if (error.status == 400) {
-                    navigation.navigate('GetPremiumScreen');
                 }
             });
     }, [quizId, isReviewPage]);

@@ -4,7 +4,7 @@ import {useTheme} from "../hooks";
 import {TitleContext} from "context/TitleContext";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import {useNavigation} from '@react-navigation/native';
-import {getShortenText} from "util/CommonUtil";
+import {getShortenText} from "util/commonUtil";
 
 const Header = () => {
     const {getTitle} = useContext(TitleContext);
@@ -17,7 +17,7 @@ const Header = () => {
 
     const styles = StyleSheet.create({
         headerContainer: {
-            height: sizes.base * 13,
+            height: sizes.base * 12,
             backgroundColor: colors.background,
             justifyContent: 'center',
             alignItems: 'center',

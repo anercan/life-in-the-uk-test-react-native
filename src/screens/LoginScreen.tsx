@@ -9,7 +9,7 @@ import {AuthContext} from "context/AuthContext";
 import useApiCaller from "../hooks/useApiCaller";
 import {useTheme} from "../hooks";
 import {AppText} from "../components";
-import {getVersionInfo} from "util/CheckVersion";
+import {getVersionInfo} from "util/checkVersion";
 import crashlytics from '@react-native-firebase/crashlytics';
 import {getUserId} from "util/jwtUtil";
 import analytics from "@react-native-firebase/analytics";

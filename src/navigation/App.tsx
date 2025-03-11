@@ -25,11 +25,11 @@ import {
     SubscriptionPurchase
 } from "react-native-iap";
 import useApiCaller from "../hooks/useApiCaller";
-import {checkVersionWithStoresInfo} from "util/CheckVersion";
-import {COLORS, normalizeFont} from "constants/theme";
+import {checkVersionWithStoresInfo} from "util/checkVersion";
+import {COLORS, normalizeFont, SIZES} from "constants/theme/theme";
 import crashlytics from "@react-native-firebase/crashlytics";
 import AppOnboarding from "components/Onboarding";
-import {checkFirstLaunch} from "util/CommonUtil";
+import {checkFirstLaunch} from "util/commonUtil";
 import analytics from "@react-native-firebase/analytics";
 
 export default () => {
@@ -149,19 +149,20 @@ export const ProfileStack = () => {
 const Tab = createBottomTabNavigator();
 
 export const TabMenu = () => {
+    let base = SIZES.base;
     return (
 
         <Tab.Navigator
             initialRouteName="QuizGroupListStack"
             screenOptions={{
                 headerShown: false,
+                tabBarShowLabel: false, // Hides label names
                 tabBarActiveTintColor: '#ffffff', // White color for active items
-                //tabBarInactiveTintColor: '#cbcaca', // Light gray color for inactive items
+                tabBarInactiveTintColor: '#9c9595', // Light gray color for inactive items
                 tabBarStyle: {
                     backgroundColor: COLORS.background, // Dark blue background
-                    height: 70, // Custom height
-                    paddingBottom: 4, // Optional: add padding for better item placement
-                    paddingTop: 1, // Optional: add padding for better item placement
+                    height: base*7, // Custom height
+                    paddingTop:base*1.4
                 },
             }}
         >
@@ -169,12 +170,6 @@ export const TabMenu = () => {
                 name="QuizGroupListStack"
                 component={QuizGroupListStack}
                 options={{
-                    tabBarLabel: 'Home',
-                    tabBarLabelStyle: {
-                        fontSize: normalizeFont(14),
-                        fontFamily: 'OpenSans-Regular',
-                        color: '#d9d8d8', // Optional: customize font size
-                    },
                     tabBarIcon: ({color, size}) => (
                         <Feather name="home" color={color} size={size}/>
                     ),
@@ -184,14 +179,8 @@ export const TabMenu = () => {
                 name="SolvedQuizListScreens"
                 component={SolvedQuizListStack}
                 options={{
-                    tabBarLabelStyle: {
-                        fontSize: normalizeFont(14),
-                        fontFamily: 'OpenSans-Regular',
-                        color: '#d9d8d8', // Optional: customize font size
-                    },
-                    tabBarLabel: 'My Quizzes',
                     tabBarIcon: ({color, size}) => (
-                        <Feather name="file-minus" color={color} size={size}/>
+                        <Feather name="file" color={color} size={size}/>
                     ),
                 }}
             />
@@ -215,7 +204,6 @@ export const TabMenu = () => {
                         fontFamily: 'OpenSans-Regular',
                         color: '#d9d8d8', // Optional: customize font size
                     },
-                    tabBarLabel: 'Profile',
                     tabBarIcon: ({color, size}) => (
                         <Feather name="user" color={color} size={size}/>
                     ),

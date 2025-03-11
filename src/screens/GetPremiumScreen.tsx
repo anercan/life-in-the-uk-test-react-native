@@ -17,7 +17,7 @@ import useApiCaller from "../hooks/useApiCaller";
 import analytics from "@react-native-firebase/analytics";
 import {getUserId} from "util/jwtUtil";
 import Animated, {FadeIn} from "react-native-reanimated";
-import {getBillingPeriod, isFreeTrialEligible} from "util/CommonUtil";
+import {getBillingPeriod, isFreeTrialEligible} from "util/commonUtil";
 
 let monthlySubProductId = 'level1';
 
@@ -36,20 +36,12 @@ const GetPremiumScreen = ({navigation}) => {
             setCardEntering(false);
         }, 1000);
         init();
-        setTitle('Subscription');
-        logEvent();
+        setTitle('Subscription Plan');
         return () => {
             purchaseUpdateSubscription?.remove();
             purchaseErrorSubscription?.remove();
         };
     }, []);
-
-    const logEvent = () => {
-        analytics().logScreenView({
-            screen_name: 'Get Premium',
-            screen_class: 'GetPremium'
-        });
-    }
 
     const init = async () => {
         initConnection().then(() => {

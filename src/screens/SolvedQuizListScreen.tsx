@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useState} from 'react';
 
 import {useTheme} from '../hooks/';
 import {AppText, Block} from '../components/';
@@ -24,27 +24,32 @@ const SolvedQuizListScreen = ({navigation}) => {
                 .then(response => {
                     let dataList = response?.userQuizResponseList;
                     setQuizCards(dataList);
-                    let onGoingQuizes = dataList?.filter((card: ISolvedQuizCard) => card?.state !== 'COMPLETED');
-                    if (onGoingQuizes.length > 0) {
-                        setTab(0);
-                        setFilteredQuizCards(onGoingQuizes);
-                    } else {
-                        setTab(1);
-                    }
+                    setInitialTab(dataList);
                 });
         }, [])
     )
 
-    useEffect(() => {
-        if (tab === 0) {
-            setFilteredQuizCards(quizCards.filter((card: ISolvedQuizCard) => card?.state !== 'COMPLETED'));
+    const filterTabs = (selected, cards = quizCards) => {
+        if (selected !== 'COMPLETED') {
+            setTab(0);
+            setFilteredQuizCards(cards.filter((card: ISolvedQuizCard) => card?.state !== 'COMPLETED'));
         } else {
-            setFilteredQuizCards(quizCards.filter((card: ISolvedQuizCard) => card?.state === 'COMPLETED'));
+            setTab(1);
+            setFilteredQuizCards(cards.filter((card: ISolvedQuizCard) => card?.state === 'COMPLETED'));
         }
-    }, [tab]);
+    }
+
+    const setInitialTab = (dataList) => {
+        let onGoingQuizes = dataList?.filter((card: ISolvedQuizCard) => card?.state !== 'COMPLETED');
+        if (onGoingQuizes.length > 0) {
+            filterTabs('ONGOING', dataList);
+        } else {
+            filterTabs('COMPLETED', dataList);
+        }
+    }
 
     const setTabChange = (filter: number) => {
-        setTab(filter);
+        filterTabs(filter === 1 ? 'COMPLETED' : 'ONGOING');
     };
 
     function cardOnPress(card: any) {
@@ -67,14 +72,8 @@ const SolvedQuizListScreen = ({navigation}) => {
         }
     }
 
-    function formatDate(dateString) {
-        const date = new Date(dateString); // Parse the date string into a Date object
-
-        const day = String(date.getDate()).padStart(2, '0'); // Get the day and pad with leading zero if necessary
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based, so add 1 and pad with leading zero
-        const year = date.getFullYear(); // Get the full year
-
-        return `${day}.${month}.${year}`; // Format the date as DD-MM-YYYY
+    function getProgress(card: any) {
+        return Math.round((card?.correctQuestionList?.length / card?.quiz?.activeQuestionCount) * 100);
     }
 
     return (
@@ -93,14 +92,14 @@ const SolvedQuizListScreen = ({navigation}) => {
                             marginTop={sizes.m}
                             align={"center"}>
                             {filteredQuizCards?.length > 0 ?
-                                filteredQuizCards?.map((card: any,index) => (
+                                filteredQuizCards?.map((card: any, index) => (
                                     <ListCard
                                         key={index}
                                         title={card?.quiz?.name}
                                         rightBottomTitle={'Difficulty: '}
                                         rightBottomDesc={card.quiz?.attributes?.difficulty}
                                         rightTopText1={tab === 0 ? card?.correctQuestionList?.length + card?.wrongQuestionList?.length : undefined}
-                                        rightTopText2={tab === 0 ? card?.quiz?.activeQuestionCount : formatDate(card?.completeDate)}
+                                        rightTopText2={tab === 0 ? card?.quiz?.activeQuestionCount : getProgress(card)}
                                         onPress={() => cardOnPress(card)}
                                     />
                                 ))

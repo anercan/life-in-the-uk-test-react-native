@@ -5,7 +5,7 @@ import AppNavigation from './src/navigation/App';
 import {AuthProvider} from "./src/context/AuthContext";
 import {TitleProvider} from "./src/context/TitleContext";
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {COLORS} from "./src/constants/theme";
+import {COLORS} from "./src/constants/theme/theme";
 import SystemNavigationBar from 'react-native-system-navigation-bar';
 
 export default function App() {

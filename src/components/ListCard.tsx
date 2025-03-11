@@ -3,7 +3,7 @@ import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 
 import {useTheme} from "../hooks";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import {getShortenText} from "util/CommonUtil";
+import {getShortenText} from "util/commonUtil";
 
 interface IListCard {
     title?: string | undefined,
@@ -68,20 +68,6 @@ const ListCard = (props:IListCard) => {
             marginTop: '-5%',
             elevation: 5,
         },
-        orderBoxDate: {
-            height: '150%',
-            width: '22%',
-            justifyContent: "center",
-            alignItems: 'center',
-            borderRadius: sizes.m,
-            backgroundColor: '#dddede',
-            shadowColor: '#363535',
-            shadowOffset: {width: 0, height: 1},
-            shadowOpacity: 0.1,
-            shadowRadius: 2,
-            marginTop: '-5%',
-            elevation: 5,
-        },
         rightBottom: {
             marginRight:sizes.sm,
             alignItems: 'flex-end',
@@ -99,27 +85,30 @@ const ListCard = (props:IListCard) => {
         text: {
             fontFamily:fonts.p,
             color: !props.locked ? '#5c5b5b' : '#848383',
-            letterSpacing: props.rightTopText1?.length + props.rightTopText2?.length > 2 ? 1 : 2
+            letterSpacing: 1
         },
         dateText: {
-            fontWeight: 'bold',
-            color: !props.locked ? '#525252' : '#848383',
+            fontFamily:fonts.p,
+            color: '#5c5b5b',
+            fontSize:sizes.smallText,
         }
     }), [props.locked]);
 
     return (
         <TouchableOpacity onPress={props.onPress} style={styles.card}>
                 <View style={styles.orderBoxContainer}>
-                    <View style={props.rightTopText1 ? styles.orderBox : styles.orderBoxDate}>
+                    <View style={styles.orderBox}>
                         {props.locked ?
                             <MaterialCommunityIcons name="lock" color={'#848383'} size={sizes.m}/> :
                             props.rightTopText1 !== undefined ?
-                                <Text style={[styles.text, {fontSize: sizes.h2}]}>{props.rightTopText1}<Text
+                                <Text style={[styles.text, {fontSize: sizes.h1}]}>{props.rightTopText1}<Text
                                     style={[styles.text, {fontSize:  sizes.h5}]}>/{props.rightTopText2}</Text>
                                 </Text>
                                 :
-                                <Text style={[styles.dateText, {fontSize: sizes.inputPadding}]}>
-                                    {props.rightTopText2}
+                                <Text style={styles.dateText}>
+                                    <Text style={[styles.dateText, {fontSize:  sizes.h2}]}>
+                                        {props.rightTopText2}
+                                    </Text>{'%'}
                                 </Text>
                         }
                     </View>

@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import {ISwitchProps} from '../constants/types';
+import {ISwitchProps} from 'constants/types';
 import useTheme from '../hooks/useTheme';
 
 const Switch = ({

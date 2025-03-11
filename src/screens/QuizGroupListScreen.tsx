@@ -9,10 +9,10 @@ import {useFocusEffect} from "@react-navigation/native";
 import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
 import {BulletList} from 'react-content-loader/native'
-import {groupCardBackgroundImages, randomColors} from "util/CommonUtil";
+import {groupCardBackgroundImages, randomColors} from "util/commonUtil";
 
 const QuizGroupListScreen = ({navigation}) => {
-    const {apiCaller} = useApiCaller();
+    const {apiCaller} = useApiCaller(navigation);
     const [quizGroupCards, setQuizGroupCards] = useState([{}]);
     const {sizes} = useTheme();
     const { setTitle } = useContext(TitleContext);

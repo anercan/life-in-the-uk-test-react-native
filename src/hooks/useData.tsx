@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState} from 'react';
 import {ITheme} from 'constants/types';
-import {defaultTheme} from '../constants';
+import {defaultTheme} from '../constants/theme';
 
 export const DataContext = React.createContext({});
 

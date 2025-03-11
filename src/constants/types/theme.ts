@@ -48,7 +48,6 @@ export type TWeight =
 
 export interface ITheme {
   colors: ThemeColors;
-  gradients: ThemeGradients;
   sizes: ThemeSizes & ThemeSpacing;
   assets: ThemeAssets & ThemeIcons;
   icons: ThemeIcons;
@@ -72,7 +71,6 @@ export interface ThemeColors {
   light: ColorValue;
   dark: ColorValue;
   gray: ColorValue;
-  darkGray: ColorValue;
   danger: ColorValue;
   warning: ColorValue;
   success: ColorValue;
@@ -81,36 +79,15 @@ export interface ThemeColors {
   background: ColorValue;
   secondaryBackground: ColorValue;
   shadow: ColorValue;
-  overlay: ColorValue;
   focus: ColorValue;
   input: ColorValue;
   switchOn: ColorValue;
   switchOff: ColorValue;
   checkbox: string[];
   checkboxIcon: ColorValue;
-  facebook: ColorValue;
-  twitter: ColorValue;
-  dribbble: ColorValue;
   icon: ColorValue;
   blurTint: 'light' | 'dark' | 'default';
   link: ColorValue;
-}
-
-export interface ThemeGradients {
-  primary?: string[];
-  secondary?: string[];
-  tertiary?: string[];
-  black?: string[];
-  white?: string[];
-  light?: string[];
-  dark?: string[];
-  gray?: string[];
-  danger?: string[];
-  warning?: string[];
-  success?: string[];
-  info?: string[];
-  divider?: string[];
-  menu?: string[];
 }
 
 export interface ThemeSizes {
