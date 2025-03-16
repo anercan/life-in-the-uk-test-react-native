@@ -346,7 +346,7 @@ const Profile = ({navigation}) => {
                             marginTop: '15%',
                             marginBottom: sizes.s
                         }}>
-                            <Button radius={sizes.s} width={'35%'} color={'#76777d'}
+                            <Button radius={sizes.sm} width={'35%'} color={'#76777d'}
                                     onPress={() => logoutInternal()}>
                                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                                     <MaterialCommunityIcons name="logout" color={'#ffffff'} size={sizes.sm}/>

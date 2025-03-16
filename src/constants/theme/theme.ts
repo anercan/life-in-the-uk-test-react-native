@@ -129,7 +129,8 @@ export const COLORS: ThemeColors = {
   // base colors
   /** UI color for #primary */
   primary: '#084a86',
-  /** UI color for #secondary */
+  background: '#084a86',
+  secondaryBackground:'#e9e9ec',
   secondary: '#395e90', // '#8392AB',
   /** UI color for #tertiary */
   tertiary: '#E8AE4C',
@@ -156,8 +157,6 @@ export const COLORS: ThemeColors = {
 
   /** UI colors for navigation & card */
   card: '#f0f6db',
-  background: '#084a86',
-  secondaryBackground:'#e9e9ec',
 
   /** UI color for shadowColor */
   shadow: '#000000',
