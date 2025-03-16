@@ -129,9 +129,9 @@ const GetPremiumScreen = ({navigation}) => {
         requestSubscription(request)
     }
 
-    const getProductOffer = () => {
-        let billingPeriod = getBillingPeriod(product?.subscriptionOfferDetails[0]?.pricingPhases.pricingPhaseList[0]?.billingPeriod);
-        let formattedPrice = product?.subscriptionOfferDetails[0]?.pricingPhases.pricingPhaseList[0]?.formattedPrice;
+    const getProductOffer = (item) => {
+        let billingPeriod = getBillingPeriod(product?.subscriptionOfferDetails[item]?.pricingPhases.pricingPhaseList[0]?.billingPeriod);
+        let formattedPrice = product?.subscriptionOfferDetails[item]?.pricingPhases.pricingPhaseList[0]?.formattedPrice;
         return formattedPrice + '/' + billingPeriod;
     }
 
@@ -237,7 +237,7 @@ const GetPremiumScreen = ({navigation}) => {
                 <Text style={styles.title}>Premium+ Plan</Text>
                 <View style={styles.plan}>
                     <Text style={styles.planTitle}>Unlock Full Access</Text>
-                    <Text style={styles.planPrice}>{product && getProductOffer()}</Text>
+                    <Text style={styles.planPrice}>{product && isFreeTrialEligible(product) ? getProductOffer(0) + ' then ' + getProductOffer(1) : getProductOffer(0)}</Text>
                     <View style={styles.planDescription}>
                         {premiumFeatures.map((feature, index) => (
                             <View key={index}>
