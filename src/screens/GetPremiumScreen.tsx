@@ -199,7 +199,7 @@ const GetPremiumScreen = ({navigation}) => {
         planDescription: {marginBottom: sizes.sm},
         button: {
             padding: sizes.sm,
-            borderRadius: sizes.sm,
+            borderRadius: sizes.xxl,
             marginTop: sizes.md,
             width: "50%",
             alignItems: "center",

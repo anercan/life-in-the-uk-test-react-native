@@ -1,13 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {ScrollView, Text, View} from 'react-native';
 import {RouteProp, useRoute} from "@react-navigation/native";
 import {ButtonCard} from "../components";
 import {useTheme} from "../hooks";
-import * as Progress from 'react-native-progress';
 import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
-
-const {height} = Dimensions.get('window');
+import ScoreCard from "components/ScoreCard";
 
 type QuizParams = {
     quizName: string;
@@ -24,11 +22,10 @@ const CompletedQuizScreen = ({navigation}) => {
     const route = useRoute<QuizRouteProp>();
     const {apiCaller} = useApiCaller();
     const {quizName, quizSize, correctAnswerSize, quizCardList, quizGroupId, quizId} = route.params;
-    const {fonts, colors, sizes} = useTheme();
+    const {fonts, sizes} = useTheme();
     const [isNextQuizExist, setNextQuizExist] = useState(true);
     const {setTitle} = useContext(TitleContext);
     const [completedStatics, setCompletedStatics] = useState({betterCount: 0, equalCount: 0, worseCount: 0});
-    const [progress, setProgress] = useState(0);
 
     const getStaticalData = async () => {
         apiCaller('user-quiz/get-completed-quiz-statics?quizId=' + quizId).then((response: any) => {
@@ -37,51 +34,11 @@ const CompletedQuizScreen = ({navigation}) => {
     }
 
     useEffect(() => {
-        setTitle(quizName);
-        setProgress(correctAnswerSize / quizSize);
+        setTitle('Completed');
         let nextQuiz = getNextQuiz();
         setNextQuizExist(nextQuiz !== undefined);
         getStaticalData();
     }, []);
-
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            alignItems: 'center',
-            paddingBottom: sizes.sm
-        },
-        text: {
-            color: '#424141',
-            fontSize: sizes.l,
-            fontFamily: fonts.p,
-        },
-        scoreText: {
-            color: '#424141',
-            fontSize: sizes.xl,
-            fontFamily: fonts.thin
-        },
-        staticsText: {
-            color: '#565758',
-            fontSize: sizes.text,
-            fontFamily: fonts.p,
-        },
-        scoreBox: {
-            justifyContent: 'center',
-            height: sizes.base * 20,
-            width: sizes.base * 20,
-            alignItems: 'center',
-            marginBottom: sizes.xl,
-            padding: 1,
-            borderRadius: sizes.xxxl,
-            margin: sizes.xs,
-            backgroundColor: colors.primary,
-            shadowColor: '#363535',
-            shadowOffset: {width: 0, height: 5},
-            shadowOpacity: 0.2,
-            shadowRadius: 2,
-            elevation: 5
-        }
-    });
 
     const getNextQuiz = () => {
         try {
@@ -94,7 +51,7 @@ const CompletedQuizScreen = ({navigation}) => {
 
     const onPressNextQuiz = () => {
         let nextQuiz = getNextQuiz();
-        if(nextQuiz?.locked) {
+        if (nextQuiz?.locked) {
             navigation.navigate('GetPremiumScreen');
         } else {
             navigation.navigate('QuizScreen', {
@@ -116,60 +73,38 @@ const CompletedQuizScreen = ({navigation}) => {
         });
     }
 
-    function getScoreText() {
-        return Math.round(correctAnswerSize * 100 / quizSize) + '%';
-    }
-
     let totalCompletedUserQuizzes = completedStatics?.equalCount + completedStatics?.worseCount + completedStatics?.betterCount;
 
-    function getPercentage() {
+    const getPercentage = (): number => {
         const total = completedStatics?.equalCount + completedStatics?.worseCount + completedStatics?.betterCount;
-        if (total === 0 || !total) return '...';
+        if (total === 0 || !total) return 0;
 
         const betterOrEqual = completedStatics?.betterCount + completedStatics?.equalCount;
         let number = ((betterOrEqual / total) * 100)?.toFixed(2);
-        return number + '%';
+        return Number(number);
     }
 
     return (
-        <ScrollView>
-            <View style={styles.container}>
-                <View style={{paddingTop: sizes.xl, paddingBottom: sizes.xxl}}>
-                    <Text style={styles.text}>Completed!</Text>
-                </View>
+        <ScrollView contentContainerStyle={{alignItems: 'center', padding: sizes.sm, paddingTop: sizes.m}}>
 
-                <View style={styles.scoreBox}>
-                    <Progress.Circle
-                        animated={true}
-                        borderWidth={0}
-                        textStyle={{fontFamily: fonts.p, fontSize: sizes.h1}}
-                        thickness={15}
-                        color={'#ffffff'}
-                        showsText={true}
-                        formatText={() => getScoreText()}
-                        size={sizes.base * 20}
-                        progress={progress}/>
-                </View>
-                <View style={{paddingBottom: sizes.xl}}>
-                    <Text style={styles.scoreText}>{correctAnswerSize}
-                        <Text style={{...styles.scoreText, fontSize: sizes.md}}>/{quizSize}</Text>
-                    </Text>
-                </View>
-                {totalCompletedUserQuizzes > 1 &&
-                    <View style={{paddingHorizontal: 25, paddingBottom: height / 25}}>
-                        <Text style={styles.staticsText}>
-                            You scored higher than {getPercentage()} of people!
+            <ScoreCard quizName={quizName} total={quizSize} correct={correctAnswerSize} wrong={quizSize - correctAnswerSize}/>
+
+            {totalCompletedUserQuizzes > 1 &&
+                <>
+                    <View style={{marginBottom:sizes.xxxl,alignItems: 'center'}}>
+                        <Text style={{color: '#565758', fontSize: sizes.text, fontFamily: fonts.p}}>
+                            You scored higher than <Text style={{fontFamily: fonts.medium}}>{getPercentage()}%</Text> of people.
                         </Text>
                     </View>
-                }
-                {correctAnswerSize !== quizSize &&
-                    <ButtonCard onPress={onPressReview} buttonText={'Review'}/>
-                }
-                {isNextQuizExist &&
-                    <ButtonCard onPress={onPressNextQuiz} buttonText={'Next Quiz'}/>
-                }
+                </>
+            }
+            {correctAnswerSize !== quizSize &&
+                <ButtonCard onPress={onPressReview} buttonText={'Review'}/>
+            }
+            {isNextQuizExist &&
+                <ButtonCard onPress={onPressNextQuiz} buttonText={'Next Quiz'}/>
+            }
 
-            </View>
         </ScrollView>
     );
 };

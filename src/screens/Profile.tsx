@@ -17,9 +17,11 @@ import {useFocusEffect} from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import {isPremium} from "util/jwtUtil";
 import useApiCaller from "../hooks/useApiCaller";
-import {capitalizeWords, getShortenText} from "util/commonUtil";
+import {capitalizeWords, checkReviewModalShown, getShortenText} from "util/commonUtil";
 import {ContributionGraph, PieChart} from "react-native-chart-kit";
 import {Instagram} from 'react-content-loader/native'
+import * as StoreReview from 'react-native-store-review';
+import analytics from "@react-native-firebase/analytics";
 
 const isAndroid = Platform.OS === 'android';
 
@@ -52,6 +54,19 @@ const Profile = ({navigation}) => {
         GoogleSignin.signOut();
     }
 
+    const handleReviewRequest = () => {
+        try {
+            checkReviewModalShown().then((reviewModalShown: any) => {
+                if (!reviewModalShown) {
+                    StoreReview.requestReview();
+                    analytics().logEvent('request-review');
+                }
+            });
+        } catch (e) {
+            console.log(e)
+        }
+    };
+
     const getPremiumScreen = () => {
         navigation.navigate('GetPremiumScreen');
     }
@@ -71,6 +86,9 @@ const Profile = ({navigation}) => {
         apiCaller('profile/get-user-info')
             .then((profileResponse: any) => {
                 setUserData(profileResponse);
+                if (profileResponse?.userOngoingQuizCount + profileResponse?.userSolvedQuizCount > 1) {
+                    handleReviewRequest();
+                }
                 if (profileResponse?.wrongsMap) {
                     let incorrectDataList: IncorrectData[] = [];
                     let wrongsMap = profileResponse.wrongsMap;
@@ -346,7 +364,7 @@ const Profile = ({navigation}) => {
                             marginTop: '15%',
                             marginBottom: sizes.s
                         }}>
-                            <Button radius={sizes.sm} width={'35%'} color={'#76777d'}
+                            <Button radius={sizes.xxl} width={'35%'} color={'#76777d'}
                                     onPress={() => logoutInternal()}>
                                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                                     <MaterialCommunityIcons name="logout" color={'#ffffff'} size={sizes.sm}/>

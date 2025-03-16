@@ -35,6 +35,20 @@ export const checkFirstLaunch = async (): Promise<boolean> => {
     }
 };
 
+export const checkReviewModalShown = async (): Promise<boolean> => {
+    try {
+        const value = await AsyncStorage.getItem('reviewModalShown');
+        if (!value && value == null) {
+            await AsyncStorage.setItem('reviewModalShown', 'true');
+            return false;
+        } else {
+            return true;
+        }
+    } catch (error) {
+        return true;
+    }
+};
+
 export const groupCardBackgroundImages = {
     0: require('../assets/icons/groupIcons/icon-8.png'),
     1: require('../assets/icons/groupIcons/icon-3.png'),
