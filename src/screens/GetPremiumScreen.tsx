@@ -27,7 +27,7 @@ const GetPremiumScreen = ({navigation}) => {
     const {login} = useContext(AuthContext);
     const {setTitle} = useContext(TitleContext);
     const [product, setProduct] = useState<any>();
-    const [buttonDisable, setButtonDisable] = useState<boolean>(false);
+    const [buttonDisable, setButtonDisable] = useState<boolean>(true);
     const [isCardEntering, setCardEntering] = useState<boolean>(true);
     let purchaseErrorSubscription;
     let purchaseUpdateSubscription: any = null;
@@ -47,6 +47,7 @@ const GetPremiumScreen = ({navigation}) => {
         initConnection().then(() => {
             getSubscriptions({'skus': [monthlySubProductId]})
                 .then((r: any) => {
+                    setButtonDisable(false);
                     setProduct(r[0]);
                 })
                 .catch(() => setButtonDisable(true));
@@ -137,11 +138,12 @@ const GetPremiumScreen = ({navigation}) => {
 
     const premiumFeatures = [
         'Access to Premium+ quizzes',
-        'Get detailed statical data',
+        'Get detailed statistical data',
         'Compare your test results with others',
         'Early access to new features',
         'Activity reports',
         'More than 500 official questions',
+        'Cancellation is available anytime!'
     ];
 
     const renderFeature = (item: any) => (
