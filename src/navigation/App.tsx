@@ -161,8 +161,8 @@ export const TabMenu = () => {
                 tabBarInactiveTintColor: '#9c9595', // Light gray color for inactive items
                 tabBarStyle: {
                     backgroundColor: COLORS.background, // Dark blue background
-                    height: base * 7, // Custom height
-                    paddingTop: base * 1.4
+                    height: base * 10, // Custom height
+                    paddingTop: base
                 },
             }}
         >

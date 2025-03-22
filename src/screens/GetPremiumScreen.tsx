@@ -143,6 +143,7 @@ const GetPremiumScreen = ({navigation}) => {
         'Early access to new features',
         'Activity reports',
         'More than 500 official questions',
+        'Monthly renewal for 6 months!',
         'Cancellation is available anytime!'
     ];
 

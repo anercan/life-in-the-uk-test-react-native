@@ -58,12 +58,12 @@ const Profile = ({navigation}) => {
         try {
             checkReviewModalShown().then((reviewModalShown: any) => {
                 if (!reviewModalShown) {
+                    analytics().logEvent('review-request');
                     StoreReview.requestReview();
-                    analytics().logEvent('request-review');
                 }
             });
         } catch (e) {
-            console.log(e)
+            analytics().logEvent('warn-review-request');
         }
     };
 

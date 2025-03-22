@@ -26,7 +26,7 @@ const ScoreCard = (props: IScoreCard) => {
             elevation: 4,
             borderRadius: sizes.s,
             padding: sizes.s,
-            width: '100%',
+            width: '95%',
         }, progress: {
             borderRadius: sizes.xxxl, backgroundColor: colors.primary, elevation: 2
         }, scoreBox: {
