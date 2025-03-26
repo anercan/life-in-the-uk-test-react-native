@@ -22,7 +22,7 @@ const CompletedQuizScreen = ({navigation}) => {
     const route = useRoute<QuizRouteProp>();
     const {apiCaller} = useApiCaller();
     const {quizName, quizSize, correctAnswerSize, quizCardList, quizGroupId, quizId} = route.params;
-    const {fonts, sizes} = useTheme();
+    const {colors,fonts, sizes} = useTheme();
     const [isNextQuizExist, setNextQuizExist] = useState(true);
     const {setTitle} = useContext(TitleContext);
     const [completedStatics, setCompletedStatics] = useState({betterCount: 0, equalCount: 0, worseCount: 0});
@@ -92,7 +92,7 @@ const CompletedQuizScreen = ({navigation}) => {
             {totalCompletedUserQuizzes > 1 &&
                 <>
                     <View style={{marginBottom:sizes.xxxl,alignItems: 'center'}}>
-                        <Text style={{color: '#565758', fontSize: sizes.text, fontFamily: fonts.p}}>
+                        <Text style={{color: colors.text, fontSize: sizes.text, fontFamily: fonts.p}}>
                             You scored higher than <Text style={{fontFamily: fonts.medium}}>{getPercentage()}%</Text> of people.
                         </Text>
                     </View>

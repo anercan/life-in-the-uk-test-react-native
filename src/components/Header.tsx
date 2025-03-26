@@ -5,64 +5,63 @@ import {TitleContext} from "context/TitleContext";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import {useNavigation} from '@react-navigation/native';
 import {getShortenText} from "util/commonUtil";
+import {AuthContext} from "context/AuthContext";
 
 const Header = () => {
     const {getTitle} = useContext(TitleContext);
-    const {fonts,colors,sizes} = useTheme();
+    const {fonts, colors, sizes} = useTheme();
     const navigation = useNavigation();
+    const {isLoggedIn} = useContext(AuthContext);
 
     const handleBackPress = () => {
         navigation.goBack();
     };
 
+    const handleSettings = () => {
+        // @ts-ignore
+        navigation?.navigate('SettingsScreen');
+    };
+
     const styles = StyleSheet.create({
         headerContainer: {
-            height: sizes.base * 12,
-            backgroundColor: colors.background,
-            justifyContent: 'center',
-            alignItems: 'center',
-
-            // iOS shadow
-            shadowColor: '#000',
-            shadowOffset: {width: 0, height: 2},
-            shadowOpacity: 0.3,
-            shadowRadius: 4,
-
-            // Android shadow
-            elevation: 4,
+            height: sizes.base * 13,
+            backgroundColor: colors.background
         },
         row: {
+            marginTop: sizes.xl + sizes.s,
             flexDirection: 'row',
-            alignItems: 'center',
-            width: '100%',
-        },
-        backButton: {
-            marginTop: sizes.l,
-            padding: sizes.xs,
-            zIndex: 1
+            justifyContent: 'center'
+        }, title: {
+            fontFamily: fonts.p,
+            textAlign: 'center',
+            fontSize: sizes.h1,
+            color: colors.gray
         }
     });
 
     return (
         <View style={styles.headerContainer}>
             <StatusBar backgroundColor={colors.background}/>
-            <View style={styles.row}>
-                {navigation.canGoBack() &&
-                    <TouchableOpacity onPress={handleBackPress} style={styles.backButton}>
-                        <MaterialCommunityIcons name='arrow-left' color={'#e8e8e8'} size={sizes.md}/>
-                    </TouchableOpacity>}
-                <Text style={{
-                    marginTop: sizes.l,
-                    marginLeft: navigation.canGoBack() ? -sizes.l : 0,
-                    fontFamily: fonts.p,
-                    textAlign: 'center',
-                    fontSize: sizes.h1,
-                    color: '#e8e8e8',
-                    flex: 1,
-                }}>
-                    {getShortenText(getTitle(),27)}
-                </Text>
+            {isLoggedIn &&
+                <View style={styles.row}>
+                <View style={{flex: 1}}>
+                    {navigation.canGoBack() &&
+                        <TouchableOpacity onPress={handleBackPress} style={{marginLeft: sizes.s}}>
+                            <MaterialCommunityIcons name='arrow-left' color={colors.gray} size={sizes.md}/>
+                        </TouchableOpacity>}
+                </View>
+                <View style={{flex: 5}}>
+                    <Text style={styles.title}>
+                        {getShortenText(getTitle(), 27)}
+                    </Text>
+                </View>
+                <View style={{flex: 1}}>
+                    <TouchableOpacity onPress={handleSettings} style={{marginLeft: sizes.s}}>
+                        <MaterialCommunityIcons name='tune' color={colors.gray} size={sizes.md}/>
+                    </TouchableOpacity>
+                </View>
             </View>
+            }
         </View>
     );
 };

@@ -59,6 +59,7 @@ export interface ITheme {
 export interface IThemeProvider {
   children?: React.ReactNode;
   theme?: ITheme;
+  setTheme?: () => void;
 }
 
 export interface ThemeColors {
@@ -78,16 +79,13 @@ export interface ThemeColors {
   card: ColorValue;
   background: ColorValue;
   secondaryBackground: ColorValue;
+  tabBackground:ColorValue;
+  orderBoxBackGround:ColorValue;
   shadow: ColorValue;
-  focus: ColorValue;
   input: ColorValue;
-  switchOn: ColorValue;
-  switchOff: ColorValue;
   checkbox: string[];
   checkboxIcon: ColorValue;
-  icon: ColorValue;
   blurTint: 'light' | 'dark' | 'default';
-  link: ColorValue;
 }
 
 export interface ThemeSizes {

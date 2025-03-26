@@ -12,7 +12,9 @@ import {
     QuizScreen,
     SolvedQuizListScreen,
     CompletedQuizScreen,
-    LoginScreen, GetPremiumScreen
+    LoginScreen,
+    GetPremiumScreen,
+    SettingsScreen
 } from "../screens";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import Feather from "react-native-vector-icons/Feather";
@@ -26,20 +28,22 @@ import {
 } from "react-native-iap";
 import useApiCaller from "../hooks/useApiCaller";
 import {checkVersionWithStoresInfo} from "util/checkVersion";
-import {COLORS, normalizeFont, SIZES} from "constants/theme/theme";
 import crashlytics from "@react-native-firebase/crashlytics";
 import AppOnboarding from "components/Onboarding";
 import {checkFirstLaunch} from "util/commonUtil";
 import analytics from "@react-native-firebase/analytics";
+import {darkTheme, lightTheme} from "constants/theme";
+import {normalizeFont} from "constants/theme/lightTheme";
 
 export default () => {
     const {apiCaller} = useApiCaller();
-    const {theme} = useData();
+    const {isDark, theme, setTheme} = useData();
     const {login, isLoggedIn} = useContext(AuthContext);
     const [isFirstLaunch, setIsFirstLaunch] = useState<boolean | null>(null);
 
     useEffect(() => {
         crashlytics().log('App mounted');
+        setTheme(isDark ? darkTheme : lightTheme)
         checkVersionWithStoresInfo();
         Platform.OS === 'android' && StatusBar.setTranslucent(true);
         subscribeListener();
@@ -81,7 +85,7 @@ export default () => {
     const styles = StyleSheet.create({
         container: {
             flex: 1,
-            backgroundColor: COLORS.background,
+            backgroundColor: lightTheme.colors.secondaryBackground,
         },
     });
 
@@ -97,7 +101,7 @@ export default () => {
     }
 
     return (
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme} setTheme={setTheme}>
             <View style={styles.container}>
                 <NavigationContainer>
                     <Header/>
@@ -110,38 +114,50 @@ export default () => {
 
 const Stack = createStackNavigator();
 
-const getScreenOptions = () => {
-    return {headerShown: false, cardStyle: {backgroundColor: COLORS.secondaryBackground}};
+const getScreenOptions = (color) => {
+    return {headerShown: false, cardStyle: {backgroundColor: color}};
 }
 
 export const QuizGroupListStack = () => {
+    const {isDark} = useData();
+
     return (
-        <Stack.Navigator initialRouteName="QuizGroupListScreen" screenOptions={getScreenOptions()}>
+        <Stack.Navigator initialRouteName="QuizGroupListScreen" screenOptions={getScreenOptions(isDark ? darkTheme.colors.secondaryBackground : lightTheme.colors.secondaryBackground)}>
             <Stack.Screen name="QuizGroupListScreen" component={QuizGroupListScreen}/>
             <Stack.Screen name="QuizListScreen" component={QuizListScreen}/>
             <Stack.Screen name="QuizScreen" component={QuizScreen}/>
             <Stack.Screen name="CompletedQuizScreen" component={CompletedQuizScreen}/>
+
             <Stack.Screen name="GetPremiumScreen" component={GetPremiumScreen}/>
+            <Stack.Screen name="SettingsScreen" component={SettingsScreen}/>
         </Stack.Navigator>
     );
 };
 
 export const SolvedQuizListStack = () => {
+    const {isDark} = useData();
+
     return (
-        <Stack.Navigator initialRouteName="SolvedQuizListScreen" screenOptions={getScreenOptions()}>
+        <Stack.Navigator initialRouteName="SolvedQuizListScreen" screenOptions={getScreenOptions(isDark ? darkTheme.colors.secondaryBackground : lightTheme.colors.secondaryBackground)}>
             <Stack.Screen name="SolvedQuizListScreen" component={SolvedQuizListScreen}/>
             <Stack.Screen name="QuizScreen" component={QuizScreen}/>
             <Stack.Screen name="CompletedQuizScreen" component={CompletedQuizScreen}/>
+
             <Stack.Screen name="GetPremiumScreen" component={GetPremiumScreen}/>
+            <Stack.Screen name="SettingsScreen" component={SettingsScreen}/>
         </Stack.Navigator>
     );
 };
 
 export const ProfileStack = () => {
+    const {isDark} = useData();
+
     return (
-        <Stack.Navigator initialRouteName="Profile" screenOptions={getScreenOptions()}>
+        <Stack.Navigator initialRouteName="Profile" screenOptions={getScreenOptions(isDark ? darkTheme.colors.secondaryBackground : lightTheme.colors.secondaryBackground)}>
             <Stack.Screen name="Profile" component={Profile}/>
+
             <Stack.Screen name="GetPremiumScreen" component={GetPremiumScreen}/>
+            <Stack.Screen name="SettingsScreen" component={SettingsScreen}/>
         </Stack.Navigator>
     );
 };
@@ -149,7 +165,9 @@ export const ProfileStack = () => {
 const Tab = createBottomTabNavigator();
 
 export const TabMenu = () => {
-    let base = SIZES.base;
+    const {isDark} = useData();
+
+    let base = lightTheme.sizes.base;
     return (
 
         <Tab.Navigator
@@ -160,8 +178,8 @@ export const TabMenu = () => {
                 tabBarActiveTintColor: '#ffffff', // White color for active items
                 tabBarInactiveTintColor: '#9c9595', // Light gray color for inactive items
                 tabBarStyle: {
-                    backgroundColor: COLORS.background, // Dark blue background
-                    height: base * 8, // Custom height
+                    backgroundColor: isDark ? darkTheme.colors.background : lightTheme.colors.background, // Dark blue background
+                    height: Platform.OS === 'android' ? base * 8 : base * 11, // Custom height
                     paddingTop: base
                 },
             }}

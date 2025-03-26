@@ -1,23 +1,19 @@
 import React, {useCallback, useContext, useState} from 'react';
 import {
     Dimensions,
-    Linking,
     Platform,
     ScrollView,
     TouchableOpacity,
     View
 } from 'react-native';
 
-import {AppText, Block, Button, Image} from '../components/';
-import {useTheme} from '../hooks/';
-import {GoogleSignin} from "@react-native-google-signin/google-signin";
-import {AuthContext} from "context/AuthContext";
+import {AppText, Block, Image} from '../components/';
+import {useData, useTheme} from '../hooks/';
 import {TitleContext} from "context/TitleContext";
 import {useFocusEffect} from "@react-navigation/native";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import {isPremium} from "util/jwtUtil";
 import useApiCaller from "../hooks/useApiCaller";
-import {capitalizeWords, checkReviewModalShown, getShortenText} from "util/commonUtil";
+import {capitalizeWords, checkReviewModalShown, getShortenText, hexWithOpacity} from "util/commonUtil";
 import {ContributionGraph, PieChart} from "react-native-chart-kit";
 import {Instagram} from 'react-content-loader/native'
 import * as StoreReview from 'react-native-store-review';
@@ -28,13 +24,13 @@ const isAndroid = Platform.OS === 'android';
 const {height, width} = Dimensions.get('window');
 
 const Profile = ({navigation}) => {
+    const {isDark} = useData();
     const {apiCaller, loading} = useApiCaller(navigation);
     const {sizes, colors} = useTheme();
     const [userData, setUserData] = useState<UserDataResponse>();
     const [isPremiumUser, setIsPremiumUser] = useState(false);
     const [incorrectMap, setIncorrectMap] = useState<IncorrectData[]>([]);
     const [activityData, setActivityData] = useState<ActivityData[]>([]);
-    const {logout} = useContext(AuthContext);
     const {setTitle} = useContext(TitleContext);
 
     useFocusEffect(
@@ -48,11 +44,6 @@ const Profile = ({navigation}) => {
             getUserInfo();
         }, [])
     )
-
-    const logoutInternal = async () => {
-        logout();
-        GoogleSignin.signOut();
-    }
 
     const handleReviewRequest = () => {
         try {
@@ -98,7 +89,7 @@ const Profile = ({navigation}) => {
                             name: getShortenText(capitalizeWords(key), 25),
                             incorrectCount: value,
                             color: getColor(index),
-                            legendFontColor: "#7F7F7F",
+                            legendFontColor: isDark ? colors.gray : colors.dark, // quick fix todo
                             legendFontSize: 15
                         } as IncorrectData);
                     });
@@ -136,7 +127,7 @@ const Profile = ({navigation}) => {
                                 resizeMode={"contain"}
                                 width={width / 1.2}
                                 height={height / 6}
-                                source={require('../assets/images/pie-chart-blur.png')}
+                                source={isDark ? require('../assets/images/pie-chart-blur-dark.png') :require('../assets/images/pie-chart-blur.png')}
                             />
                         </TouchableOpacity>
 
@@ -144,7 +135,7 @@ const Profile = ({navigation}) => {
                             <AppText onPress={() => getPremiumScreen()} style={{textDecorationLine: "underline"}}
                                      size={sizes.text}
                                      semibold
-                                     color={colors.primary}>View Premium+ Plan</AppText>
+                                     color={colors.text}>View Premium+ Plan</AppText>
                         </View>
                     </View>
                 </View>
@@ -163,14 +154,14 @@ const Profile = ({navigation}) => {
                                 resizeMode={"contain"}
                                 width={width / 1.2}
                                 height={height / 5}
-                                source={require('../assets/images/contribution-blur.png')}
+                                source={isDark ? require('../assets/images/contribution-blur-dark.png') : require('../assets/images/contribution-blur.png')}
                             />
                         </TouchableOpacity>
                         <View style={{alignItems: 'center'}}>
                             <AppText onPress={() => getPremiumScreen()} style={{textDecorationLine: "underline"}}
                                      size={sizes.text}
                                      semibold
-                                     color={colors.primary}>View Premium+ Plan</AppText>
+                                     color={colors.text}>View Premium+ Plan</AppText>
                         </View>
                     </View>
                 </View>
@@ -200,7 +191,7 @@ const Profile = ({navigation}) => {
                         width={width / 1.1}
                         height={height / 6}
                         chartConfig={{
-                            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                            color: (opacity = 1) => hexWithOpacity(colors.text,opacity),
                         }}
                         accessor={"incorrectCount"}
                         backgroundColor={"transparent"}
@@ -234,8 +225,8 @@ const Profile = ({navigation}) => {
                         chartConfig={{
                             backgroundGradientFrom: colors.secondaryBackground.toString(),
                             backgroundGradientTo: colors.secondaryBackground.toString(),
-                            color: (opacity = 1) => `rgba(30, 110, 180, ${opacity})`,
-                            labelColor: (opacity = 1) => `rgba(30, 30, 30, ${opacity})`,
+                            color: (opacity = 1) => hexWithOpacity(colors.primary, opacity),
+                            labelColor: (opacity = 1) => hexWithOpacity(colors.text, opacity),
                         }}
                         tooltipDataAttrs={() => {
                             return {rx: 8, ry: 8};
@@ -309,7 +300,7 @@ const Profile = ({navigation}) => {
                                     row
                                     flex={0}
                                     radius={sizes.sm}
-                                    color={'#c9c9c9'}
+                                    color={colors.orderBoxBackGround}
                                     overflow="hidden"
                                     justify="space-evenly"
                                     paddingVertical={sizes.sm}
@@ -364,26 +355,11 @@ const Profile = ({navigation}) => {
                             marginTop: '15%',
                             marginBottom: sizes.s
                         }}>
-                            <Button radius={sizes.xxl} width={'35%'} color={'#76777d'}
-                                    onPress={() => logoutInternal()}>
-                                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                                    <MaterialCommunityIcons name="logout" color={'#ffffff'} size={sizes.sm}/>
-                                    <AppText size={sizes.smallText} color={'#ffffff'}> Logout </AppText>
-                                </View>
-                            </Button>
-                            <View style={{marginTop: '5%', justifyContent: 'flex-end'}}>
-                                <AppText
-                                    onPress={() => Linking.openURL('https://quizmarkt.com/life-in-the-uk/privacy-policy.html')}
-                                    style={{textDecorationLine: 'underline'}} size={sizes.smallText} center={true}
-                                    gray={true}>
-                                    Privacy Policy
-                                </AppText>
-                            </View>
                         </View>
 
                     </>
                     :
-                    <Instagram backgroundColor={'#d5d5d5'} style={{marginLeft: sizes.sm}}/>
+                    <Instagram backgroundColor={colors.tabBackground.toString()} style={{marginLeft: sizes.sm}}/>
                 }
             </View>
         </ScrollView>

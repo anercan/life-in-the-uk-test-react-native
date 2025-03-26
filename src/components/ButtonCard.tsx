@@ -20,7 +20,7 @@ const ButtonCard = (props: IButton) => {
             paddingVertical:sizes.sm,
             width: sizes.base * 20,
             margin: sizes.s,
-            shadowColor: '#363535',
+            shadowColor: colors.shadow,
             shadowOffset: {width: 0, height: 1},
             shadowOpacity: 0.2,
             shadowRadius: 2,

@@ -22,13 +22,13 @@ const ListCard = (props:IListCard) => {
         card: {
             height: sizes.base * 10.6,
             width: '87%',
-            backgroundColor: '#f5f4f4',
+            backgroundColor: colors.card,
             borderRadius: sizes.sm,
             borderLeftWidth: sizes.s,
             borderColor: colors.primary,
             borderWidth: 1,
             marginBottom:sizes.l ,
-            shadowColor: '#363535',
+            shadowColor: colors.shadow,
             shadowOffset: {width: 1, height: 0},
             shadowOpacity: 0.1,
             shadowRadius: 2,
@@ -48,7 +48,7 @@ const ListCard = (props:IListCard) => {
             flex:2,
         },
         title: {
-            color: !props.locked ? '#474747' : '#848383',
+            color: !props.locked ? colors.text : colors.light,
             fontSize: sizes.h3,
             fontFamily: fonts.h4,
             fontWeight: 'bold',
@@ -60,8 +60,8 @@ const ListCard = (props:IListCard) => {
             justifyContent: "center",
             alignItems: 'center',
             borderRadius: sizes.m,
-            backgroundColor: '#dddede',
-            shadowColor: '#363535',
+            backgroundColor: colors.orderBoxBackGround,
+            shadowColor: colors.shadow,
             shadowOffset: {width: 0, height: 1},
             shadowOpacity: 0.1,
             shadowRadius: 2,
@@ -74,22 +74,22 @@ const ListCard = (props:IListCard) => {
         },
         rightBottomTextOne: {
             fontFamily: fonts.text,
-            color: !props.locked ? '#474747' : '#848383',
+            color: !props.locked ? colors.text : colors.light,
             fontSize: sizes.h4,
         },
         rightBottomTextTwo: {
             fontFamily: fonts.text,
-            color: !props.locked ? '#474747' : '#848383',
+            color: !props.locked ? colors.text : colors.light,
             fontSize: sizes.h4,
         },
         text: {
             fontFamily:fonts.p,
-            color: !props.locked ? '#5c5b5b' : '#848383',
+            color: !props.locked ? colors.text : colors.light,
             letterSpacing: 1
         },
         dateText: {
             fontFamily:fonts.p,
-            color: '#5c5b5b',
+            color: colors.text,
             fontSize:sizes.smallText,
         }
     }), [props.locked]);
@@ -99,7 +99,7 @@ const ListCard = (props:IListCard) => {
                 <View style={styles.orderBoxContainer}>
                     <View style={styles.orderBox}>
                         {props.locked ?
-                            <MaterialCommunityIcons name="lock" color={'#848383'} size={sizes.m}/> :
+                            <MaterialCommunityIcons name="lock" color={colors.light} size={sizes.m}/> :
                             props.rightTopText1 !== undefined ?
                                 <Text style={[styles.text, {fontSize: sizes.h1}]}>{props.rightTopText1}<Text
                                     style={[styles.text, {fontSize:  sizes.h5}]}>/{props.rightTopText2}</Text>

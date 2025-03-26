@@ -29,7 +29,7 @@ const Tabs = (props: IHeader) => {
         active: {
             borderRadius: sizes.m,
             paddingVertical: sizes.s,
-            backgroundColor: '#cbcdce',
+            backgroundColor: colors.tabBackground,
         },
         passive: {
             paddingVertical: sizes.s,
@@ -49,7 +49,7 @@ const Tabs = (props: IHeader) => {
                     </AppText>
                 </Block>
                 <Block
-                    gray
+                    color={colors.dark}
                     flex={0}
                     width={1}
                     marginTop={sizes.xs}

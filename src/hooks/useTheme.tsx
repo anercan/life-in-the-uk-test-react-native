@@ -1,20 +1,22 @@
 import React from 'react';
 
-import {defaultTheme} from '../constants/theme';
-import {ITheme, IThemeProvider} from 'constants/types';
+import {lightTheme} from '../constants/theme';
+import {ITheme, IThemeProvider} from '../constants/types';
 
-export const ThemeContext = React.createContext(null);
+export const ThemeContext = React.createContext({
+  theme: lightTheme,
+  setTheme: () => {},
+});
 
 export const ThemeProvider = ({
-  children,
-  theme = defaultTheme,
-  //setTheme = () => {},
-}: IThemeProvider) => {
+                                children,
+                                theme = lightTheme,
+                                setTheme = () => {},
+                              }: IThemeProvider) => {
   return (
-
-    <ThemeContext.Provider value={{theme}}>
-      {children}
-    </ThemeContext.Provider>
+      <ThemeContext.Provider value={{theme, setTheme}}>
+        {children}
+      </ThemeContext.Provider>
   );
 };
 

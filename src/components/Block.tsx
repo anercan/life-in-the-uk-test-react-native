@@ -67,33 +67,7 @@ const Block = (props: IBlockProps) => {
   } = props;
   const {colors, sizes} = useTheme();
 
-  const colorIndex = primary
-    ? 'primary'
-    : secondary
-    ? 'secondary'
-    : tertiary
-    ? 'tertiary'
-    : black
-    ? 'black'
-    : white
-    ? 'white'
-    : gray
-    ? 'gray'
-    : danger
-    ? 'danger'
-    : warning
-    ? 'warning'
-    : success
-    ? 'success'
-    : info
-    ? 'info'
-    : null;
-
-  const blockColor = color
-    ? color
-    : colorIndex
-    ? colors?.[colorIndex]
-    : undefined;
+  const blockColor = color ? color : undefined;
 
   const blockStyles = StyleSheet.flatten([
     style,

@@ -6,13 +6,13 @@ import Image from "components/Image";
 interface IGroupCard {
     card: any,
     onPress?: () => void;
-    backgroundColor:string
-    backgroundImage:ImageProps
+    backgroundColor: string
+    backgroundImage: ImageProps
 }
 
 const GroupCard = (props: IGroupCard) => {
 
-    const {fonts, sizes} = useTheme();
+    const {fonts, sizes, colors} = useTheme();
 
     const styles = StyleSheet.create({
         card: {
@@ -24,7 +24,7 @@ const GroupCard = (props: IGroupCard) => {
             justifyContent: 'center',
             marginTop: -sizes.md,
             marginHorizontal: sizes.s,
-            shadowColor: '#363535',
+            shadowColor: colors.shadow,
             shadowOffset: {width: 0, height: 3},
             shadowOpacity: 0.5,
             shadowRadius: 3,
@@ -34,7 +34,7 @@ const GroupCard = (props: IGroupCard) => {
             textAlign: 'center',
             fontFamily: fonts.p,
             fontSize: sizes.h2,
-            color: '#f1f0f0'
+            color: colors.gray
         },
         orderBox: {
             zIndex: 1,
@@ -43,8 +43,8 @@ const GroupCard = (props: IGroupCard) => {
             justifyContent: "center",
             alignItems: 'center',
             borderRadius: sizes.sm,
-            backgroundColor: '#474a50' ,
-            shadowColor: '#363535',
+            backgroundColor: '#474a50',
+            shadowColor: colors.shadow,
             shadowOffset: {width: 0, height: 1},
             shadowOpacity: 0.1,
             shadowRadius: 2,

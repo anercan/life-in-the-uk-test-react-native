@@ -113,3 +113,8 @@ export const isFreeTrialEligible = (product) => {
         return false;
     }
 }
+
+export const hexWithOpacity = (color,opacity) => {
+    const alpha = Math.round(opacity * 255).toString(16).padStart(2, '0');
+    return color+alpha;
+};

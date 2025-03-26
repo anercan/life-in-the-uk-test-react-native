@@ -3,13 +3,13 @@ import {View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView} from '
 import {IAnswerResponse, IQuizQuestion} from "constants/types";
 import {useTheme} from "../hooks";
 import {AppText} from "./index";
-import Animated, { FadeIn } from "react-native-reanimated";
+import Animated, {FadeIn} from "react-native-reanimated";
 import SwipeIndicator from "components/SwipeIndicator";
 
 const {width} = Dimensions.get('window');
 
 const QuizQuestion = (props: IQuizQuestion) => {
-    const {fonts,sizes} = useTheme();
+    const {fonts, sizes, colors} = useTheme();
     const [selectedId, setSelectedId] = useState<number>();
 
     useEffect(() => {
@@ -25,26 +25,26 @@ const QuizQuestion = (props: IQuizQuestion) => {
 
     const getBackgroundColor = (id: number) => {
         if (!props.isAnswered) {
-            return '#e0dbda'; // cevaplanmamışsa, varsayılan renk
+            return colors.orderBoxBackGround; // cevaplanmamışsa, varsayılan renk
         }
         let selectedAnswer = id === selectedId;
         if (selectedAnswer) {
-            return id === props.correctAnswerId ? '#45975c' : '#bf5c63'; // doğru cevap yeşil, yanlış kırmızı
+            return id === props.correctAnswerId ? '#67c27f' : '#cd7378'; // doğru cevap yeşil, yanlış kırmızı
         }
-        return id === props.correctAnswerId ? '#45975c' : '#e0dbda'; // doğru cevap yeşil, geri kalan gri
+        return id === props.correctAnswerId ? '#67c27f' : colors.orderBoxBackGround; // doğru cevap yeşil, geri kalan gri
     }
 
     const styles = useMemo(() => StyleSheet.create({
         box: {
             padding: sizes.s,
-            paddingBottom:sizes.m,
+            paddingBottom: sizes.m,
             borderRadius: sizes.sm,
             margin: sizes.s,
-            marginTop: sizes.sm,
+            marginTop: sizes.m,
             marginBottom: sizes.l,
-            alignItems:'center',
-            backgroundColor: '#e5e5e5',
-            shadowColor: '#363535',
+            alignItems: 'center',
+            backgroundColor: colors.card,
+            shadowColor: colors.shadow,
             shadowOffset: {width: 0, height: 5},
             shadowOpacity: 0.1,
             shadowRadius: 2,
@@ -54,28 +54,29 @@ const QuizQuestion = (props: IQuizQuestion) => {
             width: sizes.xl,
             justifyContent: 'center',
             borderRadius: sizes.xxl,
-            backgroundColor: '#d9d9d9',
-            shadowColor: '#898989',
+            backgroundColor: colors.tabBackground,
+            shadowColor: colors.shadow,
             shadowOffset: {width: 0, height: 3},
             shadowOpacity: 0.1,
             shadowRadius: 2,
             elevation: 1,
-            marginTop: -sizes.m
+            marginTop: -sizes.md
         },
         questionBox: {
             width: width / 1.2,
             padding: sizes.m,
             borderRadius: sizes.s,
-            margin: sizes.s,
-            marginBottom: sizes.l ,
-            backgroundColor: '#c1c0c0',
-            shadowColor: '#363535',
+            marginTop: sizes.sm,
+            marginHorizontal:sizes.s,
+            marginBottom: sizes.l,
+            backgroundColor: colors.tabBackground,
+            shadowColor: colors.shadow,
             shadowOffset: {width: 0, height: 1},
             shadowOpacity: 0.1,
             shadowRadius: 2,
             elevation: 5,
         }, explanationBox: {
-            marginTop:sizes.s,
+            marginTop: sizes.s,
             width: sizes.base * 42,
             padding: sizes.s,
         },
@@ -84,31 +85,31 @@ const QuizQuestion = (props: IQuizQuestion) => {
             padding: sizes.s,
             borderRadius: sizes.s,
             margin: sizes.s,
-            shadowColor: '#363535',
+            shadowColor: colors.shadow,
             shadowOffset: {width: 0, height: 1},
             shadowOpacity: 0.1,
             shadowRadius: 2,
             elevation: 3,
         }, questionText: {
             fontFamily: fonts.p,
-            color: '#363535',
+            color: colors.text,
             fontSize: sizes.text
         }, explanationText: {
             fontFamily: fonts.text,
-            color: '#363535',
+            color: colors.text,
             fontSize: sizes.text,
-            marginTop:sizes.xs
+            marginTop: sizes.xs
         }, orderText: {
             fontFamily: fonts.h1,
             textAlign: "center",
-            color: '#474646',
+            color: colors.text,
             fontSize: sizes.h2
         }, answerText: {
-            color:'#3b3b3b',
+            color: colors.text,
             fontFamily: fonts.text,
             fontSize: sizes.text
         }
-    }),[]);
+    }), []);
 
     const answers = (answerList: IAnswerResponse[]) => {
         if (props.isReviewPage) {
@@ -129,10 +130,11 @@ const QuizQuestion = (props: IQuizQuestion) => {
 
     return (
         <>
-            <ScrollView style={{marginBottom:sizes.md}}>
+            <ScrollView style={{marginBottom: sizes.md}}>
                 <View style={styles.box}>
                     <View style={styles.orderBox}>
-                        <Text style={styles.orderText}>{props?.questionOrder || props?.questionOrder == 0  ? props?.questionOrder + 1 : null}</Text>
+                        <Text
+                            style={styles.orderText}>{props?.questionOrder || props?.questionOrder == 0 ? props?.questionOrder + 1 : null}</Text>
                     </View>
                     <View style={styles.questionBox}>
                         <Text style={styles.questionText}>{props.content}</Text>
@@ -149,7 +151,7 @@ const QuizQuestion = (props: IQuizQuestion) => {
                         </Animated.View>
                         : ''
                     }
-                    { (props.questionOrder == 0 && !props.isReviewPage && props.isAnswered) &&
+                    {(props.questionOrder == 0 && !props.isReviewPage && props.isAnswered) &&
                         <SwipeIndicator/>
                     }
                 </View>

@@ -68,37 +68,8 @@ const Button = ({
   ...props
 }: IButtonProps) => {
   const {colors, sizes} = useTheme();
-  const colorIndex = primary
-    ? 'primary'
-    : secondary
-    ? 'secondary'
-    : tertiary
-    ? 'tertiary'
-    : black
-    ? 'black'
-    : white
-    ? 'white'
-    : light
-    ? 'light'
-    : dark
-    ? 'dark'
-    : gray
-    ? 'gray'
-    : danger
-    ? 'danger'
-    : warning
-    ? 'warning'
-    : success
-    ? 'success'
-    : info
-    ? 'info'
-    : null;
 
-  const buttonColor = color
-    ? color
-    : colorIndex
-    ? colors?.[colorIndex]
-    : 'transparent';
+  const buttonColor = color ? color : 'transparent';
 
   const buttonStyles = StyleSheet.flatten([
     style,

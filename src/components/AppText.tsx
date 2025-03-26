@@ -59,32 +59,7 @@ const Typography = (props: ITextProps) => {
   } = props;
   const {colors, sizes, weights, fonts} = useTheme();
 
-  const colorIndex = primary
-    ? 'primary'
-    : secondary
-    ? 'secondary'
-    : tertiary
-    ? 'tertiary'
-    : black
-    ? 'black'
-    : white
-    ? 'white'
-    : gray
-    ? 'gray'
-    : danger
-    ? 'danger'
-    : warning
-    ? 'warning'
-    : success
-    ? 'success'
-    : info
-    ? 'info'
-    : null;
-  const textColor = color
-    ? color
-    : colorIndex
-    ? colors?.[colorIndex]
-    : undefined;
+  const textColor = color ? color : undefined;
 
   const textStyles = StyleSheet.flatten([
     style,

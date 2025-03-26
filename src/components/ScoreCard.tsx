@@ -22,8 +22,12 @@ const ScoreCard = (props: IScoreCard) => {
     const styles = StyleSheet.create({
         container: {
             marginBottom: sizes.xl,
-            backgroundColor: '#d8d8d9',
+            backgroundColor: colors.card,
             elevation: 4,
+            shadowColor:colors.shadow,
+            shadowOffset: {width: 0, height: 3},
+            shadowOpacity: 0.5,
+            shadowRadius: 3,
             borderRadius: sizes.s,
             padding: sizes.s,
             width: '95%',
@@ -33,19 +37,18 @@ const ScoreCard = (props: IScoreCard) => {
             flexDirection: 'column',
             alignItems: 'center',
             flex: 1,
-            backgroundColor: '#ccccce',
+            backgroundColor: colors.tabBackground,
             borderRadius: sizes.s,
             marginHorizontal: sizes.s,
             paddingBottom: sizes.xs
         }, scoreBoxContainer: {
-            borderColor: colors.primary,
             borderRadius: sizes.sm,
             flexDirection: 'row',
             flex: 1,
-            backgroundColor: '#ccccce',
+            backgroundColor: colors.tabBackground,
             marginHorizontal: sizes.s
         }, scoreText: {
-            color: '#4e4d4d', fontSize: sizes.h2, fontFamily: fonts.p,
+            color: colors.text, fontSize: sizes.h2, fontFamily: fonts.p,
         },
     });
 
@@ -56,7 +59,7 @@ const ScoreCard = (props: IScoreCard) => {
     return (
         <View style={styles.container}>
             <View style={{alignItems: 'center', marginBottom: sizes.m}}>
-                <Text style={{textAlign: 'center', color: '#565758', fontSize: sizes.h1, fontFamily: fonts.p}}>
+                <Text style={{textAlign: 'center', color: colors.text, fontSize: sizes.h1, fontFamily: fonts.p}}>
                     {props.quizName}
                 </Text>
             </View>
@@ -77,15 +80,15 @@ const ScoreCard = (props: IScoreCard) => {
             <View style={styles.scoreBoxContainer}>
                 <View style={styles.scoreBox}>
                     <Text style={{...styles.scoreText}}>{props.total}</Text>
-                    <Text style={{...styles.scoreText, color: '#5e5d5d', fontSize: sizes.p}}>{'Total'}</Text>
+                    <Text style={{...styles.scoreText, color: colors.text, fontSize: sizes.p}}>{'Total'}</Text>
                 </View>
                 <View style={styles.scoreBox}>
                     <Text style={{...styles.scoreText}}>{props.correct}</Text>
-                    <Text style={{...styles.scoreText, color: '#5e5d5d', fontSize: sizes.p}}>{'Correct'}</Text>
+                    <Text style={{...styles.scoreText, color: colors.text, fontSize: sizes.p}}>{'Correct'}</Text>
                 </View>
                 <View style={styles.scoreBox}>
                     <Text style={{...styles.scoreText}}>{props.wrong}</Text>
-                    <Text style={{...styles.scoreText, color: '#5e5d5d', fontSize: sizes.p}}>{'Wrong'}</Text>
+                    <Text style={{...styles.scoreText, color: colors.text, fontSize: sizes.p}}>{'Wrong'}</Text>
                 </View>
             </View>
         </View>

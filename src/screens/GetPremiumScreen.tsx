@@ -155,7 +155,7 @@ const GetPremiumScreen = ({navigation}) => {
 
     const styles = StyleSheet.create({
         title: {
-            color: colors.primary,
+            color: colors.text,
             fontSize: sizes.h1,
             fontFamily: fonts.p,
             fontWeight: "bold",
@@ -168,8 +168,8 @@ const GetPremiumScreen = ({navigation}) => {
         plan: {
             padding: sizes.m,
             borderRadius: sizes.sm,
-            backgroundColor: "#fafafa",
-            shadowColor: "#000",
+            backgroundColor: colors.card,
+            shadowColor: colors.shadow,
             shadowOpacity: 0.1,
             shadowRadius: 10,
             alignItems: "center",
@@ -177,7 +177,7 @@ const GetPremiumScreen = ({navigation}) => {
             elevation: isCardEntering ? 0 : 1
         },
         planTitle: {
-            color: colors.primary,
+            color: colors.text,
             fontSize: sizes.h2,
             fontWeight: "bold",
             fontFamily: fonts.p,
@@ -192,13 +192,6 @@ const GetPremiumScreen = ({navigation}) => {
             marginTop: sizes.s,
             textDecorationLine: 'underline'
         },
-        freeTrialText: {
-            color: "#1a5ba0",
-            fontSize: sizes.h2,
-            fontWeight: 'bold',
-            fontFamily: fonts.p,
-            marginBottom: sizes.sm,
-        },
         planDescription: {marginBottom: sizes.sm},
         button: {
             padding: sizes.sm,
@@ -207,7 +200,7 @@ const GetPremiumScreen = ({navigation}) => {
             width: "50%",
             alignItems: "center",
             backgroundColor: buttonDisable ? '#bababa' : colors.primary,
-            shadowColor: "#000",
+            shadowColor: colors.shadow,
             shadowOpacity: 0.2,
             shadowRadius: 5,
             elevation: isCardEntering ? 0 : 3,
@@ -225,7 +218,7 @@ const GetPremiumScreen = ({navigation}) => {
             fontSize: sizes.h3,
             textAlign: 'center',
             fontFamily: fonts.p,
-            color: "#4f5257",
+            color: colors.text,
         },
     });
 

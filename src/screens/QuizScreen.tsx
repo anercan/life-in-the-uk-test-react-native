@@ -8,6 +8,7 @@ import {useSwipe} from "hooks/useSwipe";
 import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
 import analytics from "@react-native-firebase/analytics";
+import useQuizSettings from "hooks/useQuizSettings";
 
 const {height, width} = Dimensions.get('window');
 
@@ -26,9 +27,9 @@ const QuizScreen = ({navigation}) => {
     const {onTouchStart, onTouchEnd} = useSwipe(onSwipeLeft, onSwipeRight, 14);
     const shakeAnimation = new Animated.Value(0);
     const route = useRoute<QuizScreenRootProps>();
-    const {fonts, colors, sizes} = useTheme();
+    const {colors, sizes} = useTheme();
     const {quizId, quizGroupId, quizCardList, isReviewPage} = route.params;
-
+    const {showExplanationWhileReview} = useQuizSettings();
     const [quiz, setQuiz] = useState<any>();
     const [questionList, setQuestionList] = useState([{}]);
     const [activeQuestion, setActiveQuestion] = useState<any>({});
@@ -39,16 +40,8 @@ const QuizScreen = ({navigation}) => {
         container: {
             flex: 1,
             alignItems: 'center'
-        },
-        questionName: {
-            color: '#404040',
-            fontSize: 20,
-            fontFamily: fonts.p,
-            fontWeight: 'bold'
-        }, buttonTextStyle: {
-            color: '#393939'
         }, progressBar: {
-            paddingTop: height / 30,
+            paddingTop: sizes.sm,
         }, customProgressBar: {
             borderRadius: 7
         }
@@ -210,6 +203,16 @@ const QuizScreen = ({navigation}) => {
         ]).start();
     }
 
+    const getExplanation = () => {
+        if (isReviewPage) {
+            return activeQuestion?.explanation;
+        }
+        if (!isReviewPage && !showExplanationWhileReview) {
+            return activeQuestion?.explanation;
+        }
+        return '';
+    }
+
     return (
         <>
             <View onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} style={styles.container}>
@@ -231,7 +234,7 @@ const QuizScreen = ({navigation}) => {
                                       onSelect={handleAnswer}
                                       isAnswered={answerMap.get(activeQuestion?.id) !== undefined}
                                       isReviewPage={isReviewPage}
-                                      explanation={activeQuestion?.explanation}
+                                      explanation={getExplanation()}
                         />
                     </View>
                 </Animated.View>

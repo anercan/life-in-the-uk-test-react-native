@@ -52,7 +52,7 @@ const SwipeIndicator = () => {
             width={sizes.xxl}
             height={sizes.xxl}
             marginBottom={sizes.sm}
-            color={colors.primary}
+            color={colors.text}
             source={require('../assets/images/swipe.png')}
         />
       </Animated.View>

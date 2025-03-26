@@ -96,11 +96,17 @@ const LoginScreen = () => {
     }
 
     const fireBaseToken = async () => {
-        let token = await messaging().getToken();
-        return token?.toString();
+        try {
+            let token = await messaging().getToken();
+            return token?.toString();
+        } catch (e) {
+            console.log(e);
+            return null;
+        }
     };
 
     const loginWithGoogle = async (response: any) => {
+
         let signInRequest = {
             token: response?.data?.idToken,
             appId: 1,
@@ -138,7 +144,7 @@ const LoginScreen = () => {
             paddingVertical: sizes.xs,
             paddingHorizontal: sizes.xs,
             borderRadius: sizes.md,
-            shadowColor: '#000',
+            shadowColor: colors.shadow,
             shadowOffset: {width: 0, height: 3},
             shadowOpacity: 0.3,
             shadowRadius: 5,
@@ -167,7 +173,7 @@ const LoginScreen = () => {
             overflow: 'hidden',
             borderWidth: 2,
             borderColor: '#cecece',
-            shadowColor: '#000',
+            shadowColor: colors.shadow,
             shadowOffset: {width: 0, height: 4},
             shadowOpacity: 0.2,
             shadowRadius: 5,
@@ -200,13 +206,13 @@ const LoginScreen = () => {
                 <Text style={styles.text}>Login with Google</Text>
             </TouchableOpacity>
             <View style={{marginTop: sizes.xxl}}>
-                <AppText center={true} size={sizes.smallText} gray={true}>team@quizmarkt.com</AppText>
+                <AppText center={true} size={sizes.smallText} color={colors.gray}>team@quizmarkt.com</AppText>
                 <AppText onPress={() => Linking.openURL('https://quizmarkt.com/life-in-the-uk/privacy-policy.html')}
-                         style={{textDecorationLine: 'underline'}} size={sizes.smallText} center={true} gray={true}>
+                         style={{textDecorationLine: 'underline'}} size={sizes.smallText} center={true} color={colors.gray}>
                     Privacy Policy
                 </AppText>
                 {version != '' && version != 'null' &&
-                    <AppText center={true} size={sizes.smallText} gray={true}>{version}</AppText>
+                    <AppText center={true} size={sizes.smallText} color={colors.gray}>{version}</AppText>
                 }
             </View>
         </View>
