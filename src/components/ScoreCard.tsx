@@ -23,10 +23,10 @@ const ScoreCard = (props: IScoreCard) => {
         container: {
             marginBottom: sizes.xl,
             backgroundColor: colors.card,
-            elevation: 4,
+            elevation: 2,
             shadowColor:colors.shadow,
             shadowOffset: {width: 0, height: 3},
-            shadowOpacity: 0.5,
+            shadowOpacity: 0.2,
             shadowRadius: 3,
             borderRadius: sizes.s,
             padding: sizes.s,

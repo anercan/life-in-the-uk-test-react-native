@@ -4,6 +4,7 @@ import {DataProvider} from './src/hooks';
 import AppNavigation from './src/navigation/App';
 import {AuthProvider} from "./src/context/AuthContext";
 import {TitleProvider} from "./src/context/TitleContext";
+import {QuizSettingsProvider} from "./src/context/QuizSettingsContext";
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {COLORS} from "./src/constants/theme/lightTheme";
 import SystemNavigationBar from 'react-native-system-navigation-bar';
@@ -16,7 +17,9 @@ export default function App() {
             <AuthProvider>
                 <TitleProvider>
                     <DataProvider>
-                        <AppNavigation/>
+                        <QuizSettingsProvider>
+                            <AppNavigation/>
+                        </QuizSettingsProvider>
                     </DataProvider>
                 </TitleProvider>
             </AuthProvider>

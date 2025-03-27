@@ -35,6 +35,7 @@ export interface IQuizQuestion {
   onSelect: (selectedId: number) => void;
   isAnswered:boolean;
   isReviewPage:boolean;
+  showCorrectAnswer?:boolean
 }
 
 export interface IAnswerResponse {

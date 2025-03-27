@@ -71,7 +71,7 @@ const GetPremiumScreen = ({navigation}) => {
         if (serviceResult) {
             login(serviceResult.jwt);
             await finishTransaction({purchase: purchaseResult, isConsumable: false})
-            navigation.navigate('Profile');
+            navigation.navigate('SettingsScreen');
             logSubscription();
         } else {
             setButtonDisable(false);
@@ -141,7 +141,7 @@ const GetPremiumScreen = ({navigation}) => {
         'Get detailed statistical data',
         'Compare your test results with others',
         'Early access to new features',
-        'Activity reports',
+        'Activity report',
         'More than 500 official questions',
         'Monthly renewal for 6 months!',
         'Cancellation is available anytime!'

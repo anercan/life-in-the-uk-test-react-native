@@ -31,7 +31,7 @@ const QuizQuestion = (props: IQuizQuestion) => {
         if (selectedAnswer) {
             return id === props.correctAnswerId ? '#67c27f' : '#cd7378'; // doğru cevap yeşil, yanlış kırmızı
         }
-        return id === props.correctAnswerId ? '#67c27f' : colors.orderBoxBackGround; // doğru cevap yeşil, geri kalan gri
+        return id === props.correctAnswerId && (props.isReviewPage || props.showCorrectAnswer) ? '#67c27f' : colors.orderBoxBackGround; // doğru cevap yeşil, geri kalan gri
     }
 
     const styles = useMemo(() => StyleSheet.create({

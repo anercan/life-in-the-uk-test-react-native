@@ -30,9 +30,9 @@ const ListCard = (props:IListCard) => {
             marginBottom:sizes.l ,
             shadowColor: colors.shadow,
             shadowOffset: {width: 1, height: 0},
-            shadowOpacity: 0.1,
+            shadowOpacity: 0.3,
             shadowRadius: 2,
-            elevation: 5,
+            elevation: 3,
             flexDirection:"column",
         },
         orderBoxContainer: {

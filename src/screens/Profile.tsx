@@ -15,7 +15,7 @@ import {isPremium} from "util/jwtUtil";
 import useApiCaller from "../hooks/useApiCaller";
 import {capitalizeWords, checkReviewModalShown, getShortenText, hexWithOpacity} from "util/commonUtil";
 import {ContributionGraph, PieChart} from "react-native-chart-kit";
-import {Instagram} from 'react-content-loader/native'
+//import {Instagram} from 'react-content-loader/native'
 import * as StoreReview from 'react-native-store-review';
 import analytics from "@react-native-firebase/analytics";
 
@@ -47,9 +47,8 @@ const Profile = ({navigation}) => {
 
     const handleReviewRequest = () => {
         try {
-            checkReviewModalShown().then((reviewModalShown: any) => {
-                if (!reviewModalShown) {
-                    analytics().logEvent('review-request');
+            checkReviewModalShown().then((reviewModalShownBefore: any) => {
+                if (!reviewModalShownBefore) {
                     StoreReview.requestReview();
                 }
             });
@@ -77,20 +76,17 @@ const Profile = ({navigation}) => {
         apiCaller('profile/get-user-info')
             .then((profileResponse: any) => {
                 setUserData(profileResponse);
-                if (profileResponse?.userOngoingQuizCount + profileResponse?.userSolvedQuizCount > 1) {
-                    handleReviewRequest();
-                }
                 if (profileResponse?.wrongsMap) {
                     let incorrectDataList: IncorrectData[] = [];
                     let wrongsMap = profileResponse.wrongsMap;
 
                     Object.entries(wrongsMap).forEach(([key, value], index) => {
                         incorrectDataList.push({
-                            name: getShortenText(capitalizeWords(key), 25),
+                            name: '- ' + getShortenText(capitalizeWords(key), 25),
                             incorrectCount: value,
                             color: getColor(index),
-                            legendFontColor: isDark ? colors.gray : colors.dark, // quick fix todo
-                            legendFontSize: 15
+                            legendFontColor: colors.light,
+                            legendFontSize: sizes.smallText
                         } as IncorrectData);
                     });
 
@@ -105,6 +101,9 @@ const Profile = ({navigation}) => {
                         } as ActivityData);
                     });
                     setActivityData(activityDataList)
+                }
+                if (profileResponse?.userOngoingQuizCount + profileResponse?.userSolvedQuizCount > 1) {
+                    handleReviewRequest();
                 }
             });
     }
@@ -135,7 +134,7 @@ const Profile = ({navigation}) => {
                             <AppText onPress={() => getPremiumScreen()} style={{textDecorationLine: "underline"}}
                                      size={sizes.text}
                                      semibold
-                                     color={colors.text}>View Premium+ Plan</AppText>
+                                     color={colors.text}>Unlock with Premium+ Plan</AppText>
                         </View>
                     </View>
                 </View>
@@ -161,7 +160,7 @@ const Profile = ({navigation}) => {
                             <AppText onPress={() => getPremiumScreen()} style={{textDecorationLine: "underline"}}
                                      size={sizes.text}
                                      semibold
-                                     color={colors.text}>View Premium+ Plan</AppText>
+                                     color={colors.text}>Unlock with Premium+ Plan</AppText>
                         </View>
                     </View>
                 </View>
@@ -358,8 +357,8 @@ const Profile = ({navigation}) => {
                         </View>
 
                     </>
-                    :
-                    <Instagram backgroundColor={colors.tabBackground.toString()} style={{marginLeft: sizes.sm}}/>
+                    :null
+                    //<Instagram backgroundColor={colors.tabBackground.toString()} style={{marginLeft: sizes.sm}}/>
                 }
             </View>
         </ScrollView>

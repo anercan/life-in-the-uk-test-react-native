@@ -52,7 +52,7 @@ const Header = () => {
                 </View>
                 <View style={{flex: 5}}>
                     <Text style={styles.title}>
-                        {getShortenText(getTitle(), 27)}
+                        {getShortenText(getTitle(), 20)}
                     </Text>
                 </View>
                 <View style={{flex: 1}}>

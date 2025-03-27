@@ -8,7 +8,7 @@ import {useSwipe} from "hooks/useSwipe";
 import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
 import analytics from "@react-native-firebase/analytics";
-import useQuizSettings from "hooks/useQuizSettings";
+import {QuizSettingsContext} from "context/QuizSettingsContext";
 
 const {height, width} = Dimensions.get('window');
 
@@ -29,7 +29,7 @@ const QuizScreen = ({navigation}) => {
     const route = useRoute<QuizScreenRootProps>();
     const {colors, sizes} = useTheme();
     const {quizId, quizGroupId, quizCardList, isReviewPage} = route.params;
-    const {showExplanationWhileReview} = useQuizSettings();
+    const {showCorrectAnswer, showExplanationWhileSolving, filterCorrectAnswersInReview, skipQuestionImmediately} = useContext(QuizSettingsContext);
     const [quiz, setQuiz] = useState<any>();
     const [questionList, setQuestionList] = useState([{}]);
     const [activeQuestion, setActiveQuestion] = useState<any>({});
@@ -53,10 +53,10 @@ const QuizScreen = ({navigation}) => {
                 setQuiz(quizResponse);
                 setTitle(quizResponse?.name);
                 setStatesForQuiz(quizResponse);
-                if (isReviewPage) { // only wrong ones will display at review page
-                    let wrongQuestions = getWrongQuestions(quizResponse);
-                    setQuestionList(wrongQuestions);
-                    setActiveQuestionState(wrongQuestions, 0);
+                if (isReviewPage) {
+                    let questions = filterCorrectAnswersInReview ? getWrongQuestions(quizResponse) : quizResponse?.questionList;
+                    setQuestionList(questions);
+                    setActiveQuestionState(questions, 0);
                 } else {
                     setQuestionList(quizResponse?.questionList);
                     setActiveQuestionState(quizResponse?.questionList, getQuestionCount(quizResponse?.userQuiz));
@@ -153,22 +153,22 @@ const QuizScreen = ({navigation}) => {
         }
     }
 
-    function createUserQuizData() {
+    const createUserQuizData = () => {
         if (answerMap.size === 0) {
             let data: any = {quizId: quizId, quizGroupId: quizGroupId};
             apiCaller('user-quiz/create-update-user-quiz', 'POST', data);
         }
     }
 
-    function updateUserQuizData(id) {
+    const updateUserQuizData = (answerId, correctAnswerId, questionId) => {
         let data: any = {quizId: quizId, quizGroupId: quizGroupId};
-        if (id === activeQuestion.correctAnswerId) {
+        if (answerId === correctAnswerId) {
             setCorrectAnswerCounter(correctAnswerCounter + 1);
-            data = {...data, correctQuestionId: activeQuestion.id};
+            data = {...data, correctQuestionId: questionId};
         } else {
             data = {
                 ...data,
-                userWrongAnswerRequest: {questionId: activeQuestion.id, answerId: id}
+                userWrongAnswerRequest: {questionId:questionId, answerId: answerId}
             }
         }
         apiCaller('user-quiz/create-update-user-quiz', 'POST', data);
@@ -186,8 +186,11 @@ const QuizScreen = ({navigation}) => {
 
     const handleAnswer = (id) => {
         updateAnswerMap(activeQuestion.id, id);
-        updateUserQuizData(id);
+        updateUserQuizData(id, activeQuestion.correctAnswerId, activeQuestion.id);
         logEvent('solve_answer');
+        if (skipQuestionImmediately) {
+            setTimeout(() => onSwipeLeft(), 500);
+        }
     }
 
     const updateAnswerMap = (key, value) => {
@@ -207,7 +210,7 @@ const QuizScreen = ({navigation}) => {
         if (isReviewPage) {
             return activeQuestion?.explanation;
         }
-        if (!isReviewPage && !showExplanationWhileReview) {
+        if (!isReviewPage && showExplanationWhileSolving) {
             return activeQuestion?.explanation;
         }
         return '';
@@ -235,6 +238,7 @@ const QuizScreen = ({navigation}) => {
                                       isAnswered={answerMap.get(activeQuestion?.id) !== undefined}
                                       isReviewPage={isReviewPage}
                                       explanation={getExplanation()}
+                                      showCorrectAnswer={isReviewPage ? false : showCorrectAnswer}
                         />
                     </View>
                 </Animated.View>
