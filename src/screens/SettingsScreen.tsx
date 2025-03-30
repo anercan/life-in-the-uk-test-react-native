@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, Text, Switch, TouchableOpacity, StyleSheet, FlatList, Linking} from 'react-native';
+import {View, Text, Switch, TouchableOpacity, StyleSheet, FlatList, Linking, Platform} from 'react-native';
 import {useData, useTheme} from "hooks";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import {TitleContext} from "context/TitleContext";
@@ -162,12 +162,11 @@ const SettingsScreen = ({navigation}) => {
         <View style={styles.container}>
             <FlatList
                 data={settingsOptions.filter(item => item?.show != false)}
-                ItemSeparatorComponent={() => <View style={{height: sizes.s}}/>}
                 keyExtractor={(item) => item.id}
                 renderItem={({item}) => (
                     <View style={styles.settingItem}>
                         <View style={styles.iconTextContainer}>
-                            <MaterialCommunityIcons name={item.icon} size={26} color={colors.primary}
+                            <MaterialCommunityIcons name={item.icon} size={24} color={colors.primary}
                                                     style={styles.icon}/>
                             <Text style={styles.text}>{item.title}</Text>
                         </View>
@@ -175,7 +174,7 @@ const SettingsScreen = ({navigation}) => {
                             <Switch
                                 value={item.value}
                                 onValueChange={() => item.onToggle()}
-                                style={{transform: [{scaleX: 1.2}, {scaleY: 1.2}], marginRight: sizes.sm}}
+                                style={{transform: [{scaleX: Platform.OS === 'android' ? 1.2 : 0.9}, {scaleY: Platform.OS === 'android' ? 1.2 : 0.9}], marginRight: sizes.sm}}
                             />
                         ) : (
                             <TouchableOpacity onPress={item.onPress} style={styles.button}>

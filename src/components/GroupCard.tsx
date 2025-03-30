@@ -15,33 +15,30 @@ const GroupCard = (props: IGroupCard) => {
     const {fonts, sizes, colors} = useTheme();
 
     const styles = StyleSheet.create({
+        container: {
+            margin: sizes.xs
+        },
         card: {
-            width: sizes.base * 21,
-            height: sizes.base * 18,
-            backgroundColor: props.backgroundColor,
-            borderRadius: sizes.m,
             alignItems: 'center',
             justifyContent: 'center',
-            marginTop: -sizes.md,
-            marginHorizontal: sizes.s,
+            width: sizes.base * 22,
+            height: sizes.base * 19,
+            backgroundColor: props.backgroundColor,
+            borderRadius: sizes.m,
             shadowColor: colors.shadow,
             shadowOffset: {width: 0, height: 3},
-            shadowOpacity: 0.3,
+            shadowOpacity: 0.2,
             shadowRadius: 3,
             elevation: 4,
         },
         cardText: {
             textAlign: 'center',
-            fontFamily: fonts.p,
+            fontFamily: fonts.text,
             fontSize: sizes.h2,
             color: colors.gray
         },
         orderBox: {
             zIndex: 1,
-            height: sizes.l,
-            width: getCountLength() > 3 ? sizes.xl : sizes.l,
-            justifyContent: "center",
-            alignItems: 'center',
             borderRadius: sizes.sm,
             backgroundColor: '#474a50',
             shadowColor: colors.shadow,
@@ -49,31 +46,37 @@ const GroupCard = (props: IGroupCard) => {
             shadowOpacity: 0.2,
             shadowRadius: 2,
             elevation: 2,
-            marginTop: sizes.s,
-            marginLeft: sizes.base * 18
-        },
+            marginBottom: -sizes.md,
+            marginRight: -sizes.s,
+            alignItems: "flex-end"
+        }, orderBoxText: {
+            color: colors.gray,
+            fontSize: sizes.h2,
+            fontFamily: fonts.text,
+            alignItems: 'center',
+            paddingVertical: sizes.s,
+            paddingHorizontal: sizes.s
+        }
     });
-
-    function getCountLength() {
-        return props.card?.userSolvedCount?.toString()?.length + props.card?.quizQuantity?.toString()?.length;
-    }
 
     function getProgress() {
         return Math.round((props.card?.userSolvedCount / props.card?.quizQuantity) * 100);
     }
 
     return (
-        <TouchableOpacity id={`card-${props?.card?.id}`} onPress={props.onPress}>
-            <View style={styles.orderBox}>
-                <Text style={{color: '#ecebeb', fontSize: sizes.h2}}>
-                    {getProgress()}
-                    <Text style={{
-                        color: '#ecebeb',
-                        fontSize: sizes.h4
-                    }}>
-                        %
+        <TouchableOpacity id={`card-${props?.card?.id}`} style={styles.container} onPress={props.onPress}>
+            <View style={{alignItems: 'flex-end'}}>
+                <View style={styles.orderBox}>
+                    <Text style={styles.orderBoxText}>
+                        {getProgress()}
+                        <Text style={{
+                            color: '#ecebeb',
+                            fontSize: sizes.h4
+                        }}>
+                            %
+                        </Text>
                     </Text>
-                </Text>
+                </View>
             </View>
             <View style={styles.card}>
                 <Text style={styles.cardText}>{props.card?.title?.replace(/(?<!\bof|is)\s/g, '\n')}</Text>
