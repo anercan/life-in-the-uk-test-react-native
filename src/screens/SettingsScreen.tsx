@@ -7,7 +7,8 @@ import {AuthContext} from "context/AuthContext";
 import {GoogleSignin} from "@react-native-google-signin/google-signin";
 import {isPremium} from "util/jwtUtil";
 import {QuizSettingsContext} from "context/QuizSettingsContext";
-import * as StoreReview from "react-native-store-review";
+import InAppReview from "react-native-in-app-review";
+import analytics from "@react-native-firebase/analytics";
 
 const SettingsScreen = ({navigation}) => {
     const {setTitle} = useContext(TitleContext);
@@ -50,6 +51,24 @@ const SettingsScreen = ({navigation}) => {
         setExplanationWhileSolving(newState);
         if (newState == true && showCorrectAnswer == false) {
             setCorrectAnswer(true);
+        }
+    }
+
+    const getRequestReview = () => {
+        try {
+            if (InAppReview.isAvailable()) {
+                InAppReview.RequestInAppReview()
+                    .then((hasFlowFinishedSuccessfully) => {
+                        if (hasFlowFinishedSuccessfully) {
+                            analytics().logEvent('review');
+                        }
+                    })
+                    .catch((e) => {
+                        analytics().logEvent('error-review-request', {errorDesc: e});
+                    });
+            }
+        } catch (e) {
+            analytics().logEvent('error-review-request', {errorDesc: e});
         }
     }
 
@@ -111,12 +130,12 @@ const SettingsScreen = ({navigation}) => {
             buttonText: 'Review',
             icon: 'star-check-outline',
             type: 'button',
-            onPress: () => StoreReview.requestReview()
+            onPress: () => getRequestReview()
         },
         {
             id: '8',
             title: 'Privacy Policy',
-            buttonText: 'View',
+            buttonText: 'Review',
             icon: 'file-document-outline',
             type: 'button',
             onPress: () => Linking.openURL('https://quizmarkt.com/life-in-the-uk/privacy-policy.html')

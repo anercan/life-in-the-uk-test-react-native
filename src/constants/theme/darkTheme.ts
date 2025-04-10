@@ -1,5 +1,6 @@
 import {Dimensions, PixelRatio, Platform} from 'react-native';
-import {ITheme,
+import {
+    ITheme,
     ThemeAssets, ThemeColors,
     ThemeFonts,
     ThemeIcons,
@@ -127,9 +128,9 @@ export const COLORS: ThemeColors = {
     text: '#e5e4e4',
     primary: '#8d969c',
     background: '#084a86',
-    secondaryBackground:'#3e3d3d',
-    tabBackground:'#777879',
-    orderBoxBackGround:'#767474',
+    secondaryBackground: '#3e3d3d',
+    tabBackground: '#777879',
+    orderBoxBackGround: '#767474',
     secondary: '#395e90', // '#8392AB',
     tertiary: '#E8AE4C',
     black: '#252F40',
@@ -142,6 +143,7 @@ export const COLORS: ThemeColors = {
     success: '#06c23f',
     info: '#0297b8',
     card: '#716e6e',
+    cardBorder: '#9a9494',
     shadow: '#636161',
     input: '#252F40',
     checkbox: ['#3A416F', '#141727'],

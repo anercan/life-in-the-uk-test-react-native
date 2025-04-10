@@ -29,16 +29,18 @@ const QuizQuestion = (props: IQuizQuestion) => {
         }
         let selectedAnswer = id === selectedId;
         if (selectedAnswer) {
-            return id === props.correctAnswerId ? '#67c27f' : '#cd7378'; // doğru cevap yeşil, yanlış kırmızı
+            return id === props.correctAnswerId ? '#75c78a' : '#c97d80'; // doğru cevap yeşil, yanlış kırmızı
         }
-        return id === props.correctAnswerId && (props.isReviewPage || props.showCorrectAnswer) ? '#67c27f' : colors.orderBoxBackGround; // doğru cevap yeşil, geri kalan gri
+        return id === props.correctAnswerId && (props.isReviewPage || props.showCorrectAnswer) ? '#75c78a' : colors.orderBoxBackGround; // doğru cevap yeşil, geri kalan gri
     }
 
     const styles = useMemo(() => StyleSheet.create({
         box: {
+            borderWidth: 1,
+            borderColor: colors.cardBorder,
             padding: sizes.s,
             paddingBottom: sizes.m,
-            borderRadius: sizes.sm,
+            borderRadius: sizes.m,
             margin: sizes.s,
             marginTop: sizes.m,
             marginBottom: sizes.l,
@@ -59,37 +61,44 @@ const QuizQuestion = (props: IQuizQuestion) => {
             shadowOffset: {width: 0, height: 3},
             shadowOpacity: 0.1,
             shadowRadius: 2,
-            elevation: 1,
+            elevation: 3,
             marginTop: -sizes.md
         },
         questionBox: {
+            borderWidth: 1,
+            borderColor: colors.cardBorder,
             width: width / 1.2,
             padding: sizes.m,
-            borderRadius: sizes.s,
+            borderRadius: sizes.sm,
             marginTop: sizes.sm,
-            marginHorizontal:sizes.s,
+            marginHorizontal: sizes.s,
             marginBottom: sizes.l,
             backgroundColor: colors.tabBackground,
             shadowColor: colors.shadow,
             shadowOffset: {width: 0, height: 1},
             shadowOpacity: 0.1,
             shadowRadius: 2,
-            elevation: 5,
+            elevation: 4,
         }, explanationBox: {
             marginTop: sizes.s,
             width: sizes.base * 42,
             padding: sizes.s,
         },
         answerBox: {
+            borderWidth: 1,
+            borderColor: colors.cardBorder,
+            flexDirection: 'row',
             width: sizes.base * 43,
-            padding: sizes.s,
-            borderRadius: sizes.s,
+            paddingVertical: sizes.base * 1.3,
+            paddingHorizontal: sizes.sm,
+            borderRadius: sizes.sm,
+            marginVertical: sizes.s,
             margin: sizes.s,
             shadowColor: colors.shadow,
             shadowOffset: {width: 0, height: 1},
             shadowOpacity: 0.1,
             shadowRadius: 2,
-            elevation: 3,
+            elevation: 2,
         }, questionText: {
             fontFamily: fonts.p,
             color: colors.text,

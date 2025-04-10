@@ -220,7 +220,7 @@ const QuizScreen = ({navigation}) => {
         <>
             <View onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} style={styles.container}>
                 <View style={styles.progressBar}>
-                    <Progress.Bar height={sizes.sm} color={String(colors.primary)} style={styles.customProgressBar}
+                    <Progress.Bar height={sizes.sm} borderColor={String(colors.dark)} color={String(colors.primary)} style={styles.customProgressBar}
                                   progress={activeQuestion?.counter / questionList?.length || 0}
                                   width={width / 1.12}/>
                 </View>

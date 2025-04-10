@@ -38,12 +38,7 @@ export const checkFirstLaunch = async (): Promise<boolean> => {
 export const checkReviewModalShown = async (): Promise<boolean> => {
     try {
         const value = await AsyncStorage.getItem('reviewModalShownBefore');
-        if (!value && value == null) {
-            await AsyncStorage.setItem('reviewModalShownBefore', 'true');
-            return false;
-        } else {
-            return true;
-        }
+        return !(!value && value == null);
     } catch (error) {
         return true;
     }

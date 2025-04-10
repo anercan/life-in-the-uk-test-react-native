@@ -21,6 +21,8 @@ const ScoreCard = (props: IScoreCard) => {
 
     const styles = StyleSheet.create({
         container: {
+            borderWidth: 1,
+            borderColor: colors.cardBorder,
             marginBottom: sizes.xl,
             backgroundColor: colors.card,
             elevation: 2,
@@ -28,8 +30,8 @@ const ScoreCard = (props: IScoreCard) => {
             shadowOffset: {width: 0, height: 3},
             shadowOpacity: 0.2,
             shadowRadius: 3,
-            borderRadius: sizes.s,
-            padding: sizes.s,
+            borderRadius: sizes.m,
+            padding: sizes.sm,
             width: '95%',
         }, progress: {
             borderRadius: sizes.xxxl, backgroundColor: colors.primary, elevation: 2
@@ -42,7 +44,10 @@ const ScoreCard = (props: IScoreCard) => {
             marginHorizontal: sizes.s,
             paddingBottom: sizes.xs
         }, scoreBoxContainer: {
+            borderWidth: 1,
+            borderColor: colors.cardBorder,
             borderRadius: sizes.sm,
+            paddingVertical:sizes.xs,
             flexDirection: 'row',
             flex: 1,
             backgroundColor: colors.tabBackground,
@@ -59,7 +64,7 @@ const ScoreCard = (props: IScoreCard) => {
     return (
         <View style={styles.container}>
             <View style={{alignItems: 'center', marginBottom: sizes.m}}>
-                <Text style={{textAlign: 'center', color: colors.text, fontSize: sizes.h1, fontFamily: fonts.p}}>
+                <Text style={{textAlign: 'center', color: colors.text, fontSize: sizes.h2, fontFamily: fonts.p}}>
                     {props.quizName}
                 </Text>
             </View>

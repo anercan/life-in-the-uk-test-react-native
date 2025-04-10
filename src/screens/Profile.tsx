@@ -16,8 +16,9 @@ import useApiCaller from "../hooks/useApiCaller";
 import {capitalizeWords, checkReviewModalShown, getShortenText, hexWithOpacity} from "util/commonUtil";
 import {ContributionGraph, PieChart} from "react-native-chart-kit";
 //import {Instagram} from 'react-content-loader/native'
-import * as StoreReview from 'react-native-store-review';
+import InAppReview from 'react-native-in-app-review';
 import analytics from "@react-native-firebase/analytics";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const isAndroid = Platform.OS === 'android';
 
@@ -48,12 +49,23 @@ const Profile = ({navigation}) => {
     const handleReviewRequest = () => {
         try {
             checkReviewModalShown().then((reviewModalShownBefore: any) => {
-                if (!reviewModalShownBefore) {
-                    StoreReview.requestReview();
+                if (!reviewModalShownBefore && InAppReview.isAvailable()) {
+                    InAppReview.RequestInAppReview()
+                        .then((hasFlowFinishedSuccessfully) => {
+                            if (hasFlowFinishedSuccessfully) {
+                                AsyncStorage.setItem('reviewModalShownBefore', 'true');
+                                analytics().logEvent('review');
+                            }
+                        })
+                        .catch((error) => {
+                            AsyncStorage.setItem('reviewModalShownBefore', 'true');
+                            analytics().logEvent('error-review-request', {errorDesc:error});
+                        });
                 }
             });
         } catch (e) {
-            analytics().logEvent('warn-review-request');
+            AsyncStorage.setItem('reviewModalShownBefore', 'true');
+            analytics().logEvent('error-review-request');
         }
     };
 
@@ -102,7 +114,7 @@ const Profile = ({navigation}) => {
                     });
                     setActivityData(activityDataList)
                 }
-                if (profileResponse?.userOngoingQuizCount + profileResponse?.userSolvedQuizCount > 1) {
+                if (profileResponse?.userOngoingQuizCount + profileResponse?.userSolvedQuizCount > 2) {
                     handleReviewRequest();
                 }
             });
