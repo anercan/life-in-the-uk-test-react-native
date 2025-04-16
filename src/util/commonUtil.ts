@@ -113,3 +113,21 @@ export const hexWithOpacity = (color,opacity) => {
     const alpha = Math.round(opacity * 255).toString(16).padStart(2, '0');
     return color+alpha;
 };
+
+export const chunkArray = (array, size) => {
+    const result = [];
+    for (let i = 0; i < array?.length; i += size) {
+        result.push(array.slice(i, i + size));
+    }
+    return result;
+};
+
+export const getColorFromPalette = (index) => {
+    const colorList =
+        ['#c26666', '#82cdb9', '#deba86',
+        '#7ea36d', '#a97ab8', '#a7953b',
+        '#529aac', '#45518d', '#2d606c',
+        '#2d606c','#a5a493', '#3964b3',
+        '#6aef99', '#2a2a31', '#d7d7d7'];
+    return colorList[index];
+}

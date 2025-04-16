@@ -11,7 +11,7 @@ const useApiCaller = (navigator?) => {
         try {
             const response: ApiResponse = await ApiCallerInternal(endpoint, method, data);
             if (response?.status?.code === -3 && navigator) {
-                navigator?.navigate('GetPremiumScreen');
+                navigator?.replace('GetPremiumScreen');
             }
             return response?.data;
         } catch (error: any) {

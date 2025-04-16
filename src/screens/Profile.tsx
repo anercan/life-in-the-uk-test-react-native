@@ -13,7 +13,13 @@ import {TitleContext} from "context/TitleContext";
 import {useFocusEffect} from "@react-navigation/native";
 import {isPremium} from "util/jwtUtil";
 import useApiCaller from "../hooks/useApiCaller";
-import {capitalizeWords, checkReviewModalShown, getShortenText, hexWithOpacity} from "util/commonUtil";
+import {
+    capitalizeWords,
+    checkReviewModalShown,
+    getColorFromPalette,
+    getShortenText,
+    hexWithOpacity
+} from "util/commonUtil";
 import {ContributionGraph, PieChart} from "react-native-chart-kit";
 //import {Instagram} from 'react-content-loader/native'
 import InAppReview from 'react-native-in-app-review';
@@ -96,7 +102,7 @@ const Profile = ({navigation}) => {
                         incorrectDataList.push({
                             name: '- ' + getShortenText(capitalizeWords(key), 25),
                             incorrectCount: value,
-                            color: getColor(index),
+                            color: getColorFromPalette(index),
                             legendFontColor: colors.light,
                             legendFontSize: sizes.smallText
                         } as IncorrectData);
@@ -178,12 +184,6 @@ const Profile = ({navigation}) => {
                 </View>
             </View>
         );
-    }
-
-    function getColor(index) {
-        const colorList = ['#c26666', '#82cdb9', '#deba86', '#7ea36d',
-            '#a97ab8', '#a7953b', '#529aac', '#45518d', '#2d606c', '#2d606c'];
-        return colorList[index];
     }
 
     const getTopicStatistics = () => {

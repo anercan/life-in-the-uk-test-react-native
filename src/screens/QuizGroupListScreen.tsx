@@ -2,20 +2,20 @@ import React, {useCallback, useContext, useState} from 'react';
 
 import {useTheme} from '../hooks/';
 import {Block} from '../components/';
-import {StyleSheet, View} from "react-native";
+import {ScrollView, StyleSheet, View} from "react-native";
 import {IQuizGroupCard} from "constants/types";
 import {GroupCard} from "../components";
 import {useFocusEffect} from "@react-navigation/native";
 import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
-import {BulletList} from 'react-content-loader/native'
-import {groupCardBackgroundImages, randomColors} from "util/commonUtil";
+import {chunkArray, groupCardBackgroundImages, randomColors} from "util/commonUtil";
+import DailyCard from "components/DailyCard";
 
 const QuizGroupListScreen = ({navigation}) => {
     const {apiCaller} = useApiCaller(navigation);
-    const [quizGroupCards, setQuizGroupCards] = useState([{}]);
+    const [quizGroupCards, setQuizGroupCards] = useState([]);
     const {sizes} = useTheme();
-    const { setTitle } = useContext(TitleContext);
+    const {setTitle} = useContext(TitleContext);
 
     const styles = StyleSheet.create({
         container: {
@@ -23,7 +23,6 @@ const QuizGroupListScreen = ({navigation}) => {
             flexDirection: 'row',
             flexWrap: 'wrap',
             justifyContent: 'center',
-            padding: sizes.m,
         },
         row: {
             flexDirection: 'row',
@@ -47,47 +46,28 @@ const QuizGroupListScreen = ({navigation}) => {
         navigation.navigate('QuizListScreen', {quizGroupId: card.id, quizGroupTitle: card.title})
     );
 
-    const chunkArray = (array, size) => {
-        const result = [];
-        for (let i = 0; i < array?.length; i += size) {
-            result.push(array.slice(i, i + size));
-        }
-        return result;
-    };
-
     // Chunk the cardData array into rows of 2 cards
     const rows = chunkArray(quizGroupCards, 2);
 
     return (
         <Block>
-            {quizGroupCards?.length > 1 ?
-                <Block
-                    scroll
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{paddingBottom: sizes.l}}>
-                    <View style={styles.container}>
-                        {rows.map((row, rowIndex) => (
-                            <View key={rowIndex} style={styles.row}>
-                                {row.map((card,index) => (
-                                    <View key={row +''+ index} style={{marginRight: index == 0 ? sizes.sm : 0}}>
-                                        <GroupCard
-                                            backgroundImage={groupCardBackgroundImages[(rowIndex * row.length) + index]}
-                                            backgroundColor={randomColors[(rowIndex * row.length) + index]}
-                                            card={card}
-                                            onPress={() => onPressQuizGroupCard(card)}
-                                        />
-                                    </View>
-                                ))}
+            <ScrollView contentContainerStyle={{alignItems: 'center', marginTop: sizes.m}}>
+                <DailyCard navigation={navigation}/>
+                {rows.map((row, rowIndex) => (
+                    <View key={rowIndex} style={styles.row}>
+                        {row.map((card, index) => (
+                            <View key={row + '' + index} style={{marginRight: index == 0 ? sizes.sm : 0}}>
+                                <GroupCard
+                                    backgroundImage={groupCardBackgroundImages[(rowIndex * row.length) + index]}
+                                    backgroundColor={randomColors[(rowIndex * row.length) + index]}
+                                    card={card}
+                                    onPress={() => onPressQuizGroupCard(card)}
+                                />
                             </View>
                         ))}
                     </View>
-                </Block>
-                :
-                <>
-                    <BulletList style={{marginTop:sizes.l,marginLeft:sizes.sm}} backgroundColor={'#c1c1c1'} height={sizes.base*20} width={sizes.base * 50} />
-                </>
-
-            }
+                ))}
+            </ScrollView>
         </Block>
     );
 };

@@ -64,7 +64,7 @@ const ScoreCard = (props: IScoreCard) => {
     return (
         <View style={styles.container}>
             <View style={{alignItems: 'center', marginBottom: sizes.m}}>
-                <Text style={{textAlign: 'center', color: colors.text, fontSize: sizes.h2, fontFamily: fonts.p}}>
+                <Text style={{textAlign: 'center', color: colors.text, fontSize: sizes.h2, fontFamily: fonts.medium}}>
                     {props.quizName}
                 </Text>
             </View>

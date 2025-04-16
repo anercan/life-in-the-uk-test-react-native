@@ -6,6 +6,7 @@ import {useTheme} from "../hooks";
 import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
 import ScoreCard from "components/ScoreCard";
+import DataDistributionCard from "components/DataDistributionCard";
 
 type QuizParams = {
     quizName: string;
@@ -14,6 +15,8 @@ type QuizParams = {
     quizCardList: any[];
     quizGroupId: number;
     quizId: number;
+    isDailyQuiz?: boolean;
+    dailyQuizResponse?:any;
 };
 
 type QuizRouteProp = RouteProp<{ CompletedQuizScreen: QuizParams }, 'CompletedQuizScreen'>;
@@ -21,17 +24,12 @@ type QuizRouteProp = RouteProp<{ CompletedQuizScreen: QuizParams }, 'CompletedQu
 const CompletedQuizScreen = ({navigation}) => {
     const route = useRoute<QuizRouteProp>();
     const {apiCaller} = useApiCaller();
-    const {quizName, quizSize, correctAnswerSize, quizCardList, quizGroupId, quizId} = route.params;
-    const {colors,fonts, sizes} = useTheme();
+    const {quizName, quizSize, correctAnswerSize, quizCardList, quizGroupId, quizId, isDailyQuiz,dailyQuizResponse} = route.params;
+    const {colors, fonts, sizes} = useTheme();
     const [isNextQuizExist, setNextQuizExist] = useState(true);
     const {setTitle} = useContext(TitleContext);
     const [completedStatics, setCompletedStatics] = useState({betterCount: 0, equalCount: 0, worseCount: 0});
-
-    const getStaticalData = async () => {
-        apiCaller('user-quiz/get-completed-quiz-statics?quizId=' + quizId).then((response: any) => {
-            setCompletedStatics(response);
-        });
-    }
+    const [wrongsMap, setWrongsMap] = useState<any>({});
 
     useEffect(() => {
         setTitle('Completed');
@@ -39,6 +37,25 @@ const CompletedQuizScreen = ({navigation}) => {
         setNextQuizExist(nextQuiz !== undefined);
         getStaticalData();
     }, []);
+
+    const getStaticalData = async () => {
+        if (quizId) {
+            apiCaller('user-quiz/get-completed-quiz-statics?quizId=' + quizId).then((response: any) => {
+                setCompletedStatics(response);
+            });
+        } else if (isDailyQuiz) {
+            if (dailyQuizResponse) {
+                setWrongsMap(dailyQuizResponse?.wrongQuestionsSubjects)
+            } else {
+                apiCaller('quiz/get-user-daily-quiz', 'POST')
+                    .then((quizResponse) => {
+                        if (quizResponse?.userDailyQuizResponse) {
+                            setWrongsMap(quizResponse?.userDailyQuizResponse?.wrongQuestionsSubjects)
+                        }
+                    });
+            }
+        }
+    }
 
     const getNextQuiz = () => {
         try {
@@ -61,7 +78,6 @@ const CompletedQuizScreen = ({navigation}) => {
                 isReviewPage: false
             })
         }
-
     }
 
     const onPressReview = () => {
@@ -87,18 +103,29 @@ const CompletedQuizScreen = ({navigation}) => {
     return (
         <ScrollView contentContainerStyle={{alignItems: 'center', padding: sizes.sm, paddingTop: sizes.m}}>
 
-            <ScoreCard quizName={quizName} total={quizSize} correct={correctAnswerSize} wrong={quizSize - correctAnswerSize}/>
+            <ScoreCard quizName={isDailyQuiz ? 'Daily Quiz' : quizName} total={quizSize} correct={correctAnswerSize} wrong={quizSize - correctAnswerSize}/>
 
             {totalCompletedUserQuizzes > 1 &&
                 <>
-                    <View style={{marginBottom:sizes.xxxl,alignItems: 'center'}}>
+                    <View style={{marginBottom: sizes.xxxl, alignItems: 'center'}}>
                         <Text style={{color: colors.text, fontSize: sizes.text, fontFamily: fonts.p}}>
-                            You scored higher than <Text style={{fontFamily: fonts.medium}}>{getPercentage()}%</Text> of people.
+                            You scored higher than <Text style={{fontFamily: fonts.medium}}>{getPercentage()}%</Text> of
+                            people.
                         </Text>
                     </View>
                 </>
             }
-            {correctAnswerSize !== quizSize &&
+            {isDailyQuiz &&
+                <>
+                    <DataDistributionCard incorrectMapProps={wrongsMap}/>
+                    <View style={{marginBottom: sizes.xxxl, alignItems: 'center'}}>
+                        <Text style={{color: colors.text, fontSize: sizes.text, fontFamily: fonts.p}}>
+                            Don't forget to come back tomorrow!
+                        </Text>
+                    </View>
+                </>
+            }
+            {!isDailyQuiz && correctAnswerSize !== quizSize &&
                 <ButtonCard onPress={onPressReview} buttonText={'Review'}/>
             }
             {isNextQuizExist &&

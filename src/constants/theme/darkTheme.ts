@@ -126,7 +126,7 @@ export const LINE_HEIGHTS: ThemeLineHeights = {
 
 export const COLORS: ThemeColors = {
     text: '#e5e4e4',
-    primary: '#8d969c',
+    primary: '#777d80',
     background: '#084a86',
     secondaryBackground: '#3e3d3d',
     tabBackground: '#777879',

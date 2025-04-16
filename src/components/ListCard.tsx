@@ -26,7 +26,6 @@ const ListCard = (props:IListCard) => {
             borderRadius: sizes.sm,
             borderLeftWidth: sizes.s,
             borderColor: colors.primary,
-            borderWidth: 1,
             marginBottom:sizes.l ,
             shadowColor: colors.shadow,
             shadowOffset: {width: 1, height: 0},
@@ -50,7 +49,7 @@ const ListCard = (props:IListCard) => {
         title: {
             color: !props.locked ? colors.text : colors.light,
             fontSize: sizes.h3,
-            fontFamily: fonts.h4,
+            fontFamily: fonts.medium,
             fontWeight: 'bold',
         },
         orderBox: {

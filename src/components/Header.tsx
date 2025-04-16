@@ -32,7 +32,7 @@ const Header = () => {
             flexDirection: 'row',
             justifyContent: 'center'
         }, title: {
-            fontFamily: fonts.p,
+            fontFamily: fonts.text,
             textAlign: 'center',
             fontSize: sizes.h1,
             color: colors.gray

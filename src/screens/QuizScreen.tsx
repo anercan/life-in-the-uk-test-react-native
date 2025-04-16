@@ -9,6 +9,7 @@ import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
 import analytics from "@react-native-firebase/analytics";
 import {QuizSettingsContext} from "context/QuizSettingsContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const {height, width} = Dimensions.get('window');
 
@@ -17,6 +18,7 @@ type QuizParams = {
     quizCardList: any[];
     quizGroupId: number;
     quizId: number;
+    isDailyQuiz: boolean;
 };
 
 type QuizScreenRootProps = RouteProp<{ QuizScreen: QuizParams }, 'QuizScreen'>;
@@ -28,26 +30,28 @@ const QuizScreen = ({navigation}) => {
     const shakeAnimation = new Animated.Value(0);
     const route = useRoute<QuizScreenRootProps>();
     const {colors, sizes} = useTheme();
-    const {quizId, quizGroupId, quizCardList, isReviewPage} = route.params;
-    const {showCorrectAnswer, showExplanationWhileSolving, filterCorrectAnswersInReview, skipQuestionImmediately} = useContext(QuizSettingsContext);
+    const {quizId, quizGroupId, quizCardList, isReviewPage, isDailyQuiz} = route.params;
+    const {
+        showCorrectAnswer,
+        showExplanationWhileSolving,
+        filterCorrectAnswersInReview,
+        skipQuestionImmediately
+    } = useContext(QuizSettingsContext);
     const [quiz, setQuiz] = useState<any>();
     const [questionList, setQuestionList] = useState([{}]);
     const [activeQuestion, setActiveQuestion] = useState<any>({});
     const [correctAnswerCounter, setCorrectAnswerCounter] = useState(0);
     const [answerMap, setAnswerMap] = useState(new Map());
 
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            alignItems: 'center'
-        }, progressBar: {
-            paddingTop: sizes.sm,
-        }, customProgressBar: {
-            borderRadius: 7
-        }
-    });
-
     useEffect(() => {
+        if (!isDailyQuiz) {
+            initRegularQuizData();
+        } else {
+            initUserDailyQuizData();
+        }
+    }, [quizId, isReviewPage, isDailyQuiz]);
+
+    const initRegularQuizData = () => {
         apiCaller('quiz/get-quiz-with-id/' + quizId)
             .then((quizResponse) => {
                 setQuiz(quizResponse);
@@ -62,7 +66,28 @@ const QuizScreen = ({navigation}) => {
                     setActiveQuestionState(quizResponse?.questionList, getQuestionCount(quizResponse?.userQuiz));
                 }
             });
-    }, [quizId, isReviewPage]);
+    }
+
+    const initUserDailyQuizData = () => {
+        apiCaller('quiz/get-user-daily-quiz', 'POST')
+            .then((quizResponse) => {
+                AsyncStorage.setItem('dailyQuiz', new Date().toISOString().split('T')[0]);
+                if (quizResponse?.userDailyQuizResponse) {
+                    navigation.replace('CompletedQuizScreen', {
+                        quizSize: quizResponse?.userDailyQuizResponse?.correctQuestionIdList?.length + quizResponse?.userDailyQuizResponse?.wrongQuestionIdList?.length,
+                        correctAnswerSize: quizResponse?.userDailyQuizResponse?.correctQuestionIdList?.length,
+                        quizCardList: [],
+                        isDailyQuiz: true,
+                        dailyQuizResponse: quizResponse?.userDailyQuizResponse
+                    });
+                } else {
+                    setTitle('Daily Quiz');
+                    let dailyQuestionList = quizResponse?.questionList;
+                    setQuestionList(dailyQuestionList);
+                    setActiveQuestionState(dailyQuestionList, 0);
+                }
+            });
+    }
 
     const getQuestionCount = (userQuiz) => {
         if (userQuiz) {
@@ -73,8 +98,9 @@ const QuizScreen = ({navigation}) => {
             let wrongs = userQuiz?.wrongQuestionList ? userQuiz?.wrongQuestionList?.length : 0;
             let questionOrder = (corrects + wrongs) - 1;
             return questionOrder < 0 ? 0 : questionOrder;
+        } else {
+            return 0;
         }
-        return 0;
     }
 
     const setStatesForQuiz = (quizResponse) => {
@@ -86,16 +112,26 @@ const QuizScreen = ({navigation}) => {
     }
 
     const setActiveQuestionState = (questionList, questionCounter) => {
-        let activeQuestion = questionList[questionCounter];
-        activeQuestion.counter = questionCounter;
-        setActiveQuestion(activeQuestion);
+        try {
+            let activeQuestion = questionList[questionCounter];
+            activeQuestion.counter = questionCounter;
+            setActiveQuestion(activeQuestion);
+        } catch (e) {
+            let activeQuestion = questionList[0];
+            activeQuestion.counter = 0;
+            setActiveQuestion(activeQuestion);
+        }
     }
 
     const setStatesForOngoingQuiz = (quizResponse) => {
         let answersMap = new Map();
         setCorrectAnswerCounter(quizResponse?.userQuiz?.correctQuestionList?.length);
-        quizResponse?.userQuiz?.correctQuestionList?.forEach((questionId) =>
-            answersMap.set(questionId, quizResponse?.questionList.find((q) => q.id == questionId)?.correctAnswerId)
+        quizResponse?.userQuiz?.correctQuestionList?.forEach((questionId) => {
+                let question = quizResponse?.questionList.find((q) => q.id == questionId);
+                if (question) {
+                    answersMap.set(questionId, question?.correctAnswerId);
+                }
+            }
         );
         quizResponse?.userQuiz?.wrongQuestionList?.forEach((wrongQuestion) =>
             answersMap.set(wrongQuestion.question.id, wrongQuestion.wrongAnswer.id)
@@ -111,7 +147,7 @@ const QuizScreen = ({navigation}) => {
     const getCompletedScreenBody = () => {
         if (isReviewPage) {
             return {
-                quizName: quiz.name,
+                quizName: quiz?.name,
                 quizSize: quiz?.userQuiz?.correctQuestionList.length + quiz?.userQuiz?.wrongQuestionList?.length,
                 correctAnswerSize: quiz?.userQuiz?.correctQuestionList.length,
                 quizCardList: quizCardList,
@@ -120,14 +156,28 @@ const QuizScreen = ({navigation}) => {
             };
         } else {
             return {
-                quizName: quiz.name,
+                quizName: quiz?.name,
                 quizSize: questionList.length,
                 correctAnswerSize: correctAnswerCounter,
                 quizCardList: quizCardList,
                 quizGroupId: quizGroupId,
-                quizId: quizId
+                quizId: quizId,
+                isDailyQuiz: isDailyQuiz
             };
         }
+    }
+
+    const updateDailyQuizData = (answerId) => {
+        let correctId, wrongId;
+        if (answerId === activeQuestion.correctAnswerId) {
+            correctId = activeQuestion.id;
+        } else {
+            wrongId = activeQuestion.id;
+        }
+        apiCaller('quiz/save-user-daily-quiz', 'POST', {
+            correctQuestionId: correctId,
+            wrongQuestionId: wrongId,
+        })
     }
 
     function onSwipeLeft() { // to next question
@@ -136,7 +186,6 @@ const QuizScreen = ({navigation}) => {
             startShake();
             return;
         }
-
         let newQuestionOrder = activeQuestion.counter + 1;
         let isLastQuestion = newQuestionOrder == questionList.length;
         if (!isLastQuestion) {
@@ -163,12 +212,11 @@ const QuizScreen = ({navigation}) => {
     const updateUserQuizData = (answerId, correctAnswerId, questionId) => {
         let data: any = {quizId: quizId, quizGroupId: quizGroupId};
         if (answerId === correctAnswerId) {
-            setCorrectAnswerCounter(correctAnswerCounter + 1);
             data = {...data, correctQuestionId: questionId};
         } else {
             data = {
                 ...data,
-                userWrongAnswerRequest: {questionId:questionId, answerId: answerId}
+                userWrongAnswerRequest: {questionId: questionId, answerId: answerId}
             }
         }
         apiCaller('user-quiz/create-update-user-quiz', 'POST', data);
@@ -185,16 +233,27 @@ const QuizScreen = ({navigation}) => {
     }
 
     const handleAnswer = (id) => {
+        if (isDailyQuiz) {
+            updateDailyQuizData(id);
+        } else {
+            updateUserQuizData(id, activeQuestion.correctAnswerId, activeQuestion.id);
+        }
+
+        if (id === activeQuestion.correctAnswerId) {
+            setCorrectAnswerCounter(correctAnswerCounter + 1);
+        }
+
         updateAnswerMap(activeQuestion.id, id);
-        updateUserQuizData(id, activeQuestion.correctAnswerId, activeQuestion.id);
-        logEvent('solve_answer');
+        logEvent(isDailyQuiz ? 'solve_daily_question' : 'solve_answer');
         if (skipQuestionImmediately) {
             setTimeout(() => onSwipeLeft(), 500);
         }
     }
 
     const updateAnswerMap = (key, value) => {
-        setAnswerMap(answerMap.set(key, value));
+        const updatedMap = new Map(answerMap);
+        updatedMap.set(key, value);
+        setAnswerMap(updatedMap);
     }
 
     const startShake = () => {
@@ -216,16 +275,28 @@ const QuizScreen = ({navigation}) => {
         return '';
     }
 
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            alignItems: 'center'
+        }, progressBar: {
+            paddingTop: sizes.sm,
+        }, customProgressBar: {
+            borderRadius: 7
+        }
+    });
+
     return (
         <>
             <View onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} style={styles.container}>
                 <View style={styles.progressBar}>
-                    <Progress.Bar height={sizes.sm} borderColor={String(colors.dark)} color={String(colors.primary)} style={styles.customProgressBar}
+                    <Progress.Bar height={sizes.sm} borderColor={String(colors.dark)} color={String(colors.primary)}
+                                  style={styles.customProgressBar}
                                   progress={activeQuestion?.counter / questionList?.length || 0}
                                   width={width / 1.12}/>
                 </View>
                 <Animated.View style={{transform: [{translateX: shakeAnimation} as any]}}>
-                    <View style={{paddingTop: height / 30}}>
+                    <View style={{marginTop: height / 30}}>
                         <QuizQuestion id={activeQuestion?.id}
                                       questionOrder={activeQuestion.counter}
                                       content={activeQuestion?.content}

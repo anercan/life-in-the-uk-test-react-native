@@ -138,11 +138,11 @@ const GetPremiumScreen = ({navigation}) => {
 
     const premiumFeatures = [
         'Access to Premium+ quizzes',
+        'Limitless personal daily challenges',
         'Get detailed statistical data',
         'Compare your test results with others',
-        'Early access to new features',
         'Activity report',
-        'More than 500 official questions',
+        'Official questions',
         'Monthly renewal for 6 months!',
         'Cancellation is available anytime!'
     ];
