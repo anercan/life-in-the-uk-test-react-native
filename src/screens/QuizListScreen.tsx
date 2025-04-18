@@ -62,10 +62,10 @@ const QuizListScreen = ({navigation}) => {
     const handleSelect = (card: IQuizCard, quizCardList: IQuizCard[]) => {
         if (!card.locked) {
             navigation.navigate('QuizScreen', {
+                quizType:'REGULAR',
                 quizId: card?.id,
                 quizGroupId: quizGroupId,
                 quizCardList: quizCardList,
-                isReviewPage: false
             });
         } else {
             navigation.navigate('GetPremiumScreen');

@@ -16,7 +16,7 @@ type QuizParams = {
     quizGroupId: number;
     quizId: number;
     isDailyQuiz?: boolean;
-    dailyQuizResponse?:any;
+    dailyQuizResponse?: any;
 };
 
 type QuizRouteProp = RouteProp<{ CompletedQuizScreen: QuizParams }, 'CompletedQuizScreen'>;
@@ -24,7 +24,16 @@ type QuizRouteProp = RouteProp<{ CompletedQuizScreen: QuizParams }, 'CompletedQu
 const CompletedQuizScreen = ({navigation}) => {
     const route = useRoute<QuizRouteProp>();
     const {apiCaller} = useApiCaller();
-    const {quizName, quizSize, correctAnswerSize, quizCardList, quizGroupId, quizId, isDailyQuiz,dailyQuizResponse} = route.params;
+    const {
+        quizName,
+        quizSize,
+        correctAnswerSize,
+        quizCardList,
+        quizGroupId,
+        quizId,
+        isDailyQuiz,
+        dailyQuizResponse
+    } = route.params;
     const {colors, fonts, sizes} = useTheme();
     const [isNextQuizExist, setNextQuizExist] = useState(true);
     const {setTitle} = useContext(TitleContext);
@@ -72,20 +81,20 @@ const CompletedQuizScreen = ({navigation}) => {
             navigation.navigate('GetPremiumScreen');
         } else {
             navigation.navigate('QuizScreen', {
+                quizType: 'REGULAR',
                 quizId: nextQuiz?.id,
                 quizGroupId: quizGroupId,
                 quizCardList: quizCardList,
-                isReviewPage: false
             })
         }
     }
 
     const onPressReview = () => {
         navigation.navigate('QuizScreen', {
+            quizType: 'REVIEW',
             quizId: quizId,
             quizGroupId: quizGroupId,
-            quizCardList: quizCardList,
-            isReviewPage: true
+            quizCardList: quizCardList
         });
     }
 
@@ -103,7 +112,8 @@ const CompletedQuizScreen = ({navigation}) => {
     return (
         <ScrollView contentContainerStyle={{alignItems: 'center', padding: sizes.sm, paddingTop: sizes.m}}>
 
-            <ScoreCard quizName={isDailyQuiz ? 'Daily Quiz' : quizName} total={quizSize} correct={correctAnswerSize} wrong={quizSize - correctAnswerSize}/>
+            <ScoreCard quizName={isDailyQuiz ? 'Daily Quiz' : quizName} total={quizSize} correct={correctAnswerSize}
+                       wrong={quizSize - correctAnswerSize}/>
 
             {totalCompletedUserQuizzes > 1 &&
                 <>

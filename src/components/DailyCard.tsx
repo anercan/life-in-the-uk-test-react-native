@@ -18,9 +18,8 @@ const DailyCard = ({navigation}) => {
 
     const handlePress = () => {
         navigation.navigate('QuizScreen', {
+            quizType: 'DAILY',
             quizCardList: [],
-            isReviewPage: false,
-            isDailyQuiz: true,
         });
     };
 
@@ -76,7 +75,8 @@ const DailyCard = ({navigation}) => {
             <View style={styles.card}>
                 <View style={styles.textContainer}>
                     <Text style={styles.header}>Daily Challenge</Text>
-                    <Text style={styles.subText}>{isSolved ? 'Review Your Daily Quiz Report' : 'Your Daily Quiz is Ready!'}</Text>
+                    <Text
+                        style={styles.subText}>{isSolved ? 'Review Your Daily Quiz Report' : 'Your Daily Quiz is Ready!'}</Text>
                 </View>
                 <Icon
                     name="chevron-forward"

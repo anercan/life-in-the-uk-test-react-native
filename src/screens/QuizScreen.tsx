@@ -10,15 +10,15 @@ import useApiCaller from "../hooks/useApiCaller";
 import analytics from "@react-native-firebase/analytics";
 import {QuizSettingsContext} from "context/QuizSettingsContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {isDailyQuiz, isRegularQuiz, isReviewMode} from "util/quizUtils";
 
 const {height, width} = Dimensions.get('window');
 
 type QuizParams = {
-    isReviewPage: boolean;
+    quizType: 'REGULAR' | 'DAILY' | 'REVIEW';
     quizCardList: any[];
     quizGroupId: number;
     quizId: number;
-    isDailyQuiz: boolean;
 };
 
 type QuizScreenRootProps = RouteProp<{ QuizScreen: QuizParams }, 'QuizScreen'>;
@@ -30,7 +30,7 @@ const QuizScreen = ({navigation}) => {
     const shakeAnimation = new Animated.Value(0);
     const route = useRoute<QuizScreenRootProps>();
     const {colors, sizes} = useTheme();
-    const {quizId, quizGroupId, quizCardList, isReviewPage, isDailyQuiz} = route.params;
+    const {quizId, quizGroupId, quizCardList, quizType} = route.params;
     const {
         showCorrectAnswer,
         showExplanationWhileSolving,
@@ -44,12 +44,13 @@ const QuizScreen = ({navigation}) => {
     const [answerMap, setAnswerMap] = useState(new Map());
 
     useEffect(() => {
-        if (!isDailyQuiz) {
+        if (isRegularQuiz(quizType) || isReviewMode(quizType)) {
             initRegularQuizData();
-        } else {
+        }
+        if(isDailyQuiz(quizType)) {
             initUserDailyQuizData();
         }
-    }, [quizId, isReviewPage, isDailyQuiz]);
+    }, [quizId, quizType]);
 
     const initRegularQuizData = () => {
         apiCaller('quiz/get-quiz-with-id/' + quizId)
@@ -57,7 +58,7 @@ const QuizScreen = ({navigation}) => {
                 setQuiz(quizResponse);
                 setTitle(quizResponse?.name);
                 setStatesForQuiz(quizResponse);
-                if (isReviewPage) {
+                if (isReviewMode(quizType)) {
                     let questions = filterCorrectAnswersInReview ? getWrongQuestions(quizResponse) : quizResponse?.questionList;
                     setQuestionList(questions);
                     setActiveQuestionState(questions, 0);
@@ -145,7 +146,7 @@ const QuizScreen = ({navigation}) => {
     }
 
     const getCompletedScreenBody = () => {
-        if (isReviewPage) {
+        if (isReviewMode(quizType)) {
             return {
                 quizName: quiz?.name,
                 quizSize: quiz?.userQuiz?.correctQuestionList.length + quiz?.userQuiz?.wrongQuestionList?.length,
@@ -162,7 +163,7 @@ const QuizScreen = ({navigation}) => {
                 quizCardList: quizCardList,
                 quizGroupId: quizGroupId,
                 quizId: quizId,
-                isDailyQuiz: isDailyQuiz
+                isDailyQuiz: isDailyQuiz(quizType)
             };
         }
     }
@@ -233,7 +234,7 @@ const QuizScreen = ({navigation}) => {
     }
 
     const handleAnswer = (id) => {
-        if (isDailyQuiz) {
+        if (isDailyQuiz(quizType)) {
             updateDailyQuizData(id);
         } else {
             updateUserQuizData(id, activeQuestion.correctAnswerId, activeQuestion.id);
@@ -244,7 +245,7 @@ const QuizScreen = ({navigation}) => {
         }
 
         updateAnswerMap(activeQuestion.id, id);
-        logEvent(isDailyQuiz ? 'solve_daily_question' : 'solve_answer');
+        logEvent(isDailyQuiz(quizType) ? 'solve_daily_question' : 'solve_answer');
         if (skipQuestionImmediately) {
             setTimeout(() => onSwipeLeft(), 500);
         }
@@ -266,10 +267,10 @@ const QuizScreen = ({navigation}) => {
     }
 
     const getExplanation = () => {
-        if (isReviewPage) {
+        if (isReviewMode(quizType)) {
             return activeQuestion?.explanation;
         }
-        if (!isReviewPage && showExplanationWhileSolving) {
+        if (!isReviewMode(quizType) && showExplanationWhileSolving) {
             return activeQuestion?.explanation;
         }
         return '';
@@ -307,9 +308,9 @@ const QuizScreen = ({navigation}) => {
                                       selectedId={answerMap.get(activeQuestion?.id)}
                                       onSelect={handleAnswer}
                                       isAnswered={answerMap.get(activeQuestion?.id) !== undefined}
-                                      isReviewPage={isReviewPage}
+                                      isReviewPage={isReviewMode(quizType)}
                                       explanation={getExplanation()}
-                                      showCorrectAnswer={isReviewPage ? false : showCorrectAnswer}
+                                      showCorrectAnswer={isReviewMode(quizType) ? false : showCorrectAnswer}
                         />
                     </View>
                 </Animated.View>

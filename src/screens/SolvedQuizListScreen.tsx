@@ -64,10 +64,10 @@ const SolvedQuizListScreen = ({navigation}) => {
             });
         } else {
             navigation.navigate('QuizScreen', {
+                quizType: 'REGULAR',
                 quizId: card.quiz.id,
                 quizGroupId: card.quizGroupId,
-                quizCardList: [],
-                isReviewPage: false
+                quizCardList: []
             });
         }
     }
