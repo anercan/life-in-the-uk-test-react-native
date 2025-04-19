@@ -163,12 +163,7 @@ const QuizScreen = ({navigation}) => {
         })
     }
 
-    function onSwipeLeft() { // to next question
-        let activeOneAnswered = answerMap.has(activeQuestion?.id);
-        if (!activeOneAnswered) {
-            startShake();
-            return;
-        }
+    const skipNextQuestion = () => {
         let newQuestionOrder = activeQuestion.counter + 1;
         let isLastQuestion = newQuestionOrder == questionList.length;
         if (!isLastQuestion) {
@@ -176,6 +171,15 @@ const QuizScreen = ({navigation}) => {
         } else {
             navigation.navigate('CompletedQuizScreen', getCompletedScreenBody());
         }
+    }
+
+    function onSwipeLeft() { // to next question
+        let activeOneAnswered = answerMap.has(activeQuestion?.id);
+        if (!activeOneAnswered) {
+            startShake();
+            return;
+        }
+        skipNextQuestion();
     }
 
     function onSwipeRight() { // to previous question
@@ -229,7 +233,7 @@ const QuizScreen = ({navigation}) => {
         updateAnswerMap(activeQuestion.id, id);
         logEvent(isDailyQuiz(quizType) ? 'solve_daily_question' : 'solve_answer');
         if (skipQuestionImmediately) {
-            setTimeout(() => onSwipeLeft(), 500);
+            setTimeout(() => skipNextQuestion(), 500);
         }
     }
 
