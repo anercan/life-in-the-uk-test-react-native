@@ -16,7 +16,9 @@ const ScoreCard = (props: IScoreCard) => {
     const [progress, setProgress] = useState(0);
 
     useEffect(() => {
-        setProgress(props.correct / props.total);
+        if (props?.total) {
+            setProgress(props.correct / props.total);
+        }
     }, [progress]);
 
     const styles = StyleSheet.create({
@@ -27,7 +29,7 @@ const ScoreCard = (props: IScoreCard) => {
             backgroundColor: colors.card,
             elevation: 2,
             shadowColor:colors.shadow,
-            shadowOffset: {width: 0, height: 3},
+            shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.2,
             shadowRadius: 3,
             borderRadius: sizes.m,
@@ -58,7 +60,14 @@ const ScoreCard = (props: IScoreCard) => {
     });
 
     const getScoreText = () => {
-        return Math.round(props.correct * 100 / props.total) + '%';
+        try {
+            if (props?.total) {
+                return Math.round(props?.correct * 100 / props?.total) + '%';
+            }
+            return '0%';
+        } catch (e) {
+            return '0%';
+        }
     }
 
     return (

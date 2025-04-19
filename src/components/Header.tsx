@@ -4,7 +4,7 @@ import {useTheme} from "../hooks";
 import {TitleContext} from "context/TitleContext";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import {useNavigation} from '@react-navigation/native';
-import {getShortenText} from "util/commonUtil";
+import {getShortenText, isAndroid} from "util/commonUtil";
 import {AuthContext} from "context/AuthContext";
 
 const Header = () => {
@@ -32,6 +32,7 @@ const Header = () => {
             flexDirection: 'row',
             justifyContent: 'center'
         }, title: {
+            marginTop: isAndroid() ? sizes.xs : sizes.s,
             fontFamily: fonts.text,
             textAlign: 'center',
             fontSize: sizes.h1,
@@ -44,23 +45,23 @@ const Header = () => {
             <StatusBar backgroundColor={colors.background}/>
             {isLoggedIn &&
                 <View style={styles.row}>
-                <View style={{flex: 1}}>
-                    {navigation.canGoBack() &&
-                        <TouchableOpacity onPress={handleBackPress} style={{marginLeft: sizes.s}}>
-                            <MaterialCommunityIcons name='arrow-left' color={colors.gray} size={sizes.md}/>
-                        </TouchableOpacity>}
+                    <View style={{flex: 1}}>
+                        {navigation.canGoBack() &&
+                            <TouchableOpacity onPress={handleBackPress} style={{marginLeft: sizes.s}}>
+                                <MaterialCommunityIcons name='arrow-left' color={colors.gray} size={sizes.md}/>
+                            </TouchableOpacity>}
+                    </View>
+                    <View style={{flex: 5}}>
+                        <Text style={styles.title}>
+                            {getShortenText(getTitle(), 20)}
+                        </Text>
+                    </View>
+                    <View style={{flex: 1}}>
+                        <TouchableOpacity onPress={handleSettings} style={{marginLeft: sizes.s}}>
+                            <MaterialCommunityIcons name='tune' color={colors.gray} size={sizes.md}/>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-                <View style={{flex: 5}}>
-                    <Text style={styles.title}>
-                        {getShortenText(getTitle(), 20)}
-                    </Text>
-                </View>
-                <View style={{flex: 1}}>
-                    <TouchableOpacity onPress={handleSettings} style={{marginLeft: sizes.s}}>
-                        <MaterialCommunityIcons name='tune' color={colors.gray} size={sizes.md}/>
-                    </TouchableOpacity>
-                </View>
-            </View>
             }
         </View>
     );

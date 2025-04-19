@@ -29,7 +29,7 @@ export interface IQuizQuestion {
   imgUrl: string;
   correctAnswerId: number;
   explanation?: string;
-  attributes: any;
+  attributes?: any;
   answersList: IAnswerResponse[];
   selectedId:number;
   onSelect: (selectedId: number) => void;

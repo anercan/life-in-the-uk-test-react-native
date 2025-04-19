@@ -6,7 +6,7 @@ import {AppText} from "./index";
 import Animated, {FadeIn} from "react-native-reanimated";
 import SwipeIndicator from "components/SwipeIndicator";
 
-const {width} = Dimensions.get('window');
+const {height, width} = Dimensions.get('window');
 
 const QuizQuestion = (props: IQuizQuestion) => {
     const {fonts, sizes, colors} = useTheme();
@@ -47,7 +47,7 @@ const QuizQuestion = (props: IQuizQuestion) => {
             alignItems: 'center',
             backgroundColor: colors.card,
             shadowColor: colors.shadow,
-            shadowOffset: {width: 0, height: 5},
+            shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.1,
             shadowRadius: 2,
             elevation: 5,
@@ -58,7 +58,7 @@ const QuizQuestion = (props: IQuizQuestion) => {
             borderRadius: sizes.xxl,
             backgroundColor: colors.tabBackground,
             shadowColor: colors.shadow,
-            shadowOffset: {width: 0, height: 3},
+            shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.1,
             shadowRadius: 2,
             elevation: 3,
@@ -75,7 +75,7 @@ const QuizQuestion = (props: IQuizQuestion) => {
             marginBottom: sizes.l,
             backgroundColor: colors.tabBackground,
             shadowColor: colors.shadow,
-            shadowOffset: {width: 0, height: 1},
+            shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.1,
             shadowRadius: 2,
             elevation: 4,
@@ -95,7 +95,7 @@ const QuizQuestion = (props: IQuizQuestion) => {
             marginVertical: sizes.s,
             margin: sizes.s,
             shadowColor: colors.shadow,
-            shadowOffset: {width: 0, height: 1},
+            shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.1,
             shadowRadius: 2,
             elevation: 2,
@@ -138,35 +138,32 @@ const QuizQuestion = (props: IQuizQuestion) => {
     };
 
     return (
-        <>
-            <ScrollView style={{marginBottom: sizes.md}}>
-                <View style={styles.box}>
-                    <View style={styles.orderBox}>
-                        <Text
-                            style={styles.orderText}>{props?.questionOrder || props?.questionOrder == 0 ? props?.questionOrder + 1 : null}</Text>
-                    </View>
-                    <View style={styles.questionBox}>
-                        <Text style={styles.questionText}>{props.content}</Text>
-                    </View>
-                    {answers(props.answersList)}
-                    {(props.isAnswered && props.selectedId != props.correctAnswerId && props.explanation?.trim()?.length > 0) ?
-                        <Animated.View entering={FadeIn} style={styles.explanationBox}>
-                            <AppText h4>
-                                Explanation
-                            </AppText>
-                            <Text style={styles.explanationText}>
-                                {props.explanation}
-                            </Text>
-                        </Animated.View>
-                        : ''
-                    }
-                    {(props.questionOrder == 0 && !props.isReviewPage && props.isAnswered) &&
-                        <SwipeIndicator/>
-                    }
+        <ScrollView style={{marginBottom: sizes.md, marginTop: height / 30}}>
+            <View style={styles.box}>
+                <View style={styles.orderBox}>
+                    <Text
+                        style={styles.orderText}>{props?.questionOrder || props?.questionOrder == 0 ? props?.questionOrder + 1 : null}</Text>
                 </View>
-            </ScrollView>
-
-        </>
+                <View style={styles.questionBox}>
+                    <Text style={styles.questionText}>{props.content}</Text>
+                </View>
+                {answers(props.answersList)}
+                {(props.isAnswered && props.selectedId != props.correctAnswerId && props.explanation?.trim()?.length > 0) ?
+                    <Animated.View entering={FadeIn} style={styles.explanationBox}>
+                        <AppText h4>
+                            Explanation
+                        </AppText>
+                        <Text style={styles.explanationText}>
+                            {props.explanation}
+                        </Text>
+                    </Animated.View>
+                    : ''
+                }
+                {(props.questionOrder == 0 && !props.isReviewPage && props.isAnswered) &&
+                    <SwipeIndicator/>
+                }
+            </View>
+        </ScrollView>
     );
 }
 

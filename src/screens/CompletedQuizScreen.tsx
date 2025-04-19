@@ -54,7 +54,7 @@ const CompletedQuizScreen = ({navigation}) => {
             });
         } else if (isDailyQuiz) {
             if (dailyQuizResponse) {
-                setWrongsMap(dailyQuizResponse?.wrongQuestionsSubjects)
+                setWrongsMap(dailyQuizResponse?.wrongQuestionsSubjects);
             } else {
                 apiCaller('quiz/get-user-daily-quiz', 'POST')
                     .then((quizResponse) => {
@@ -125,16 +125,17 @@ const CompletedQuizScreen = ({navigation}) => {
                     </View>
                 </>
             }
-            {isDailyQuiz &&
-                <>
-                    <DataDistributionCard incorrectMapProps={wrongsMap}/>
-                    <View style={{marginBottom: sizes.xxxl, alignItems: 'center'}}>
-                        <Text style={{color: colors.text, fontSize: sizes.text, fontFamily: fonts.p}}>
-                            Don't forget to come back tomorrow!
-                        </Text>
-                    </View>
-                </>
+            {isDailyQuiz && (Object.keys(dailyQuizResponse?.wrongQuestionsSubjects || {}).length > 0) &&
+                <DataDistributionCard incorrectMapProps={wrongsMap}/>
             }
+            {isDailyQuiz &&
+                <View style={{marginBottom: sizes.xxxl, alignItems: 'center'}}>
+                    <Text style={{color: colors.text, fontSize: sizes.text, fontFamily: fonts.p}}>
+                        Don't forget to come back tomorrow!
+                    </Text>
+                </View>
+            }
+
             {!isDailyQuiz && correctAnswerSize !== quizSize &&
                 <ButtonCard onPress={onPressReview} buttonText={'Review'}/>
             }

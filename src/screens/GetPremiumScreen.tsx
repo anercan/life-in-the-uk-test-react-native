@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Platform, ScrollView, Text, TouchableOpacity} from 'react-native';
+import {ScrollView, Text, TouchableOpacity} from 'react-native';
 import {View, StyleSheet} from 'react-native';
 import useTheme from "../hooks/useTheme";
 import {TitleContext} from "context/TitleContext";
@@ -17,7 +17,7 @@ import useApiCaller from "../hooks/useApiCaller";
 import analytics from "@react-native-firebase/analytics";
 import {getUserId} from "util/jwtUtil";
 import Animated, {FadeIn} from "react-native-reanimated";
-import {getBillingPeriod, isFreeTrialEligible} from "util/commonUtil";
+import {getBillingPeriod, isAndroid, isFreeTrialEligible} from "util/commonUtil";
 
 let monthlySubProductId = 'level1';
 
@@ -91,7 +91,7 @@ const GetPremiumScreen = ({navigation}) => {
         purchaseUpdateSubscription = purchaseUpdatedListener((purchase: SubscriptionPurchase | ProductPurchase) => {
                 const receipt = purchase?.transactionReceipt;
                 if (receipt) {
-                    if (Platform.OS === 'android') {
+                    if (isAndroid()) {
                         apiCaller('user-management/google-play-subscribe', 'POST', purchase)
                             .then(async (deliveryResult) => {
                                 await consumeGooglePlayDeliveryResult(purchase, deliveryResult);

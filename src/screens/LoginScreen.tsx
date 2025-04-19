@@ -15,6 +15,7 @@ import {getUserId} from "util/jwtUtil";
 import analytics from "@react-native-firebase/analytics";
 import {PermissionsAndroid, Platform} from 'react-native';
 import messaging from '@react-native-firebase/messaging';
+import {isAndroid} from "util/commonUtil";
 
 function getGoogleConfig() {
     return {
@@ -44,7 +45,7 @@ const LoginScreen = () => {
     }
 
     const requestNotificationPermission = async () => {
-        if (Platform.OS === 'android' && Platform.Version >= 33) {
+        if (isAndroid() && Platform.Version >= 33) {
             await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
         }
     }
@@ -112,7 +113,7 @@ const LoginScreen = () => {
             appId: 1,
             deviceInfo: {
                 token: await fireBaseToken(),
-                osType: Platform.OS === 'android' ? 'ANDROID' : 'IOS'
+                osType: isAndroid() ? 'ANDROID' : 'IOS'
             }
         }
 
@@ -145,7 +146,7 @@ const LoginScreen = () => {
             paddingHorizontal: sizes.xs,
             borderRadius: sizes.md,
             shadowColor: colors.shadow,
-            shadowOffset: {width: 0, height: 3},
+            shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.3,
             shadowRadius: 5,
             elevation: 5,
@@ -174,7 +175,7 @@ const LoginScreen = () => {
             borderWidth: 2,
             borderColor: '#cecece',
             shadowColor: colors.shadow,
-            shadowOffset: {width: 0, height: 4},
+            shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.2,
             shadowRadius: 5,
             marginBottom: sizes.base * 14,

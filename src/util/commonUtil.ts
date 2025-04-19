@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {Platform} from "react-native";
 
 export const getShortenText = (title: string | undefined, number: number) => {
     if (!title) return '';
@@ -130,4 +131,8 @@ export const getColorFromPalette = (index) => {
         '#2d606c','#a5a493', '#3964b3',
         '#6aef99', '#2a2a31', '#d7d7d7'];
     return colorList[index];
+}
+
+export const isAndroid = () => {
+    return Platform.OS === 'android'
 }

@@ -15,11 +15,11 @@ const DataDistributionCard = ({incorrectMapProps}) => {
             let incorrectDataList: IncorrectData[] = [];
             Object.entries(incorrectMapProps).forEach(([key, value], index) => {
                 incorrectDataList.push({
-                    name: '- ' + getShortenText(capitalizeWords(key), 20),
+                    name: '- ' + getShortenText(capitalizeWords(key), 24),
                     incorrectCount: value,
                     color: getColorFromPalette(index),
                     legendFontColor: colors.light,
-                    legendFontSize: sizes.smallText
+                    legendFontSize: sizes.smallestText
                 } as IncorrectData);
             });
             setIncorrectMap(incorrectDataList);
@@ -35,7 +35,7 @@ const DataDistributionCard = ({incorrectMapProps}) => {
             backgroundColor: colors.card,
             elevation: 2,
             shadowColor: colors.shadow,
-            shadowOffset: {width: 0, height: 3},
+            shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.2,
             shadowRadius: 3,
             borderRadius: sizes.m,

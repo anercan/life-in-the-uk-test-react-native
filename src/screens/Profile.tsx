@@ -1,7 +1,6 @@
 import React, {useCallback, useContext, useState} from 'react';
 import {
     Dimensions,
-    Platform,
     ScrollView,
     TouchableOpacity,
     View
@@ -18,15 +17,12 @@ import {
     checkReviewModalShown,
     getColorFromPalette,
     getShortenText,
-    hexWithOpacity
+    hexWithOpacity, isAndroid
 } from "util/commonUtil";
 import {ContributionGraph, PieChart} from "react-native-chart-kit";
-//import {Instagram} from 'react-content-loader/native'
 import InAppReview from 'react-native-in-app-review';
 import analytics from "@react-native-firebase/analytics";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-const isAndroid = Platform.OS === 'android';
 
 const {height, width} = Dimensions.get('window');
 
@@ -301,7 +297,7 @@ const Profile = ({navigation}) => {
                                 flex={0}
                                 radius={sizes.sm}
                                 style={{elevation: 2}}
-                                shadow={!isAndroid}
+                                shadow={!isAndroid()}
                                 marginTop={-sizes.l}
                                 marginHorizontal="8%"
                                 color="rgba(255,255,255,0.2)"

@@ -1,18 +1,15 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Animated, Dimensions, StyleSheet, View} from 'react-native';
+import {Animated, View} from 'react-native';
 import {RouteProp, useRoute} from "@react-navigation/native";
 import QuizQuestion from "../components/QuizQuestion";
-import * as Progress from 'react-native-progress';
-import {useTheme} from "../hooks";
 import {useSwipe} from "hooks/useSwipe";
 import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
 import analytics from "@react-native-firebase/analytics";
 import {QuizSettingsContext} from "context/QuizSettingsContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {isDailyQuiz, isRegularQuiz, isReviewMode} from "util/quizUtils";
-
-const {height, width} = Dimensions.get('window');
+import {getQuestionCount, isDailyQuiz, isRegularQuiz, isReviewMode} from "util/quizUtils";
+import ProgressBar from "components/ProgressBar";
 
 type QuizParams = {
     quizType: 'REGULAR' | 'DAILY' | 'REVIEW';
@@ -29,7 +26,6 @@ const QuizScreen = ({navigation}) => {
     const {onTouchStart, onTouchEnd} = useSwipe(onSwipeLeft, onSwipeRight, 14);
     const shakeAnimation = new Animated.Value(0);
     const route = useRoute<QuizScreenRootProps>();
-    const {colors, sizes} = useTheme();
     const {quizId, quizGroupId, quizCardList, quizType} = route.params;
     const {
         showCorrectAnswer,
@@ -47,7 +43,7 @@ const QuizScreen = ({navigation}) => {
         if (isRegularQuiz(quizType) || isReviewMode(quizType)) {
             initRegularQuizData();
         }
-        if(isDailyQuiz(quizType)) {
+        if (isDailyQuiz(quizType)) {
             initUserDailyQuizData();
         }
     }, [quizId, quizType]);
@@ -88,20 +84,6 @@ const QuizScreen = ({navigation}) => {
                     setActiveQuestionState(dailyQuestionList, 0);
                 }
             });
-    }
-
-    const getQuestionCount = (userQuiz) => {
-        if (userQuiz) {
-            if (userQuiz?.state === 'COMPLETED') {
-                return 0;
-            }
-            let corrects = userQuiz?.correctQuestionList ? userQuiz?.correctQuestionList?.length : 0;
-            let wrongs = userQuiz?.wrongQuestionList ? userQuiz?.wrongQuestionList?.length : 0;
-            let questionOrder = (corrects + wrongs) - 1;
-            return questionOrder < 0 ? 0 : questionOrder;
-        } else {
-            return 0;
-        }
     }
 
     const setStatesForQuiz = (quizResponse) => {
@@ -196,7 +178,7 @@ const QuizScreen = ({navigation}) => {
         }
     }
 
-    function onSwipeRight() {
+    function onSwipeRight() { // to previous question
         let newQuestionOrder = activeQuestion.counter - 1;
         if (newQuestionOrder >= 0) {
             setActiveQuestionState(questionList, newQuestionOrder);
@@ -276,48 +258,28 @@ const QuizScreen = ({navigation}) => {
         return '';
     }
 
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            alignItems: 'center'
-        }, progressBar: {
-            paddingTop: sizes.sm,
-        }, customProgressBar: {
-            borderRadius: 7
-        }
-    });
-
     return (
         <>
-            <View onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} style={styles.container}>
-                <View style={styles.progressBar}>
-                    <Progress.Bar height={sizes.sm} borderColor={String(colors.dark)} color={String(colors.primary)}
-                                  style={styles.customProgressBar}
-                                  progress={activeQuestion?.counter / questionList?.length || 0}
-                                  width={width / 1.12}/>
-                </View>
+            <View onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} style={{flex: 1, alignItems: 'center'}}>
+                <ProgressBar progress={activeQuestion?.counter / questionList?.length || 0}/>
                 <Animated.View style={{transform: [{translateX: shakeAnimation} as any]}}>
-                    <View style={{marginTop: height / 30}}>
-                        <QuizQuestion id={activeQuestion?.id}
-                                      questionOrder={activeQuestion.counter}
-                                      content={activeQuestion?.content}
-                                      imgUrl={activeQuestion?.imgUrl}
-                                      correctAnswerId={activeQuestion?.correctAnswerId}
-                                      attributes={activeQuestion?.attributes}
-                                      answersList={activeQuestion?.answersList}
-                                      selectedId={answerMap.get(activeQuestion?.id)}
-                                      onSelect={handleAnswer}
-                                      isAnswered={answerMap.get(activeQuestion?.id) !== undefined}
-                                      isReviewPage={isReviewMode(quizType)}
-                                      explanation={getExplanation()}
-                                      showCorrectAnswer={isReviewMode(quizType) ? false : showCorrectAnswer}
-                        />
-                    </View>
+                    <QuizQuestion id={activeQuestion?.id}
+                                  questionOrder={activeQuestion.counter}
+                                  content={activeQuestion?.content}
+                                  imgUrl={activeQuestion?.imgUrl}
+                                  correctAnswerId={activeQuestion?.correctAnswerId}
+                                  answersList={activeQuestion?.answersList}
+                                  selectedId={answerMap.get(activeQuestion?.id)}
+                                  onSelect={handleAnswer}
+                                  isAnswered={answerMap.get(activeQuestion?.id) !== undefined}
+                                  isReviewPage={isReviewMode(quizType)}
+                                  explanation={getExplanation()}
+                                  showCorrectAnswer={isReviewMode(quizType) ? false : showCorrectAnswer}
+                    />
                 </Animated.View>
             </View>
         </>
     );
 };
-
 
 export default QuizScreen;

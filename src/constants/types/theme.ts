@@ -101,6 +101,7 @@ export interface ThemeSizes {
     h5: number;
     p: number;
     smallText: number;
+    smallestText: number;
 
     buttonBorder: number;
     buttonRadius: number;

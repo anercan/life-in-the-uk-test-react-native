@@ -165,6 +165,7 @@ export const SIZES: ThemeSizes = {
   p: normalizeFont(17),
   text: normalizeFont(17),
   smallText: normalizeFont(15),
+  smallestText: normalizeFont(12),
 
   // button sizes
   buttonBorder: normalize(1),
