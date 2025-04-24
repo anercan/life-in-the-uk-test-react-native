@@ -8,8 +8,11 @@ import {GroupCard} from "../components";
 import {useFocusEffect} from "@react-navigation/native";
 import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
-import {chunkArray, groupCardBackgroundImages, randomColors} from "util/commonUtil";
+import {checkReviewModalShown, chunkArray, groupCardBackgroundImages, randomColors} from "util/commonUtil";
 import DailyCard from "components/DailyCard";
+import InAppReview from "react-native-in-app-review";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import analytics from "@react-native-firebase/analytics";
 
 const QuizGroupListScreen = ({navigation}) => {
     const {apiCaller} = useApiCaller(navigation);
@@ -31,6 +34,24 @@ const QuizGroupListScreen = ({navigation}) => {
         }
     });
 
+    const handleReviewRequest = () => {
+        checkReviewModalShown().then((reviewModalShownBefore: any) => {
+            if (!reviewModalShownBefore && InAppReview.isAvailable()) {
+                InAppReview.RequestInAppReview()
+                    .then((hasFlowFinishedSuccessfully) => {
+                        if (hasFlowFinishedSuccessfully) {
+                            AsyncStorage.setItem('reviewModalShownBefore', 'true');
+                            analytics().logEvent('review');
+                        }
+                    })
+                    .catch((error) => {
+                        AsyncStorage.setItem('reviewModalShownBefore', 'true');
+                        analytics().logEvent('error-review-request', {errorDesc: error});
+                    });
+            }
+        });
+    }
+
     useFocusEffect(
         useCallback(() => {
             setTitle('Quiz Groups');
@@ -38,6 +59,11 @@ const QuizGroupListScreen = ({navigation}) => {
                 .then(response => {
                     let dataList = response?.quizGroupWithUserDataList;
                     setQuizGroupCards(dataList);
+                    const totalSolvedCount = (response?.quizGroupWithUserDataList ?? [])
+                        .reduce((sum, item) => sum + (item.userSolvedCount ?? 0), 0);
+                    if (totalSolvedCount > 2) {
+                        handleReviewRequest();
+                    }
                 });
         }, [])
     )

@@ -211,10 +211,7 @@ const QuizScreen = ({navigation}) => {
 
     const logEvent = (eventName) => {
         try {
-            analytics().logEvent(eventName, {
-                quizName: quiz.name,
-                quizId: quizId
-            });
+            analytics().logEvent(eventName, {quizName: quiz?.name});
         } catch (e) {
         }
     }

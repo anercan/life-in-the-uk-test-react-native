@@ -169,8 +169,9 @@ const SettingsScreen = ({navigation}) => {
             backgroundColor: colors.primary,
             paddingHorizontal: sizes.sm,
             paddingVertical: sizes.s,
-            borderRadius: sizes.s,
-            marginRight: sizes.sm
+            borderRadius: sizes.m,
+            marginRight: sizes.sm,
+            elevation: 3,
         },
         buttonText: {color: '#fff', fontSize: sizes.h3, fontFamily: fonts.text},
         iconTextContainer: {flexDirection: 'row', alignItems: 'center'},

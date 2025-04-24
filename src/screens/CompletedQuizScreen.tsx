@@ -38,7 +38,7 @@ const CompletedQuizScreen = ({navigation}) => {
     const [isNextQuizExist, setNextQuizExist] = useState(true);
     const {setTitle} = useContext(TitleContext);
     const [completedStatics, setCompletedStatics] = useState({betterCount: 0, equalCount: 0, worseCount: 0});
-    const [wrongsMap, setWrongsMap] = useState<any>({});
+    const [wrongsMap, setWrongsMap] = useState<any>(new Map());
 
     useEffect(() => {
         setTitle('Completed');
@@ -125,7 +125,7 @@ const CompletedQuizScreen = ({navigation}) => {
                     </View>
                 </>
             }
-            {isDailyQuiz && (Object.keys(dailyQuizResponse?.wrongQuestionsSubjects || {}).length > 0) &&
+            {isDailyQuiz && (Object.keys(wrongsMap)?.length > 0) &&
                 <DataDistributionCard incorrectMapProps={wrongsMap}/>
             }
             {isDailyQuiz &&

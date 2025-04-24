@@ -142,7 +142,7 @@ const GetPremiumScreen = ({navigation}) => {
         'Get detailed statistical data',
         'Compare your test results with others',
         'Activity report',
-        'Official questions',
+        'All Official questions',
         'Monthly renewal for 6 months!',
         'Cancellation is available anytime!'
     ];
@@ -222,6 +222,13 @@ const GetPremiumScreen = ({navigation}) => {
         },
     });
 
+    const getOfferText = () => {
+        if (product) {
+            return product && isFreeTrialEligible(product) ? getProductOffer(0) + ' then ' + getProductOffer(1) : getProductOffer(0);
+        }
+        return '';
+    }
+
     return (
         <ScrollView contentContainerStyle={{
             marginTop: sizes.xl,
@@ -233,7 +240,7 @@ const GetPremiumScreen = ({navigation}) => {
                 <Text style={styles.title}>Premium+ Plan</Text>
                 <View style={styles.plan}>
                     <Text style={styles.planTitle}>Unlock Full Access</Text>
-                    <Text style={styles.planPrice}>{product && isFreeTrialEligible(product) ? getProductOffer(0) + ' then ' + getProductOffer(1) : getProductOffer(0)}</Text>
+                    <Text style={styles.planPrice}>{getOfferText()}</Text>
                     <View style={styles.planDescription}>
                         {premiumFeatures.map((feature, index) => (
                             <View key={index}>
