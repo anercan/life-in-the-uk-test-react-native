@@ -20,7 +20,7 @@ const GroupCard = (props: IGroupCard) => {
     const styles = StyleSheet.create({
         container: {
             margin: sizes.xs,
-            marginHorizontal: sizes.sm,
+            marginHorizontal: 10,
         },
         card: {
             alignItems: 'center',

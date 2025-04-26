@@ -22,7 +22,7 @@ export function useSwipe(onSwipeLeft?: any, onSwipeRight?: any, rangeOffset = 4)
             onSwipeRight && onSwipeRight()
         }
         // check if position is growing negatively and has reached specified range
-        else if(firstTouch - positionX > range){
+        else if(firstTouch - positionX > range || firstTouch == positionX){
             onSwipeLeft && onSwipeLeft()
         }
     }
