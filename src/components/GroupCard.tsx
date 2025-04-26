@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, ImageProps} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, ImageProps, Dimensions} from 'react-native';
 import {useTheme} from "../hooks";
 import Image from "components/Image";
 
@@ -10,21 +10,25 @@ interface IGroupCard {
     backgroundImage: ImageProps
 }
 
+const {width} = Dimensions.get('window');
+
 const GroupCard = (props: IGroupCard) => {
 
     const {fonts, sizes, colors} = useTheme();
 
+    const cardWidth = width / 2.5;
     const styles = StyleSheet.create({
         container: {
-            margin: sizes.xs
+            margin: sizes.xs,
+            marginHorizontal: sizes.sm,
         },
         card: {
             alignItems: 'center',
             justifyContent: 'center',
-            width: sizes.base * 22,
-            height: sizes.base * 19,
+            width: cardWidth,
+            height: cardWidth / 1.15,
             backgroundColor: props.backgroundColor,
-            borderRadius: sizes.m,
+            borderRadius: sizes.md,
             shadowColor: colors.shadow,
             shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.2,
@@ -33,7 +37,7 @@ const GroupCard = (props: IGroupCard) => {
         },
         cardText: {
             textAlign: 'center',
-            fontFamily: fonts.text,
+            fontFamily: fonts.p,
             fontSize: sizes.h2,
             color: colors.gray
         },

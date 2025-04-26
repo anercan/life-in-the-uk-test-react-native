@@ -8,11 +8,8 @@ import {GroupCard} from "../components";
 import {useFocusEffect} from "@react-navigation/native";
 import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
-import {checkReviewModalShown, chunkArray, groupCardBackgroundImages, randomColors} from "util/commonUtil";
+import {chunkArray, groupCardBackgroundImages, randomColors} from "util/commonUtil";
 import DailyCard from "components/DailyCard";
-import InAppReview from "react-native-in-app-review";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import analytics from "@react-native-firebase/analytics";
 
 const QuizGroupListScreen = ({navigation}) => {
     const {apiCaller} = useApiCaller(navigation);
@@ -30,27 +27,8 @@ const QuizGroupListScreen = ({navigation}) => {
         row: {
             flexDirection: 'row',
             justifyContent: 'center',
-            marginBottom: sizes.s,
         }
     });
-
-    const handleReviewRequest = () => {
-        checkReviewModalShown().then((reviewModalShownBefore: any) => {
-            if (!reviewModalShownBefore && InAppReview.isAvailable()) {
-                InAppReview.RequestInAppReview()
-                    .then((hasFlowFinishedSuccessfully) => {
-                        if (hasFlowFinishedSuccessfully) {
-                            AsyncStorage.setItem('reviewModalShownBefore', 'true');
-                            analytics().logEvent('review');
-                        }
-                    })
-                    .catch((error) => {
-                        AsyncStorage.setItem('reviewModalShownBefore', 'true');
-                        analytics().logEvent('error-review-request', {errorDesc: error});
-                    });
-            }
-        });
-    }
 
     useFocusEffect(
         useCallback(() => {
@@ -59,11 +37,6 @@ const QuizGroupListScreen = ({navigation}) => {
                 .then(response => {
                     let dataList = response?.quizGroupWithUserDataList;
                     setQuizGroupCards(dataList);
-                    const totalSolvedCount = (response?.quizGroupWithUserDataList ?? [])
-                        .reduce((sum, item) => sum + (item.userSolvedCount ?? 0), 0);
-                    if (totalSolvedCount > 2) {
-                        handleReviewRequest();
-                    }
                 });
         }, [])
     )
@@ -82,7 +55,7 @@ const QuizGroupListScreen = ({navigation}) => {
                 {rows.map((row, rowIndex) => (
                     <View key={rowIndex} style={styles.row}>
                         {row.map((card, index) => (
-                            <View key={row + '' + index} style={{marginRight: index == 0 ? sizes.sm : 0}}>
+                            <View key={row + '' + index}>
                                 <GroupCard
                                     backgroundImage={groupCardBackgroundImages[(rowIndex * row.length) + index]}
                                     backgroundColor={randomColors[(rowIndex * row.length) + index]}
