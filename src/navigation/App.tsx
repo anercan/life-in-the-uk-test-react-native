@@ -28,12 +28,9 @@ import {
 } from "react-native-iap";
 import useApiCaller from "../hooks/useApiCaller";
 import {checkVersionWithStoresInfo} from "util/checkVersion";
-import crashlytics from "@react-native-firebase/crashlytics";
 import AppOnboarding from "components/Onboarding";
 import {checkFirstLaunch} from "util/commonUtil";
-import analytics from "@react-native-firebase/analytics";
 import {darkTheme, lightTheme} from "constants/theme";
-import {normalizeFont} from "constants/theme/lightTheme";
 
 export default () => {
     const {apiCaller} = useApiCaller();
@@ -42,7 +39,7 @@ export default () => {
     const [isFirstLaunch, setIsFirstLaunch] = useState<boolean | null>(null);
 
     useEffect(() => {
-        crashlytics().log('App mounted');
+        //crashlytics().log('App mounted');
         setTheme(isDark ? darkTheme : lightTheme)
         checkVersionWithStoresInfo();
         Platform.OS === 'android' && StatusBar.setTranslucent(true);
@@ -91,7 +88,6 @@ export default () => {
 
     const getScreen = () => {
         if (isFirstLaunch) {
-            analytics()?.logEvent('first_launch', {date: new Date()})
             return <AppOnboarding onDone={() => setIsFirstLaunch(false)}/>
         } else if (isLoggedIn) {
             return <TabMenu/>
@@ -217,11 +213,6 @@ export const TabMenu = () => {
                 name="ProfileScreens"
                 component={ProfileStack}
                 options={{
-                    tabBarLabelStyle: {
-                        fontSize: normalizeFont(14),
-                        fontFamily: 'OpenSans-Regular',
-                        color: '#d9d8d8', // Optional: customize font size
-                    },
                     tabBarIcon: ({color, size}) => (
                         <Feather name="user" color={color} size={size}/>
                     ),

@@ -89,9 +89,9 @@ const CompletedQuizScreen = ({navigation}) => {
         }
     }
 
-    const onPressReview = () => {
+    const onPressReview = (reviewType) => {
         navigation.navigate('QuizScreen', {
-            quizType: 'REVIEW',
+            quizType: reviewType,
             quizId: quizId,
             quizGroupId: quizGroupId,
             quizCardList: quizCardList
@@ -112,8 +112,13 @@ const CompletedQuizScreen = ({navigation}) => {
     return (
         <ScrollView contentContainerStyle={{alignItems: 'center', padding: sizes.sm, paddingTop: sizes.m}}>
 
-            <ScoreCard quizName={isDailyQuiz ? 'Daily Quiz' : quizName} total={quizSize} correct={correctAnswerSize}
-                       wrong={quizSize - correctAnswerSize}/>
+            <ScoreCard
+                onPress={(reviewType) => onPressReview(reviewType)}
+                quizName={isDailyQuiz ? 'Daily Quiz' : quizName}
+                total={quizSize}
+                correct={correctAnswerSize}
+                wrong={quizSize - correctAnswerSize}
+            />
 
             {totalCompletedUserQuizzes > 1 &&
                 <>
@@ -137,7 +142,7 @@ const CompletedQuizScreen = ({navigation}) => {
             }
 
             {!isDailyQuiz && correctAnswerSize !== quizSize &&
-                <ButtonCard onPress={onPressReview} buttonText={'Review'}/>
+                <ButtonCard onPress={() => onPressReview('REVIEW_ALL')} buttonText={'Review'}/>
             }
             {isNextQuizExist &&
                 <ButtonCard onPress={onPressNextQuiz} buttonText={'Next Quiz'}/>

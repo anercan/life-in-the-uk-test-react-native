@@ -14,10 +14,10 @@ import {
 } from 'react-native-iap';
 import {AuthContext} from "context/AuthContext";
 import useApiCaller from "../hooks/useApiCaller";
-import analytics from "@react-native-firebase/analytics";
 import {getUserId} from "util/jwtUtil";
 import Animated, {FadeIn} from "react-native-reanimated";
 import {getBillingPeriod, isAndroid, isFreeTrialEligible} from "util/commonUtil";
+import {logEvent} from "util/logUtil";
 
 let monthlySubProductId = 'level1';
 
@@ -58,12 +58,9 @@ const GetPremiumScreen = ({navigation}) => {
 
     const logSubscription = () => {
         try {
-            getUserId().then(userId => {
-                    analytics().logEvent('subscription', {userId: userId})
-                }
-            );
+            getUserId().then(userId => logEvent('subscription', {userId: userId}));
         } catch (e) {
-            console.log('Analytic Error');
+            logEvent('analyticError');
         }
     }
 
@@ -79,12 +76,7 @@ const GetPremiumScreen = ({navigation}) => {
     }
 
     const logBackendError = (e) => {
-        getUserId().then(userId => {
-            analytics().logEvent('error_purchase_backend', {
-                userId: userId,
-                error: e
-            });
-        });
+        getUserId().then(userId => logEvent('error_purchase_backend', {userId: userId, error: e}));
     }
 
     const subscriptionListener = () => {
@@ -105,7 +97,7 @@ const GetPremiumScreen = ({navigation}) => {
         purchaseErrorSubscription = purchaseErrorListener(
             (error: PurchaseError) => {
                 getUserId().then(userId => {
-                    analytics().logEvent('error_purchase', {
+                    logEvent('error_purchase', {
                         userId: userId,
                         errorName: error?.name,
                         errorMessage: error?.message,
@@ -195,7 +187,7 @@ const GetPremiumScreen = ({navigation}) => {
         planDescription: {marginBottom: sizes.sm},
         button: {
             paddingVertical: sizes.sm,
-            paddingHorizontal:sizes.l,
+            paddingHorizontal: sizes.l,
             borderRadius: sizes.xxl,
             marginTop: sizes.md,
             alignItems: "center",
@@ -232,7 +224,7 @@ const GetPremiumScreen = ({navigation}) => {
     return (
         <ScrollView contentContainerStyle={{
             marginTop: sizes.xl,
-            marginBottom:sizes.xl,
+            marginBottom: sizes.xl,
             alignItems: 'center',
             padding: sizes.s,
         }}>

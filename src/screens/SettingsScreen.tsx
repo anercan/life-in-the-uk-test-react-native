@@ -8,7 +8,7 @@ import {GoogleSignin} from "@react-native-google-signin/google-signin";
 import {isPremium} from "util/jwtUtil";
 import {QuizSettingsContext} from "context/QuizSettingsContext";
 import InAppReview from "react-native-in-app-review";
-import analytics from "@react-native-firebase/analytics";
+import {logEvent} from "util/logUtil";
 
 const SettingsScreen = ({navigation}) => {
     const {setTitle} = useContext(TitleContext);
@@ -18,10 +18,8 @@ const SettingsScreen = ({navigation}) => {
     const {
         setExplanationWhileSolving,
         setCorrectAnswer,
-        setFilterCorrectsInReview,
         showCorrectAnswer,
         showExplanationWhileSolving,
-        filterCorrectAnswersInReview,
         skipQuestionImmediately,
         setSkipQuestion
     } = useContext(QuizSettingsContext);
@@ -60,15 +58,15 @@ const SettingsScreen = ({navigation}) => {
                 InAppReview.RequestInAppReview()
                     .then((hasFlowFinishedSuccessfully) => {
                         if (hasFlowFinishedSuccessfully) {
-                            analytics().logEvent('review');
+                            logEvent('review');
                         }
                     })
                     .catch((e) => {
-                        analytics().logEvent('error-review-request', {errorDesc: e});
+                        logEvent('error-review-request', {errorDesc: e});
                     });
             }
         } catch (e) {
-            analytics().logEvent('error-review-request', {errorDesc: e});
+            logEvent('error-review-request', {errorDesc: e});
         }
     }
 
@@ -115,14 +113,6 @@ const SettingsScreen = ({navigation}) => {
             type: 'switch',
             value: showExplanationWhileSolving,
             onToggle: () => toggleShowExplanationOnlyReview()
-        },
-        {
-            id: '6',
-            title: 'Hide Correct Answers In Review',
-            icon: 'filter-check-outline',
-            type: 'switch',
-            value: filterCorrectAnswersInReview,
-            onToggle: () => setFilterCorrectsInReview(!filterCorrectAnswersInReview)
         },
         {
             id: '7',

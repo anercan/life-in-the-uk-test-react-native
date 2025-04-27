@@ -1,5 +1,5 @@
 import React, {createContext, useState} from 'react';
-import analytics from "@react-native-firebase/analytics";
+import {logScreenEvent} from "util/logUtil";
 
 export const TitleContext = createContext(null);
 
@@ -10,13 +10,6 @@ export const TitleProvider = ({children}) => {
         logScreenEvent(title)
         setTitleInternal(title)
     };
-
-    const logScreenEvent = (title) => {
-        analytics()?.logScreenView({
-            screen_name: title,
-            screen_class: title
-        });
-    }
 
     const getTitle = () => {
         return title;

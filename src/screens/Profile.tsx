@@ -1,11 +1,5 @@
 import React, {useCallback, useContext, useState} from 'react';
-import {
-    Dimensions,
-    ScrollView,
-    TouchableOpacity,
-    View
-} from 'react-native';
-
+import {Dimensions, ScrollView, TouchableOpacity, View} from 'react-native';
 import {AppText, Block, Image} from '../components/';
 import {useData, useTheme} from '../hooks/';
 import {TitleContext} from "context/TitleContext";
@@ -14,15 +8,13 @@ import {isPremium} from "util/jwtUtil";
 import useApiCaller from "../hooks/useApiCaller";
 import {
     capitalizeWords,
-    checkReviewModalShown,
     getColorFromPalette,
     getShortenText,
-    hexWithOpacity, isAndroid
+    handleReviewRequest,
+    hexWithOpacity,
+    isAndroid
 } from "util/commonUtil";
 import {ContributionGraph, PieChart} from "react-native-chart-kit";
-import InAppReview from 'react-native-in-app-review';
-import analytics from "@react-native-firebase/analytics";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const {height, width} = Dimensions.get('window');
 
@@ -48,34 +40,11 @@ const Profile = ({navigation}) => {
         }, [])
     )
 
-    const handleReviewRequest = () => {
-        try {
-            checkReviewModalShown().then((reviewModalShownBefore: any) => {
-                if (!reviewModalShownBefore && InAppReview.isAvailable()) {
-                    InAppReview.RequestInAppReview()
-                        .then((hasFlowFinishedSuccessfully) => {
-                            if (hasFlowFinishedSuccessfully) {
-                                AsyncStorage.setItem('reviewModalShownBefore', 'true');
-                                analytics().logEvent('review');
-                            }
-                        })
-                        .catch((error) => {
-                            AsyncStorage.setItem('reviewModalShownBefore', 'true');
-                            analytics().logEvent('error-review-request', {errorDesc:error});
-                        });
-                }
-            });
-        } catch (e) {
-            AsyncStorage.setItem('reviewModalShownBefore', 'true');
-            analytics().logEvent('error-review-request');
-        }
-    };
-
     const getPremiumScreen = () => {
         navigation.navigate('GetPremiumScreen');
     }
 
-    function getCount(data: ActivityData) {
+    const getCount = (data: ActivityData) => {
         if (data?.count) {
             if (data.count == 0) {
                 return 0;
@@ -140,7 +109,7 @@ const Profile = ({navigation}) => {
                                 resizeMode={"contain"}
                                 width={width / 1.2}
                                 height={height / 6}
-                                source={isDark ? require('../assets/images/pie-chart-blur-dark.png') :require('../assets/images/pie-chart-blur.png')}
+                                source={isDark ? require('../assets/images/pie-chart-blur-dark.png') : require('../assets/images/pie-chart-blur.png')}
                             />
                         </TouchableOpacity>
 
@@ -198,7 +167,7 @@ const Profile = ({navigation}) => {
                         width={width / 1.1}
                         height={height / 6}
                         chartConfig={{
-                            color: (opacity = 1) => hexWithOpacity(colors.text,opacity),
+                            color: (opacity = 1) => hexWithOpacity(colors.text, opacity),
                         }}
                         accessor={"incorrectCount"}
                         backgroundColor={"transparent"}
@@ -365,7 +334,7 @@ const Profile = ({navigation}) => {
                         </View>
 
                     </>
-                    :null
+                    : null
                     //<Instagram backgroundColor={colors.tabBackground.toString()} style={{marginLeft: sizes.sm}}/>
                 }
             </View>

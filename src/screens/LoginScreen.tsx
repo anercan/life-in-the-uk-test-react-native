@@ -10,12 +10,10 @@ import useApiCaller from "../hooks/useApiCaller";
 import {useTheme} from "../hooks";
 import {AppText} from "../components";
 import {getVersionInfo} from "util/checkVersion";
-import crashlytics from '@react-native-firebase/crashlytics';
-import {getUserId} from "util/jwtUtil";
-import analytics from "@react-native-firebase/analytics";
 import {PermissionsAndroid, Platform} from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import {isAndroid} from "util/commonUtil";
+import {loginEvent} from "util/logUtil";
 
 function getGoogleConfig() {
     return {
@@ -28,7 +26,7 @@ function getGoogleConfig() {
 const LoginScreen = () => {
     const {apiCaller} = useApiCaller();
     const {login, autoLogin} = useContext(AuthContext);
-    const {fonts, sizes,colors} = useTheme();
+    const {fonts, sizes, colors} = useTheme();
     const [version, setVersion] = useState("");
 
     useEffect(() => {
@@ -85,17 +83,6 @@ const LoginScreen = () => {
         }
     };
 
-    function loginEvent() {
-        try {
-            analytics().logLogin({method: 'Google'});
-            getUserId().then(id => {
-                crashlytics().setUserId(id);
-                analytics().setUserId(id);
-            });
-        } catch (e) {
-        }
-    }
-
     const fireBaseToken = async () => {
         try {
             let token = await messaging().getToken();
@@ -107,7 +94,6 @@ const LoginScreen = () => {
     };
 
     const loginWithGoogle = async (response: any) => {
-
         let signInRequest = {
             token: response?.data?.idToken,
             appId: 1,
@@ -120,7 +106,7 @@ const LoginScreen = () => {
         apiCaller('user-management/google-sign-in', 'POST', signInRequest)
             .then((response) => {
                 login(response.jwt);
-                loginEvent();
+                loginEvent('Google');
             })
             .catch(() => alert('Login Failed'));
     }
@@ -209,7 +195,8 @@ const LoginScreen = () => {
             <View style={{marginTop: sizes.xxl}}>
                 <AppText center={true} size={sizes.smallText} color={colors.gray}>team@quizmarkt.com</AppText>
                 <AppText onPress={() => Linking.openURL('https://quizmarkt.com/life-in-the-uk/privacy-policy.html')}
-                         style={{textDecorationLine: 'underline'}} size={sizes.smallText} center={true} color={colors.gray}>
+                         style={{textDecorationLine: 'underline'}} size={sizes.smallText} center={true}
+                         color={colors.gray}>
                     Privacy Policy
                 </AppText>
                 {version != '' && version != 'null' &&

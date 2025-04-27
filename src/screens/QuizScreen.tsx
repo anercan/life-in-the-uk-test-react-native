@@ -5,39 +5,27 @@ import QuizQuestion from "../components/QuizQuestion";
 import {useSwipe} from "hooks/useSwipe";
 import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
-import analytics from "@react-native-firebase/analytics";
 import {QuizSettingsContext} from "context/QuizSettingsContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {getQuestionCount, isDailyQuiz, isRegularQuiz, isReviewMode} from "util/quizUtils";
+import {getQuestionCount, getQuestions, isDailyQuiz, isRegularQuiz, isReviewMode, QuizParams} from "util/quizUtils";
 import ProgressBar from "components/ProgressBar";
-
-type QuizParams = {
-    quizType: 'REGULAR' | 'DAILY' | 'REVIEW';
-    quizCardList: any[];
-    quizGroupId: number;
-    quizId: number;
-};
+import {logEvent} from "util/logUtil";
 
 type QuizScreenRootProps = RouteProp<{ QuizScreen: QuizParams }, 'QuizScreen'>;
 
 const QuizScreen = ({navigation}) => {
     const {apiCaller} = useApiCaller(navigation);
     const {setTitle} = useContext(TitleContext);
-    const {onTouchStart, onTouchEnd} = useSwipe(onSwipeLeft, onSwipeRight, 14);
+    const [answerMap, setAnswerMap] = useState(new Map());
+    const [activeQuestion, setActiveQuestion] = useState<any>({});
+    const {onTouchStart, onTouchEnd} = useSwipe(onSwipeLeft, onSwipeRight, 14,answerMap?.get(activeQuestion?.id) !== undefined);
     const shakeAnimation = new Animated.Value(0);
     const route = useRoute<QuizScreenRootProps>();
     const {quizId, quizGroupId, quizCardList, quizType} = route.params;
-    const {
-        showCorrectAnswer,
-        showExplanationWhileSolving,
-        filterCorrectAnswersInReview,
-        skipQuestionImmediately
-    } = useContext(QuizSettingsContext);
+    const {showCorrectAnswer, showExplanationWhileSolving, skipQuestionImmediately} = useContext(QuizSettingsContext);
     const [quiz, setQuiz] = useState<any>();
     const [questionList, setQuestionList] = useState([{}]);
-    const [activeQuestion, setActiveQuestion] = useState<any>({});
     const [correctAnswerCounter, setCorrectAnswerCounter] = useState(0);
-    const [answerMap, setAnswerMap] = useState(new Map());
 
     useEffect(() => {
         if (isRegularQuiz(quizType) || isReviewMode(quizType)) {
@@ -55,7 +43,7 @@ const QuizScreen = ({navigation}) => {
                 setTitle(quizResponse?.name);
                 setStatesForQuiz(quizResponse);
                 if (isReviewMode(quizType)) {
-                    let questions = filterCorrectAnswersInReview ? getWrongQuestions(quizResponse) : quizResponse?.questionList;
+                    let questions = getQuestions(quizResponse, quizType);
                     setQuestionList(questions);
                     setActiveQuestionState(questions, 0);
                 } else {
@@ -120,11 +108,6 @@ const QuizScreen = ({navigation}) => {
             answersMap.set(wrongQuestion.question.id, wrongQuestion.wrongAnswer.id)
         );
         setAnswerMap(answersMap);
-    }
-
-    const getWrongQuestions = (quiz) => {
-        let wrongQuestionIdList = quiz?.userQuiz?.wrongQuestionList.map(wrongQuestion => wrongQuestion.question.id);
-        return quiz?.questionList.filter(question => wrongQuestionIdList.includes(question.id));
     }
 
     const getCompletedScreenBody = () => {
@@ -209,13 +192,6 @@ const QuizScreen = ({navigation}) => {
         apiCaller('user-quiz/create-update-user-quiz', 'POST', data);
     }
 
-    const logEvent = (eventName) => {
-        try {
-            analytics().logEvent(eventName, {quizName: quiz?.name});
-        } catch (e) {
-        }
-    }
-
     const handleAnswer = (id) => {
         if (isDailyQuiz(quizType)) {
             updateDailyQuizData(id);
@@ -228,7 +204,7 @@ const QuizScreen = ({navigation}) => {
         }
 
         updateAnswerMap(activeQuestion.id, id);
-        logEvent(isDailyQuiz(quizType) ? 'solve_daily_question' : 'solve_answer');
+        logEvent(isDailyQuiz(quizType) ? 'solve_daily_question' : 'solve_answer', {quizName: quiz?.name});
         if (skipQuestionImmediately) {
             setTimeout(() => skipNextQuestion(), 500);
         }

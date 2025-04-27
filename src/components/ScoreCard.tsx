@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import * as Progress from 'react-native-progress';
 
 import useTheme from '../hooks/useTheme';
@@ -9,6 +9,7 @@ export interface IScoreCard {
     correct: number;
     wrong: number;
     quizName: string;
+    onPress: (reviewType: string) => void;
 }
 
 const ScoreCard = (props: IScoreCard) => {
@@ -36,23 +37,27 @@ const ScoreCard = (props: IScoreCard) => {
             padding: sizes.sm,
             width: '95%',
         }, progress: {
-            borderRadius: sizes.xxxl, backgroundColor: colors.primary, elevation: 2
+            borderRadius: sizes.xxxl, backgroundColor: colors.primary,  elevation: 2,
+            shadowColor:colors.shadow,
+            shadowOffset: {width: 0, height: 0},
+            shadowOpacity: 0.2,
+            shadowRadius: 3,
         }, scoreBox: {
+            elevation: 2,
+            shadowColor:colors.shadow,
+            shadowOffset: {width: 0, height: 0},
+            shadowOpacity: 0.2,
+            shadowRadius: 3,
             flexDirection: 'column',
             alignItems: 'center',
             flex: 1,
             backgroundColor: colors.tabBackground,
             borderRadius: sizes.s,
-            marginHorizontal: sizes.s,
+            marginHorizontal: sizes.xs,
             paddingBottom: sizes.xs
         }, scoreBoxContainer: {
-            borderWidth: 1,
-            borderColor: colors.cardBorder,
-            borderRadius: sizes.sm,
-            paddingVertical:sizes.xs,
             flexDirection: 'row',
             flex: 1,
-            backgroundColor: colors.tabBackground,
             marginHorizontal: sizes.s
         }, scoreText: {
             color: colors.text, fontSize: sizes.h2, fontFamily: fonts.p,
@@ -92,18 +97,18 @@ const ScoreCard = (props: IScoreCard) => {
                 </View>
             </View>
             <View style={styles.scoreBoxContainer}>
-                <View style={styles.scoreBox}>
+                <TouchableOpacity onPress={() => props.onPress('REVIEW_ALL')} style={styles.scoreBox}>
                     <Text style={{...styles.scoreText}}>{props.total}</Text>
                     <Text style={{...styles.scoreText, color: colors.text, fontSize: sizes.p}}>{'Total'}</Text>
-                </View>
-                <View style={styles.scoreBox}>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => props.onPress('REVIEW_CORRECTS')} style={styles.scoreBox}>
                     <Text style={{...styles.scoreText}}>{props.correct}</Text>
                     <Text style={{...styles.scoreText, color: colors.text, fontSize: sizes.p}}>{'Correct'}</Text>
-                </View>
-                <View style={styles.scoreBox}>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => props.onPress('REVIEW_WRONGS')} style={styles.scoreBox}>
                     <Text style={{...styles.scoreText}}>{props.wrong}</Text>
                     <Text style={{...styles.scoreText, color: colors.text, fontSize: sizes.p}}>{'Wrong'}</Text>
-                </View>
+                </TouchableOpacity>
             </View>
         </View>
 

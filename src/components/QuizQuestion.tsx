@@ -122,7 +122,10 @@ const QuizQuestion = (props: IQuizQuestion) => {
 
     const answers = (answerList: IAnswerResponse[]) => {
         if (props.isReviewPage) {
-            answerList = answerList?.filter(answer => answer.id === selectedId || answer.id === props.correctAnswerId)
+            answerList = answerList?.filter(answer => {
+                const answeredCorrectly = props?.correctAnswerId === selectedId;
+                return answeredCorrectly || answer.id === selectedId || answer.id === props.correctAnswerId;
+            })
         }
 
         return answerList?.map((answer) => (

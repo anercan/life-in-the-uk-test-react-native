@@ -1,7 +1,8 @@
-import { Dimensions } from 'react-native';
+import {Dimensions} from 'react-native';
+
 const windowWidth = Dimensions.get('window').width;
 
-export function useSwipe(onSwipeLeft?: any, onSwipeRight?: any, rangeOffset = 4) {
+export function useSwipe(onSwipeLeft: any, onSwipeRight: any, rangeOffset: any, isAnswered: boolean) {
 
     let firstTouch = 0
 
@@ -11,18 +12,18 @@ export function useSwipe(onSwipeLeft?: any, onSwipeRight?: any, rangeOffset = 4)
     }
 
     // when touch ends check for swipe directions
-    function onTouchEnd(e: any){
+    function onTouchEnd(e: any) {
 
         // get touch position and screen size
         const positionX = e.nativeEvent.pageX
         const range = windowWidth / rangeOffset
 
         // check if position is growing positively and has reached specified range
-        if(positionX - firstTouch > range){
+        if (positionX - firstTouch > range) {
             onSwipeRight && onSwipeRight()
         }
         // check if position is growing negatively and has reached specified range
-        else if(firstTouch - positionX > range || firstTouch == positionX){
+        else if (firstTouch - positionX > range || (isAnswered && firstTouch == positionX)) {
             onSwipeLeft && onSwipeLeft()
         }
     }
