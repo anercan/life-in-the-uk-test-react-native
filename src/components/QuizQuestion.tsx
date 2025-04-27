@@ -1,14 +1,16 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView} from 'react-native';
 import {IAnswerResponse, IQuizQuestion} from "constants/types";
 import {useTheme} from "../hooks";
 import {AppText} from "./index";
 import Animated, {FadeIn} from "react-native-reanimated";
 import SwipeIndicator from "components/SwipeIndicator";
+import {useTap} from "hooks/useTap";
 
 const {height, width} = Dimensions.get('window');
 
 const QuizQuestion = (props: IQuizQuestion) => {
+    const {onTouchStart, onTouchEnd} = useTap(() => triggerTap());
     const {fonts, sizes, colors} = useTheme();
     const [selectedId, setSelectedId] = useState<number>();
 
@@ -34,7 +36,13 @@ const QuizQuestion = (props: IQuizQuestion) => {
         return id === props.correctAnswerId && (props.isReviewPage || props.showCorrectAnswer) ? '#75c78a' : colors.orderBoxBackGround; // doğru cevap yeşil, geri kalan gri
     }
 
-    const styles = useMemo(() => StyleSheet.create({
+    const triggerTap = () => {
+        if (props.isAnswered) {
+            props.onSkipTap();
+        }
+    }
+
+    const styles = StyleSheet.create({
         box: {
             borderWidth: 1,
             borderColor: colors.cardBorder,
@@ -118,7 +126,7 @@ const QuizQuestion = (props: IQuizQuestion) => {
             fontFamily: fonts.text,
             fontSize: sizes.text
         }
-    }), []);
+    });
 
     const answers = (answerList: IAnswerResponse[]) => {
         if (props.isReviewPage) {
@@ -142,7 +150,7 @@ const QuizQuestion = (props: IQuizQuestion) => {
 
     return (
         <ScrollView style={{marginBottom: sizes.md, marginTop: height / 30}}>
-            <View style={styles.box}>
+            <View onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} style={styles.box}>
                 <View style={styles.orderBox}>
                     <Text
                         style={styles.orderText}>{props?.questionOrder || props?.questionOrder == 0 ? props?.questionOrder + 1 : null}</Text>

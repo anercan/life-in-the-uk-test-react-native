@@ -18,7 +18,7 @@ const QuizScreen = ({navigation}) => {
     const {setTitle} = useContext(TitleContext);
     const [answerMap, setAnswerMap] = useState(new Map());
     const [activeQuestion, setActiveQuestion] = useState<any>({});
-    const {onTouchStart, onTouchEnd} = useSwipe(onSwipeLeft, onSwipeRight, 14,answerMap?.get(activeQuestion?.id) !== undefined);
+    const {onTouchStart, onTouchEnd} = useSwipe(onSwipeLeft, onSwipeRight, 14);
     const shakeAnimation = new Animated.Value(0);
     const route = useRoute<QuizScreenRootProps>();
     const {quizId, quizGroupId, quizCardList, quizType} = route.params;
@@ -252,6 +252,7 @@ const QuizScreen = ({navigation}) => {
                                   isReviewPage={isReviewMode(quizType)}
                                   explanation={getExplanation()}
                                   showCorrectAnswer={isReviewMode(quizType) ? false : showCorrectAnswer}
+                                  onSkipTap={() => onSwipeLeft()}
                     />
                 </Animated.View>
             </View>

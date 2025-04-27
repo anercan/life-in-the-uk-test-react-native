@@ -1,12 +1,12 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, StyleSheet } from 'react-native';
+import {Animated, StyleSheet, Text} from 'react-native';
 import {useTheme} from "hooks";
 import Image from "components/Image";
 
 const SwipeIndicator = () => {
   const translateX = useRef(new Animated.Value(250)).current; // Start from 500px to the right (off-screen)
   const fadeIn = useRef(new Animated.Value(0)).current; // Initial opacity 0 (hidden)
-  const {sizes,colors} = useTheme();
+  const {sizes,colors,fonts} = useTheme();
 
   const styles = StyleSheet.create({
     container: {
@@ -48,10 +48,15 @@ const SwipeIndicator = () => {
             },
           ]}
       >
+        <Text style={{
+          textAlign: 'center',
+          fontFamily: fonts.p,
+          fontSize: sizes.smallText,
+          color: colors.text
+        }}>Swipe Or Tap!</Text>
         <Image
             width={sizes.xxl}
             height={sizes.xxl}
-            marginBottom={sizes.sm}
             color={colors.text}
             source={require('../assets/images/swipe.png')}
         />

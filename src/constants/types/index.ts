@@ -36,6 +36,7 @@ export interface IQuizQuestion {
   isAnswered:boolean;
   isReviewPage:boolean;
   showCorrectAnswer?:boolean
+  onSkipTap: () => void;
 }
 
 export interface IAnswerResponse {

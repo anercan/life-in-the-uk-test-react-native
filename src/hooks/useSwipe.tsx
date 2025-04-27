@@ -2,7 +2,7 @@ import {Dimensions} from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
 
-export function useSwipe(onSwipeLeft: any, onSwipeRight: any, rangeOffset: any, isAnswered: boolean) {
+export function useSwipe(onSwipeLeft: any, onSwipeRight: any, rangeOffset: any) {
 
     let firstTouch = 0
 
@@ -23,7 +23,7 @@ export function useSwipe(onSwipeLeft: any, onSwipeRight: any, rangeOffset: any, 
             onSwipeRight && onSwipeRight()
         }
         // check if position is growing negatively and has reached specified range
-        else if (firstTouch - positionX > range || (isAnswered && firstTouch == positionX)) {
+        else if (firstTouch - positionX > range) {
             onSwipeLeft && onSwipeLeft()
         }
     }
