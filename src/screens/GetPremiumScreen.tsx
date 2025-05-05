@@ -135,7 +135,6 @@ const GetPremiumScreen = ({navigation}) => {
         'Compare your test results with others',
         'Activity report',
         'All Official questions',
-        'Monthly renewal for 6 months!',
         'Cancellation is available anytime!'
     ];
 
@@ -154,6 +153,8 @@ const GetPremiumScreen = ({navigation}) => {
             marginBottom: sizes.m,
         },
         planContainer: {
+            marginTop: sizes.xl,
+            marginBottom: sizes.xl,
             width: "100%",
             alignItems: "center",
         },
@@ -223,8 +224,6 @@ const GetPremiumScreen = ({navigation}) => {
 
     return (
         <ScrollView contentContainerStyle={{
-            marginTop: sizes.xl,
-            marginBottom: sizes.xl,
             alignItems: 'center',
             padding: sizes.s,
         }}>

@@ -1,7 +1,6 @@
 import React, {useCallback, useContext, useState} from 'react';
 
 import {useTheme} from '../hooks/';
-import {Block} from '../components/';
 import {ScrollView, StyleSheet, View} from "react-native";
 import {IQuizGroupCard} from "constants/types";
 import {GroupCard} from "../components";
@@ -49,25 +48,23 @@ const QuizGroupListScreen = ({navigation}) => {
     const rows = chunkArray(quizGroupCards, 2);
 
     return (
-        <Block>
-            <ScrollView contentContainerStyle={{alignItems: 'center', marginTop: sizes.m}}>
-                <DailyCard navigation={navigation}/>
-                {rows.map((row, rowIndex) => (
-                    <View key={rowIndex} style={styles.row}>
-                        {row.map((card, index) => (
-                            <View key={row + '' + index}>
-                                <GroupCard
-                                    backgroundImage={groupCardBackgroundImages[(rowIndex * row.length) + index]}
-                                    backgroundColor={randomColors[(rowIndex * row.length) + index]}
-                                    card={card}
-                                    onPress={() => onPressQuizGroupCard(card)}
-                                />
-                            </View>
-                        ))}
-                    </View>
-                ))}
-            </ScrollView>
-        </Block>
+        <ScrollView contentContainerStyle={{alignItems: 'center', marginTop: sizes.m}}>
+            <DailyCard navigation={navigation}/>
+            {rows.map((row, rowIndex) => (
+                <View key={rowIndex} style={styles.row}>
+                    {row.map((card, index) => (
+                        <View key={row + '' + index}>
+                            <GroupCard
+                                backgroundImage={groupCardBackgroundImages[(rowIndex * row.length) + index]}
+                                backgroundColor={randomColors[(rowIndex * row.length) + index]}
+                                card={card}
+                                onPress={() => onPressQuizGroupCard(card)}
+                            />
+                        </View>
+                    ))}
+                </View>
+            ))}
+        </ScrollView>
     );
 };
 

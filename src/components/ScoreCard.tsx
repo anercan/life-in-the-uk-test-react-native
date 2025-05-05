@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import * as Progress from 'react-native-progress';
 
 import useTheme from '../hooks/useTheme';
+import {isDailyQuiz} from "util/quizUtils";
 
 export interface IScoreCard {
     total: number;
@@ -10,6 +11,7 @@ export interface IScoreCard {
     wrong: number;
     quizName: string;
     onPress: (reviewType: string) => void;
+    quizType: string;
 }
 
 const ScoreCard = (props: IScoreCard) => {
@@ -29,7 +31,7 @@ const ScoreCard = (props: IScoreCard) => {
             marginBottom: sizes.xl,
             backgroundColor: colors.card,
             elevation: 2,
-            shadowColor:colors.shadow,
+            shadowColor: colors.shadow,
             shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.2,
             shadowRadius: 3,
@@ -37,14 +39,14 @@ const ScoreCard = (props: IScoreCard) => {
             padding: sizes.sm,
             width: '95%',
         }, progress: {
-            borderRadius: sizes.xxxl, backgroundColor: colors.primary,  elevation: 2,
-            shadowColor:colors.shadow,
+            borderRadius: sizes.xxxl, backgroundColor: colors.primary, elevation: 2,
+            shadowColor: colors.shadow,
             shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.2,
             shadowRadius: 3,
         }, scoreBox: {
             elevation: 2,
-            shadowColor:colors.shadow,
+            shadowColor: colors.shadow,
             shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.2,
             shadowRadius: 3,
@@ -75,6 +77,16 @@ const ScoreCard = (props: IScoreCard) => {
         }
     }
 
+    const onPressScore = (reviewType) => {
+        if (!isDailyQuiz(props.quizType)) {
+            props.onPress(reviewType);
+        }
+    }
+
+    const getActiveOpacity = () => {
+        return isDailyQuiz(props.quizType) ? 1 : 0.4;
+    }
+
     return (
         <View style={styles.container}>
             <View style={{alignItems: 'center', marginBottom: sizes.m}}>
@@ -97,15 +109,18 @@ const ScoreCard = (props: IScoreCard) => {
                 </View>
             </View>
             <View style={styles.scoreBoxContainer}>
-                <TouchableOpacity onPress={() => props.onPress('REVIEW_ALL')} style={styles.scoreBox}>
+                <TouchableOpacity activeOpacity={getActiveOpacity()} onPress={() => onPressScore('REVIEW_ALL')}
+                                  style={styles.scoreBox}>
                     <Text style={{...styles.scoreText}}>{props.total}</Text>
                     <Text style={{...styles.scoreText, color: colors.text, fontSize: sizes.p}}>{'Total'}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => props.onPress('REVIEW_CORRECTS')} style={styles.scoreBox}>
+                <TouchableOpacity activeOpacity={getActiveOpacity()} onPress={() => onPressScore('REVIEW_CORRECTS')}
+                                  style={styles.scoreBox}>
                     <Text style={{...styles.scoreText}}>{props.correct}</Text>
                     <Text style={{...styles.scoreText, color: colors.text, fontSize: sizes.p}}>{'Correct'}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => props.onPress('REVIEW_WRONGS')} style={styles.scoreBox}>
+                <TouchableOpacity activeOpacity={getActiveOpacity()} onPress={() => onPressScore('REVIEW_WRONGS')}
+                                  style={styles.scoreBox}>
                     <Text style={{...styles.scoreText}}>{props.wrong}</Text>
                     <Text style={{...styles.scoreText, color: colors.text, fontSize: sizes.p}}>{'Wrong'}</Text>
                 </TouchableOpacity>

@@ -49,7 +49,7 @@ const Tabs = (props: IHeader) => {
                     </AppText>
                 </Block>
                 <Block
-                    color={colors.dark}
+                    color={colors.light}
                     flex={0}
                     width={1}
                     marginTop={sizes.xs}

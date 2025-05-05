@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Animated, View} from 'react-native';
+import {Animated, ScrollView, View} from 'react-native';
 import {RouteProp, useRoute} from "@react-navigation/native";
 import QuizQuestion from "../components/QuizQuestion";
 import {useSwipe} from "hooks/useSwipe";
@@ -10,6 +10,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {getQuestionCount, getQuestions, isDailyQuiz, isRegularQuiz, isReviewMode, QuizParams} from "util/quizUtils";
 import ProgressBar from "components/ProgressBar";
 import {logEvent} from "util/logUtil";
+import {useTheme} from "hooks";
 
 type QuizScreenRootProps = RouteProp<{ QuizScreen: QuizParams }, 'QuizScreen'>;
 
@@ -18,7 +19,7 @@ const QuizScreen = ({navigation}) => {
     const {setTitle} = useContext(TitleContext);
     const [answerMap, setAnswerMap] = useState(new Map());
     const [activeQuestion, setActiveQuestion] = useState<any>({});
-    const {onTouchStart, onTouchEnd} = useSwipe(onSwipeLeft, onSwipeRight, 14);
+    const {onTouchStart, onTouchEnd} = useSwipe(onSwipeLeft, onSwipeRight, 20);
     const shakeAnimation = new Animated.Value(0);
     const route = useRoute<QuizScreenRootProps>();
     const {quizId, quizGroupId, quizCardList, quizType} = route.params;
@@ -26,6 +27,7 @@ const QuizScreen = ({navigation}) => {
     const [quiz, setQuiz] = useState<any>();
     const [questionList, setQuestionList] = useState([{}]);
     const [correctAnswerCounter, setCorrectAnswerCounter] = useState(0);
+    const {sizes} = useTheme();
 
     useEffect(() => {
         if (isRegularQuiz(quizType) || isReviewMode(quizType)) {
@@ -62,7 +64,7 @@ const QuizScreen = ({navigation}) => {
                         quizSize: quizResponse?.userDailyQuizResponse?.correctQuestionIdList?.length + quizResponse?.userDailyQuizResponse?.wrongQuestionIdList?.length,
                         correctAnswerSize: quizResponse?.userDailyQuizResponse?.correctQuestionIdList?.length,
                         quizCardList: [],
-                        isDailyQuiz: true,
+                        quizType: quizType,
                         dailyQuizResponse: quizResponse?.userDailyQuizResponse
                     });
                 } else {
@@ -113,6 +115,7 @@ const QuizScreen = ({navigation}) => {
     const getCompletedScreenBody = () => {
         if (isReviewMode(quizType)) {
             return {
+                quizType: quizType,
                 quizName: quiz?.name,
                 quizSize: quiz?.userQuiz?.correctQuestionList.length + quiz?.userQuiz?.wrongQuestionList?.length,
                 correctAnswerSize: quiz?.userQuiz?.correctQuestionList.length,
@@ -128,7 +131,7 @@ const QuizScreen = ({navigation}) => {
                 quizCardList: quizCardList,
                 quizGroupId: quizGroupId,
                 quizId: quizId,
-                isDailyQuiz: isDailyQuiz(quizType)
+                quizType: quizType
             };
         }
     }
@@ -236,10 +239,10 @@ const QuizScreen = ({navigation}) => {
     }
 
     return (
-        <>
-            <View onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} style={{flex: 1, alignItems: 'center'}}>
-                <ProgressBar progress={activeQuestion?.counter / questionList?.length || 0}/>
-                <Animated.View style={{transform: [{translateX: shakeAnimation} as any]}}>
+        <View onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} style={{alignItems: 'center',paddingBottom: sizes.base * 10 }}>
+            <ProgressBar progress={activeQuestion?.counter / questionList?.length || 0}/>
+            <Animated.View style={{transform: [{translateX: shakeAnimation} as any]}}>
+                <ScrollView>
                     <QuizQuestion id={activeQuestion?.id}
                                   questionOrder={activeQuestion.counter}
                                   content={activeQuestion?.content}
@@ -254,9 +257,9 @@ const QuizScreen = ({navigation}) => {
                                   showCorrectAnswer={isReviewMode(quizType) ? false : showCorrectAnswer}
                                   onSkipTap={() => onSwipeLeft()}
                     />
-                </Animated.View>
-            </View>
-        </>
+                </ScrollView>
+            </Animated.View>
+        </View>
     );
 };
 

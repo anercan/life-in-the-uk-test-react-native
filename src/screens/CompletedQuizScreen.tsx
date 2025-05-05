@@ -7,6 +7,7 @@ import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
 import ScoreCard from "components/ScoreCard";
 import DataDistributionCard from "components/DataDistributionCard";
+import {isDailyQuiz} from "util/quizUtils";
 
 type QuizParams = {
     quizName: string;
@@ -15,7 +16,7 @@ type QuizParams = {
     quizCardList: any[];
     quizGroupId: number;
     quizId: number;
-    isDailyQuiz?: boolean;
+    quizType: string;
     dailyQuizResponse?: any;
 };
 
@@ -31,7 +32,7 @@ const CompletedQuizScreen = ({navigation}) => {
         quizCardList,
         quizGroupId,
         quizId,
-        isDailyQuiz,
+        quizType,
         dailyQuizResponse
     } = route.params;
     const {colors, fonts, sizes} = useTheme();
@@ -52,7 +53,7 @@ const CompletedQuizScreen = ({navigation}) => {
             apiCaller('user-quiz/get-completed-quiz-statics?quizId=' + quizId).then((response: any) => {
                 setCompletedStatics(response);
             });
-        } else if (isDailyQuiz) {
+        } else if (isDailyQuiz(quizType)) {
             if (dailyQuizResponse) {
                 setWrongsMap(dailyQuizResponse?.wrongQuestionsSubjects);
             } else {
@@ -114,7 +115,8 @@ const CompletedQuizScreen = ({navigation}) => {
 
             <ScoreCard
                 onPress={(reviewType) => onPressReview(reviewType)}
-                quizName={isDailyQuiz ? 'Daily Quiz' : quizName}
+                quizName={isDailyQuiz(quizType) ? 'Daily Quiz' : quizName}
+                quizType={quizType}
                 total={quizSize}
                 correct={correctAnswerSize}
                 wrong={quizSize - correctAnswerSize}
@@ -130,18 +132,18 @@ const CompletedQuizScreen = ({navigation}) => {
                     </View>
                 </>
             }
-            {isDailyQuiz && (Object.keys(wrongsMap)?.length > 0) &&
+            {isDailyQuiz(quizType) && (Object.keys(wrongsMap)?.length > 0) &&
                 <DataDistributionCard incorrectMapProps={wrongsMap}/>
             }
-            {isDailyQuiz &&
-                <View style={{marginBottom: sizes.xxxl, alignItems: 'center'}}>
+            {isDailyQuiz(quizType) &&
+                <View style={{marginBottom: sizes.m, alignItems: 'center'}}>
                     <Text style={{color: colors.text, fontSize: sizes.text, fontFamily: fonts.p}}>
                         Don't forget to come back tomorrow!
                     </Text>
                 </View>
             }
 
-            {!isDailyQuiz && correctAnswerSize !== quizSize &&
+            {!isDailyQuiz(quizType) && correctAnswerSize !== quizSize &&
                 <ButtonCard onPress={() => onPressReview('REVIEW_ALL')} buttonText={'Review'}/>
             }
             {isNextQuizExist &&

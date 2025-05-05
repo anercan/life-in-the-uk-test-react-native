@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, Dimensions} from 'react-native';
 import {IAnswerResponse, IQuizQuestion} from "constants/types";
 import {useTheme} from "../hooks";
-import {AppText} from "./index";
 import Animated, {FadeIn} from "react-native-reanimated";
 import SwipeIndicator from "components/SwipeIndicator";
 import {useTap} from "hooks/useTap";
@@ -44,14 +43,14 @@ const QuizQuestion = (props: IQuizQuestion) => {
 
     const styles = StyleSheet.create({
         box: {
+            marginBottom: sizes.md,
+            marginTop: height / 30,
             borderWidth: 1,
             borderColor: colors.cardBorder,
             padding: sizes.s,
-            paddingBottom: sizes.m,
+            paddingBottom: sizes.sm,
             borderRadius: sizes.m,
-            margin: sizes.s,
-            marginTop: sizes.m,
-            marginBottom: sizes.l,
+            marginHorizontal: sizes.s,
             alignItems: 'center',
             backgroundColor: colors.card,
             shadowColor: colors.shadow,
@@ -148,33 +147,30 @@ const QuizQuestion = (props: IQuizQuestion) => {
         ));
     };
 
+    const showSwipeIndicator = () => {
+        return props?.questionOrder == 0 && !props?.isReviewPage && props?.isAnswered;
+    }
+
     return (
-        <ScrollView style={{marginBottom: sizes.md, marginTop: height / 30}}>
-            <View onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} style={styles.box}>
-                <View style={styles.orderBox}>
-                    <Text
-                        style={styles.orderText}>{props?.questionOrder || props?.questionOrder == 0 ? props?.questionOrder + 1 : null}</Text>
-                </View>
-                <View style={styles.questionBox}>
-                    <Text style={styles.questionText}>{props.content}</Text>
-                </View>
-                {answers(props.answersList)}
-                {(props.isAnswered && props.selectedId != props.correctAnswerId && props.explanation?.trim()?.length > 0) ?
-                    <Animated.View entering={FadeIn} style={styles.explanationBox}>
-                        <AppText h4>
-                            Explanation
-                        </AppText>
-                        <Text style={styles.explanationText}>
-                            {props.explanation}
-                        </Text>
-                    </Animated.View>
-                    : ''
-                }
-                {(props.questionOrder == 0 && !props.isReviewPage && props.isAnswered) &&
-                    <SwipeIndicator/>
-                }
+        <View onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} style={styles.box}>
+            <View style={styles.orderBox}>
+                <Text
+                    style={styles.orderText}>{props?.questionOrder || props?.questionOrder == 0 ? props?.questionOrder + 1 : null}</Text>
             </View>
-        </ScrollView>
+            <View style={styles.questionBox}>
+                <Text style={styles.questionText}>{props.content}</Text>
+            </View>
+            {answers(props.answersList)}
+            {(props.isAnswered && props.selectedId != props.correctAnswerId && props.explanation?.trim()?.length > 0) ?
+                <Animated.View entering={FadeIn} style={styles.explanationBox}>
+                    <Text style={styles.explanationText}>
+                        {props.explanation}
+                    </Text>
+                </Animated.View>
+                : ''
+            }
+            {showSwipeIndicator() && <SwipeIndicator/>}
+        </View>
     );
 }
 

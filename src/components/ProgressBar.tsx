@@ -10,15 +10,15 @@ const ProgressBar = ({progress}) => {
 
     const styles = StyleSheet.create({
         progressBar: {
-            paddingTop: sizes.sm,
+            paddingVertical: sizes.sm,
         }, customProgressBar: {
-            borderRadius: 7
+            borderRadius: sizes.sm
         }
     });
 
     return (
         <View style={styles.progressBar}>
-            <Progress.Bar height={sizes.sm} borderColor={String(colors.dark)} color={String(colors.primary)}
+            <Progress.Bar height={sizes.s} borderColor={String(colors.tabBackground)} color={String(colors.dark)}
                           style={styles.customProgressBar}
                           progress={progress || 0}
                           width={width / 1.12}/>

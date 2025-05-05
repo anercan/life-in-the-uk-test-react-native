@@ -52,9 +52,10 @@ const SolvedQuizListScreen = ({navigation}) => {
         filterTabs(filter === 1 ? 'COMPLETED' : 'ONGOING');
     };
 
-    function cardOnPress(card: any) {
+    const cardOnPress = (card: any) => {
         if (card?.state === 'COMPLETED') {
             navigation.navigate('CompletedQuizScreen', {
+                quizType:'REGULAR',
                 quizName: card.quiz?.name,
                 quizSize: card?.correctQuestionList?.length + card?.wrongQuestionList?.length,
                 correctAnswerSize: card?.correctQuestionList?.length,
@@ -72,7 +73,7 @@ const SolvedQuizListScreen = ({navigation}) => {
         }
     }
 
-    function getProgress(card: any) {
+    const getProgress = (card: any) => {
         return Math.round((card?.correctQuestionList?.length / card?.quiz?.activeQuestionCount) * 100);
     }
 
