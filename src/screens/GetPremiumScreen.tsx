@@ -164,7 +164,7 @@ const GetPremiumScreen = ({navigation}) => {
             backgroundColor: colors.card,
             shadowColor: colors.shadow,
             shadowOpacity: 0.1,
-            shadowRadius: 10,
+            shadowRadius: sizes.shadowRadius,
             alignItems: "center",
             width: "90%",
             elevation: isCardEntering ? 0 : 1
@@ -195,7 +195,7 @@ const GetPremiumScreen = ({navigation}) => {
             backgroundColor: buttonDisable ? '#bababa' : colors.primary,
             shadowColor: colors.shadow,
             shadowOpacity: 0.2,
-            shadowRadius: 3,
+            shadowRadius: sizes.shadowRadius,
             elevation: isCardEntering ? 0 : 2,
         },
         buttonText: {

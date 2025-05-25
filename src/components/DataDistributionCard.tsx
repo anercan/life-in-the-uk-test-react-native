@@ -4,15 +4,14 @@ import {View, StyleSheet, Text} from 'react-native';
 import useTheme from '../hooks/useTheme';
 import {capitalizeWords, getColorFromPalette, getShortenText, hexWithOpacity} from "util/commonUtil";
 import {PieChart} from "react-native-chart-kit";
-import {IncorrectData} from "screens/Profile";
 
 const DataDistributionCard = ({incorrectMapProps}) => {
     const {fonts, colors, sizes} = useTheme();
-    const [incorrectMap, setIncorrectMap] = useState<IncorrectData[]>([]);
+    const [incorrectMap, setIncorrectMap] = useState<any[]>([]);
 
     useEffect(() => {
         if (incorrectMapProps) {
-            let incorrectDataList: IncorrectData[] = [];
+            let incorrectDataList: any[] = [];
             Object.entries(incorrectMapProps).forEach(([key, value], index) => {
                 incorrectDataList.push({
                     name: '- ' + getShortenText(capitalizeWords(key), 24),
@@ -20,7 +19,7 @@ const DataDistributionCard = ({incorrectMapProps}) => {
                     color: getColorFromPalette(index),
                     legendFontColor: colors.light,
                     legendFontSize: sizes.smallestText
-                } as IncorrectData);
+                } as any);
             });
             setIncorrectMap(incorrectDataList);
         }
@@ -37,7 +36,7 @@ const DataDistributionCard = ({incorrectMapProps}) => {
             shadowColor: colors.shadow,
             shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.2,
-            shadowRadius: 3,
+            shadowRadius: sizes.shadowRadius,
             borderRadius: sizes.m,
             padding: sizes.sm,
             width: '95%',

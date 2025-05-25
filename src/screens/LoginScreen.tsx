@@ -134,7 +134,7 @@ const LoginScreen = () => {
             shadowColor: colors.shadow,
             shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.3,
-            shadowRadius: 5,
+            shadowRadius: sizes.shadowRadius,
             elevation: 5,
         },
         iconContainer: {
@@ -163,7 +163,7 @@ const LoginScreen = () => {
             shadowColor: colors.shadow,
             shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.2,
-            shadowRadius: 5,
+            shadowRadius: sizes.shadowRadius,
             marginBottom: sizes.base * 14,
             elevation: 5, // Drop shadow on Android
         },

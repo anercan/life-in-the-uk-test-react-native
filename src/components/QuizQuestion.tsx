@@ -56,7 +56,7 @@ const QuizQuestion = (props: IQuizQuestion) => {
             shadowColor: colors.shadow,
             shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.1,
-            shadowRadius: 2,
+            shadowRadius: sizes.shadowRadius,
             elevation: 5,
         }, orderBox: {
             height: sizes.xl,
@@ -67,7 +67,7 @@ const QuizQuestion = (props: IQuizQuestion) => {
             shadowColor: colors.shadow,
             shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.1,
-            shadowRadius: 2,
+            shadowRadius: sizes.shadowRadius,
             elevation: 3,
             marginTop: -sizes.md
         },
@@ -84,7 +84,7 @@ const QuizQuestion = (props: IQuizQuestion) => {
             shadowColor: colors.shadow,
             shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.1,
-            shadowRadius: 2,
+            shadowRadius: sizes.shadowRadius,
             elevation: 4,
         }, explanationBox: {
             marginTop: sizes.s,
@@ -104,7 +104,7 @@ const QuizQuestion = (props: IQuizQuestion) => {
             shadowColor: colors.shadow,
             shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.1,
-            shadowRadius: 2,
+            shadowRadius: sizes.shadowRadius,
             elevation: 2,
         }, questionText: {
             fontFamily: fonts.p,

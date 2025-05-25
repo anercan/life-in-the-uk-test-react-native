@@ -1,229 +1,60 @@
 import React, {useCallback, useContext, useState} from 'react';
-import {Dimensions, ScrollView, TouchableOpacity, View} from 'react-native';
+import {ScrollView, TouchableOpacity, View} from 'react-native';
 import {AppText, Block, Image} from '../components/';
-import {useData, useTheme} from '../hooks/';
+import {useTheme} from '../hooks/';
 import {TitleContext} from "context/TitleContext";
 import {useFocusEffect} from "@react-navigation/native";
 import {isPremium} from "util/jwtUtil";
 import useApiCaller from "../hooks/useApiCaller";
 import {
-    capitalizeWords,
-    getColorFromPalette,
-    getShortenText,
     handleReviewRequest,
-    hexWithOpacity,
     isAndroid
 } from "util/commonUtil";
-import {ContributionGraph, PieChart} from "react-native-chart-kit";
-
-const {height, width} = Dimensions.get('window');
+import NavigationBox from "components/NavigationBox";
+import ActivityModal from "components/ActivityModal";
 
 const Profile = ({navigation}) => {
-    const {isDark} = useData();
     const {apiCaller, loading} = useApiCaller(navigation);
     const {sizes, colors} = useTheme();
     const [userData, setUserData] = useState<UserDataResponse>();
-    const [isPremiumUser, setIsPremiumUser] = useState(false);
-    const [incorrectMap, setIncorrectMap] = useState<IncorrectData[]>([]);
-    const [activityData, setActivityData] = useState<ActivityData[]>([]);
     const {setTitle} = useContext(TitleContext);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [isPremiumUser, setIsPremiumUser] = useState(false);
 
     useFocusEffect(
         useCallback(() => {
-            setTitle('Profile');
             const checkPremiumStatus = async () => {
                 const premium = await isPremium();
                 setIsPremiumUser(premium);
             };
             checkPremiumStatus();
+            setTitle('Profile');
             getUserInfo();
         }, [])
     )
-
-    const getPremiumScreen = () => {
-        navigation.navigate('GetPremiumScreen');
-    }
-
-    const getCount = (data: ActivityData) => {
-        if (data?.count) {
-            if (data.count == 0) {
-                return 0;
-            } else if (data.count > 0) {
-                return 1;
-            }
-        }
-        return 0;
-    }
 
     const getUserInfo = () => {
         apiCaller('profile/get-user-info')
             .then((profileResponse: any) => {
                 setUserData(profileResponse);
-                if (profileResponse?.wrongsMap) {
-                    let incorrectDataList: IncorrectData[] = [];
-                    let wrongsMap = profileResponse.wrongsMap;
-
-                    Object.entries(wrongsMap).forEach(([key, value], index) => {
-                        incorrectDataList.push({
-                            name: '- ' + getShortenText(capitalizeWords(key), 25),
-                            incorrectCount: value,
-                            color: getColorFromPalette(index),
-                            legendFontColor: colors.light,
-                            legendFontSize: sizes.smallText
-                        } as IncorrectData);
-                    });
-
-                    setIncorrectMap(incorrectDataList);
-                }
-                if (profileResponse?.activityDataList) {
-                    let activityDataList: ActivityData[] = [];
-                    profileResponse?.activityDataList.forEach((data: ActivityData) => {
-                        activityDataList.push({
-                            count: getCount(data),
-                            date: data.date
-                        } as ActivityData);
-                    });
-                    setActivityData(activityDataList)
-                }
                 if (profileResponse?.userOngoingQuizCount + profileResponse?.userSolvedQuizCount > 2) {
                     handleReviewRequest();
                 }
             });
     }
 
-    const getSubscribePremiumContent = () => {
-        return (
-            <View style={{flexDirection: 'column', marginHorizontal: sizes.s}}>
-                <View style={{flex: 1, marginBottom: sizes.m}}>
-                    <AppText h4 align={"center"}>Most Incorrect Answers by Subjects</AppText>
-                    <View style={{
-                        borderColor: '#6f6e6e',
-                        paddingVertical: sizes.xs,
-                        borderRadius: sizes.sm,
-                        borderWidth: 1,
-                        alignItems: 'center',
-                    }}>
-
-                        <TouchableOpacity onPress={() => getPremiumScreen()}>
-                            <Image
-                                resizeMode={"contain"}
-                                width={width / 1.2}
-                                height={height / 6}
-                                source={isDark ? require('../assets/images/pie-chart-blur-dark.png') : require('../assets/images/pie-chart-blur.png')}
-                            />
-                        </TouchableOpacity>
-
-                        <View style={{alignItems: 'center'}}>
-                            <AppText onPress={() => getPremiumScreen()} style={{textDecorationLine: "underline"}}
-                                     size={sizes.text}
-                                     semibold
-                                     color={colors.text}>Unlock with Premium+ Plan</AppText>
-                        </View>
-                    </View>
-                </View>
-
-                <View style={{flex: 1}}>
-                    <AppText h4 align={"center"}>Activity (Last 3 Months)</AppText>
-                    <View style={{
-                        borderColor: '#6f6e6e',
-                        paddingVertical: sizes.xs,
-                        borderRadius: sizes.sm,
-                        borderWidth: 1,
-                        alignItems: 'center',
-                    }}>
-                        <TouchableOpacity onPress={() => getPremiumScreen()}>
-                            <Image
-                                resizeMode={"contain"}
-                                width={width / 1.2}
-                                height={height / 5}
-                                source={isDark ? require('../assets/images/contribution-blur-dark.png') : require('../assets/images/contribution-blur.png')}
-                            />
-                        </TouchableOpacity>
-                        <View style={{alignItems: 'center'}}>
-                            <AppText onPress={() => getPremiumScreen()} style={{textDecorationLine: "underline"}}
-                                     size={sizes.text}
-                                     semibold
-                                     color={colors.text}>Unlock with Premium+ Plan</AppText>
-                        </View>
-                    </View>
-                </View>
-            </View>
-        );
-    }
-
-    const getTopicStatistics = () => {
-        return (
-            <View style={{flex: 1, marginBottom: sizes.m}}>
-                <AppText h4 align={"center"}>Most Incorrect Answers by Subjects</AppText>
-                <View style={{
-                    borderColor: '#6f6e6e',
-                    paddingVertical: sizes.xs,
-                    borderRadius: sizes.sm,
-                    borderWidth: 1,
-                    alignItems: 'center',
-                }}>
-                    <PieChart
-                        data={incorrectMap}
-                        width={width / 1.1}
-                        height={height / 6}
-                        chartConfig={{
-                            color: (opacity = 1) => hexWithOpacity(colors.text, opacity),
-                        }}
-                        accessor={"incorrectCount"}
-                        backgroundColor={"transparent"}
-                        center={[sizes.xl, -sizes.xs]}
-                        absolute
-                        paddingLeft={-sizes.xxl + ""}
-                    />
-                </View>
-            </View>);
-    }
-
-    const getActivityData = () => {
-        return (
-            <View style={{flex: 1}}>
-                <AppText h4 align={"center"}>Activity (Last 3 Months)</AppText>
-                <View style={{
-                    borderColor: '#6f6e6e',
-                    paddingVertical: sizes.xs,
-                    borderRadius: sizes.sm,
-                    borderWidth: 1,
-                    alignItems: 'center',
-                }}>
-                    <ContributionGraph
-                        values={activityData}
-                        endDate={new Date()}
-                        numDays={90}
-                        accessor={"count"}
-                        squareSize={height / 45}
-                        width={width / 1.2}
-                        height={height / 4.3}
-                        chartConfig={{
-                            backgroundGradientFrom: colors.secondaryBackground.toString(),
-                            backgroundGradientTo: colors.secondaryBackground.toString(),
-                            color: (opacity = 1) => hexWithOpacity(colors.primary, opacity),
-                            labelColor: (opacity = 1) => hexWithOpacity(colors.text, opacity),
-                        }}
-                        tooltipDataAttrs={() => {
-                            return {rx: 8, ry: 8};
-                        }}
-                    />
-                </View>
-            </View>
-        );
-    }
-
-    const getUserStatistics = () => {
-        if (userData != null && userData.wrongsMap != null && Object.keys(userData.wrongsMap).length) {
-            return (
-                <View style={{flexDirection: 'column', marginHorizontal: sizes.s}}>
-                    {incorrectMap?.length > 0 &&
-                        getTopicStatistics()
-                    }
-                    {getActivityData()}
-                </View>)
+    const navigate = (path,param?) => {
+        if (isPremiumUser) {
+            return navigation.navigate(path,param);
         }
-        return <></>
+        return navigation.navigate('GetPremiumScreen');
+    }
+
+    const getActivityModal = () => {
+        if (isPremiumUser) {
+            setModalVisible((prevState => !prevState));
+        }
+        return navigation.navigate('GetPremiumScreen');
     }
 
     return (
@@ -238,17 +69,17 @@ const Profile = ({navigation}) => {
                 {!loading ?
                     <>
                         {/* Profile Image and Stats */}
-                        <View style={{marginHorizontal: sizes.xs}}>
+                        <View style={{marginHorizontal: sizes.xs, marginBottom: sizes.m}}>
                             <Image
                                 background
                                 resizeMode="cover"
                                 padding={sizes.sm}
                                 paddingBottom={sizes.l}
-                                radius={sizes.cardRadius}
+                                radius={sizes.s}
                                 shadow={true}
                                 source={require('../assets/images/img.png')}
                             >
-                                {userData?.avatarUrl &&
+                                {
                                     <Block flex={0} align="center">
                                         <Image
                                             width={sizes.xxl}
@@ -276,7 +107,7 @@ const Profile = ({navigation}) => {
                                     row
                                     flex={0}
                                     radius={sizes.sm}
-                                    color={colors.orderBoxBackGround}
+                                    color={colors.card}
                                     overflow="hidden"
                                     justify="space-evenly"
                                     paddingVertical={sizes.sm}
@@ -314,30 +145,22 @@ const Profile = ({navigation}) => {
                             </Block>
                         </View>
 
-                        {isPremiumUser ?
-                            <View style={{marginTop: sizes.m}}>
-                                {getUserStatistics()}
-                            </View>
-                            :
-                            <View style={{marginTop: sizes.m}}>
-                                {getSubscribePremiumContent()}
-                            </View>
-                        }
-
-                        {/* Logout Button */}
-                        <View style={{
-                            alignItems: 'center',
-                            justifyContent: 'flex-end',
-                            marginTop: '15%',
-                            marginBottom: sizes.s
-                        }}>
+                        <View style={{flexDirection: 'row', justifyContent: 'center',}}>
+                            <NavigationBox icon={'calendar-question'} header={'Daily Challenge'} onPress={() => navigation.navigate('QuizScreen', {
+                                quizType: 'DAILY',
+                                quizCardList: [],
+                            })}/>
+                            <NavigationBox icon={'cards-heart-outline'} header={'Favorites'} onPress={() => navigate('FavoriteScreen')}/>
                         </View>
-
+                        <View key={2} style={{flexDirection: 'row', justifyContent: 'center'}}>
+                            <NavigationBox icon={'equalizer'} header={'Incorrect Distribution'} onPress={() => navigate('AnalyseScreen')}/>
+                            <NavigationBox icon={'calendar-blank'} header={'Activity'} onPress={() => getActivityModal()}/>
+                        </View>
                     </>
                     : null
-                    //<Instagram backgroundColor={colors.tabBackground.toString()} style={{marginLeft: sizes.sm}}/>
                 }
             </View>
+            <ActivityModal navigation={navigation} modalVisible={modalVisible} onPressClose={() => setModalVisible((prevState => !prevState))}/>
         </ScrollView>
     );
 };
@@ -348,20 +171,10 @@ export interface ActivityData {
 }
 
 interface UserDataResponse {
+    avatarUrl: string;
     userSolvedQuizCount: number;
     userOngoingQuizCount: number;
     totalQuizCount: number;
-    avatarUrl: string;
-    wrongsMap: Record<string, number>;
-    activityDataList: ActivityData[];
-}
-
-export interface IncorrectData {
-    name: string,
-    incorrectCount: number,
-    color: string,
-    legendFontColor: string,
-    legendFontSize: number
 }
 
 export default Profile;

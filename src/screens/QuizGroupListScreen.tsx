@@ -49,7 +49,9 @@ const QuizGroupListScreen = ({navigation}) => {
 
     return (
         <ScrollView contentContainerStyle={{alignItems: 'center', marginTop: sizes.m}}>
-            <DailyCard navigation={navigation}/>
+            <View style={{flexDirection:'row',flex:1,marginBottom: sizes.md}}>
+                <DailyCard navigation={navigation}/>
+            </View>
             {rows.map((row, rowIndex) => (
                 <View key={rowIndex} style={styles.row}>
                     {row.map((card, index) => (

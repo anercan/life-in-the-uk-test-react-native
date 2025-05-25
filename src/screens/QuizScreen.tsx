@@ -58,8 +58,8 @@ const QuizScreen = ({navigation}) => {
     const initUserDailyQuizData = () => {
         apiCaller('quiz/get-user-daily-quiz', 'POST')
             .then((quizResponse) => {
-                AsyncStorage.setItem('dailyQuiz', new Date().toISOString().split('T')[0]);
                 if (quizResponse?.userDailyQuizResponse) {
+                    AsyncStorage.setItem('dailyQuiz', new Date().toISOString().split('T')[0]);
                     navigation.replace('CompletedQuizScreen', {
                         quizSize: quizResponse?.userDailyQuizResponse?.correctQuestionIdList?.length + quizResponse?.userDailyQuizResponse?.wrongQuestionIdList?.length,
                         correctAnswerSize: quizResponse?.userDailyQuizResponse?.correctQuestionIdList?.length,
@@ -68,6 +68,7 @@ const QuizScreen = ({navigation}) => {
                         dailyQuizResponse: quizResponse?.userDailyQuizResponse
                     });
                 } else {
+                    AsyncStorage.setItem('dailyQuiz', new Date().toISOString().split('T')[0]);
                     setTitle('Daily Quiz');
                     let dailyQuestionList = quizResponse?.questionList;
                     setQuestionList(dailyQuestionList);

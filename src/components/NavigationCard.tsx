@@ -10,7 +10,6 @@ const NavigationCard = ({id, header, subText, onPress}) => {
         container: {
             width: '85%',
             height: sizes.xxl,
-            marginBottom: sizes.md,
             alignSelf: 'center',
         },
         card: {
@@ -44,7 +43,6 @@ const NavigationCard = ({id, header, subText, onPress}) => {
             color: colors.text
         },
         icon: {
-            marginLeft: sizes.xxl,
         },
     });
 

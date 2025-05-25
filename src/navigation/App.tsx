@@ -31,6 +31,7 @@ import {checkVersionWithStoresInfo} from "util/checkVersion";
 import AppOnboarding from "components/Onboarding";
 import {checkFirstLaunch} from "util/commonUtil";
 import {darkTheme, lightTheme} from "constants/theme";
+import AnalyseScreen from "screens/AnalyseScreen";
 
 export default () => {
     const {apiCaller} = useApiCaller();
@@ -151,7 +152,10 @@ export const ProfileStack = () => {
     return (
         <Stack.Navigator initialRouteName="Profile" screenOptions={getScreenOptions(isDark ? darkTheme.colors.secondaryBackground : lightTheme.colors.secondaryBackground)}>
             <Stack.Screen name="Profile" component={Profile}/>
+            <Stack.Screen name="QuizScreen" component={QuizScreen}/>
+            <Stack.Screen name="CompletedQuizScreen" component={CompletedQuizScreen}/>
 
+            <Stack.Screen name="AnalyseScreen" component={AnalyseScreen}/>
             <Stack.Screen name="GetPremiumScreen" component={GetPremiumScreen}/>
             <Stack.Screen name="SettingsScreen" component={SettingsScreen}/>
         </Stack.Navigator>
