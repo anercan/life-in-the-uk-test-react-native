@@ -116,7 +116,7 @@ const QuizScreen = ({navigation}) => {
         if (quizResponse?.userQuiz) {
             setStatesForOngoingQuiz(quizResponse);
         } else {
-            createUserQuizData();
+            createUserQuizData(quizResponse);
         }
     }
 
@@ -204,8 +204,9 @@ const QuizScreen = ({navigation}) => {
         }
     }
 
-    const createUserQuizData = () => {
+    const createUserQuizData = (quizResponse) => {
         if (answerMap.size === 0) {
+            setAnswerCounter(prev => ({...prev, total: quizResponse?.questionList?.length ?? 0}));
             let data: any = {quizId: quizId, quizGroupId: quizGroupId};
             apiCaller('user-quiz/create-update-user-quiz', 'POST', data);
         }
