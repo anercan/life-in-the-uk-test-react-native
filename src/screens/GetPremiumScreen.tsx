@@ -129,13 +129,13 @@ const GetPremiumScreen = ({navigation}) => {
     }
 
     const premiumFeatures = [
-        'Access to Premium+ quizzes',
-        'Limitless personal daily challenges',
-        'Get detailed statistical data',
-        'Compare your test results with others',
-        'Activity report',
-        'All Official questions',
-        'Cancellation is available anytime!'
+        'Access Premium+ Quizzes',
+        'Limitless Personal Daily Challenges',
+        'Create Favorite Questions List',
+        'Activity Tracker',
+        'Advanced Statistics & Analytics',
+        'Compare Results with Others',
+        'Cancellation Available Anytime!'
     ];
 
     const renderFeature = (item: any) => (
@@ -150,7 +150,7 @@ const GetPremiumScreen = ({navigation}) => {
             fontSize: sizes.h1,
             fontFamily: fonts.p,
             fontWeight: "bold",
-            marginBottom: sizes.m,
+            marginBottom: sizes.sm,
         },
         planContainer: {
             marginTop: sizes.xl,

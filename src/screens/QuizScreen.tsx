@@ -88,6 +88,7 @@ const QuizScreen = ({navigation}) => {
                     let dailyQuestionList = quizResponse?.questionList;
                     setQuestionList(dailyQuestionList);
                     setActiveQuestionState(dailyQuestionList, 0);
+                    setAnswerCounter({total: dailyQuestionList?.length, correct: 0, wrong: 0});
                 }
             });
     }
@@ -99,6 +100,7 @@ const QuizScreen = ({navigation}) => {
                 setQuiz(quizResponse);
                 setQuestionList(quizResponse?.questionList);
                 setActiveQuestionState(quizResponse?.questionList, 0);
+                setAnswerCounter({total: quizResponse?.questionList?.length, correct: 0, wrong: 0});
             });
     }
 
@@ -236,7 +238,7 @@ const QuizScreen = ({navigation}) => {
         }
 
         updateAnswerMap(activeQuestion.id, id);
-        logEvent(isDailyQuiz(quizType) ? 'solve_daily_question' : 'solve_answer', {quizName: quiz?.name});
+        logEvent('solve_answer', {quizName: quiz?.name});
         if (skipQuestionImmediately) {
             setTimeout(() => skipNextQuestion(), 500);
         }
@@ -267,10 +269,24 @@ const QuizScreen = ({navigation}) => {
         return '';
     }
 
+    const favOperation = (questionId, isAddOperation) => {
+        if (isAddOperation) {
+            logEvent('favorite', {questionId: questionId});
+        }
+        apiCaller('favorite/add-or-remove', 'POST', {
+            add: isAddOperation,
+            questionId: questionId
+        }).then((response) => {
+            if (response?.favoriteIds) {
+                setFavoriteIds(response.favoriteIds);
+            }
+        })
+    }
+
     return (
         <View onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}
               style={{alignItems: 'center', paddingBottom: sizes.base * 10}}>
-            <ProgressBar favOperation={(favIds) => setFavoriteIds(favIds)}
+            <ProgressBar favOperation={(questionId,isAddOperation) => favOperation(questionId,isAddOperation)}
                          isCurrentInFav={favoriteIds?.includes(activeQuestion?.id)} questionId={activeQuestion?.id}
                          progress={activeQuestion?.counter / questionList?.length || 0}/>
             <Animated.View style={{transform: [{translateX: shakeAnimation} as any]}}>

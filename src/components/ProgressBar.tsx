@@ -3,12 +3,10 @@ import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useTheme} from "hooks";
 import * as Progress from 'react-native-progress';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import useApiCaller from "hooks/useApiCaller";
 
 const {width} = Dimensions.get('window');
 
 const ProgressBar = ({isCurrentInFav,questionId, progress,favOperation}) => {
-    const {apiCaller} = useApiCaller();
     const {sizes, colors} = useTheme();
     const [isFav, setFav] = useState(isCurrentInFav);
 
@@ -32,15 +30,9 @@ const ProgressBar = ({isCurrentInFav,questionId, progress,favOperation}) => {
     });
 
     const onPressFav = () => {
-        apiCaller('favorite/add-or-remove', 'POST', {
-            add: !isFav,
-            questionId: questionId
-        }).then((response) => {
-            setFav(prevState => !prevState);
-            if (response?.favoriteIds) {
-                favOperation(response.favoriteIds);
-            }
-        })
+        const isAddOperation = !isFav;
+        setFav(prevState => !prevState);
+        favOperation(questionId,isAddOperation);
     }
 
     return (
@@ -56,7 +48,7 @@ const ProgressBar = ({isCurrentInFav,questionId, progress,favOperation}) => {
                               style={styles.customProgressBar}
                               borderRadius={sizes.s}
                               width={width / 1.4}
-                              unfilledColor={String(colors.light)}
+                              unfilledColor={String('#aeb2b8')}
                               progress={progress || 0}
                 />
 
