@@ -3,7 +3,6 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import * as Progress from 'react-native-progress';
 
 import useTheme from '../hooks/useTheme';
-import {isDailyQuiz} from "util/quizUtils";
 
 export interface IScoreCard {
     total: number;
@@ -11,7 +10,7 @@ export interface IScoreCard {
     wrong: number;
     quizName: string;
     onPress: (reviewType: string) => void;
-    quizType: string;
+    isTabsActive:boolean
 }
 
 const ScoreCard = (props: IScoreCard) => {
@@ -28,7 +27,7 @@ const ScoreCard = (props: IScoreCard) => {
         container: {
             borderWidth: 1,
             borderColor: colors.cardBorder,
-            marginBottom: sizes.xl,
+            marginBottom: sizes.s,
             backgroundColor: colors.card,
             elevation: 2,
             shadowColor: colors.shadow,
@@ -37,7 +36,6 @@ const ScoreCard = (props: IScoreCard) => {
             shadowRadius: sizes.shadowRadius,
             borderRadius: sizes.m,
             padding: sizes.sm,
-            width: '95%',
         }, progress: {
             borderRadius: sizes.xxxl, backgroundColor: colors.primary, elevation: 2,
             shadowColor: colors.shadow,
@@ -78,13 +76,13 @@ const ScoreCard = (props: IScoreCard) => {
     }
 
     const onPressScore = (reviewType) => {
-        if (!isDailyQuiz(props.quizType)) {
+        if (props.isTabsActive) {
             props.onPress(reviewType);
         }
     }
 
     const getActiveOpacity = () => {
-        return isDailyQuiz(props.quizType) ? 1 : 0.4;
+        return props.isTabsActive ? 1 : 0.4;
     }
 
     return (

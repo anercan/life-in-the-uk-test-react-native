@@ -53,7 +53,7 @@ const SwipeIndicator = () => {
                 fontFamily: fonts.p,
                 fontSize: sizes.smallText,
                 color: colors.background
-            }}>Swipe Or Tap!</Text>
+            }}>Swipe or Tap the Card!</Text>
             <Image
                 width={sizes.xxl}
                 height={sizes.xxl}

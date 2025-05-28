@@ -59,6 +59,7 @@ const SolvedQuizListScreen = ({navigation}) => {
                 quizName: card.quiz?.name,
                 quizSize: card?.correctQuestionList?.length + card?.wrongQuestionList?.length,
                 correctAnswerSize: card?.correctQuestionList?.length,
+                wrongAnswerSize: card?.wrongQuestionList?.length,
                 quizCardList: [],
                 quizGroupId: card?.quizGroupId,
                 quizId: card.quiz?.id,

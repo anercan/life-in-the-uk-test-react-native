@@ -1,5 +1,7 @@
+import {capitalizeWords, getColorFromPalette, getShortenText} from "util/commonUtil";
+
 export type QuizParams = {
-    quizType: 'REGULAR' | 'DAILY' | 'REVIEW_ALL' | 'REVIEW_WRONGS' | 'REVIEW_CORRECTS';
+    quizType: 'REGULAR' | 'DAILY' | 'REVIEW_ALL' | 'REVIEW_WRONGS' | 'REVIEW_CORRECTS' | 'FAVORITES';
     quizCardList: any[];
     quizGroupId: number;
     quizId: number;
@@ -11,6 +13,10 @@ export const isDailyQuiz = (quizType) => {
 
 export const isRegularQuiz = (quizType) => {
     return quizType === 'REGULAR';
+}
+
+export const isFavoritesQuiz = (quizType) => {
+    return quizType === 'FAVORITES';
 }
 
 export const isReviewMode = (quizType) => {
@@ -53,4 +59,22 @@ export const getQuestions = (quizResponse,type) => {
         return quizResponse?.userQuiz?.correctQuestionList.length > 0 ? quizResponse?.questionList.filter(question => quizResponse?.userQuiz?.correctQuestionList?.includes(question.id)) : quizResponse?.questionList;
     }
     return quizResponse?.questionList;
+}
+
+export const mapWrongsToPieChartData = (wrongsMap) => {
+    try {
+        let incorrectDataList: any[] = [];
+        const maxIncorrectKey = Object.entries(wrongsMap)?.reduce((max, entry) => Number(entry[1]) > Number(max[1]) ? entry : max)[0];
+        Object.entries(wrongsMap).forEach(([key, val], index) => {
+            incorrectDataList.push({
+                focused: maxIncorrectKey === key,
+                name: getShortenText(capitalizeWords(key), 50),
+                value: val,
+                color: getColorFromPalette(index),
+            });
+        });
+        return incorrectDataList;
+    } catch (e) {
+        return [];
+    }
 }

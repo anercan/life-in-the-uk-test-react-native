@@ -53,6 +53,7 @@ const Profile = ({navigation}) => {
     const getActivityModal = () => {
         if (isPremiumUser) {
             setModalVisible((prevState => !prevState));
+            return;
         }
         return navigation.navigate('GetPremiumScreen');
     }
@@ -150,7 +151,10 @@ const Profile = ({navigation}) => {
                                 quizType: 'DAILY',
                                 quizCardList: [],
                             })}/>
-                            <NavigationBox icon={'cards-heart-outline'} header={'Favorites'} onPress={() => navigate('FavoriteScreen')}/>
+                            <NavigationBox icon={'cards-heart-outline'} header={'Favorites'} onPress={() => navigate('QuizScreen', {
+                                quizType: 'FAVORITES',
+                                quizCardList: [],
+                            })}/>
                         </View>
                         <View key={2} style={{flexDirection: 'row', justifyContent: 'center'}}>
                             <NavigationBox icon={'equalizer'} header={'Incorrect Distribution'} onPress={() => navigate('AnalyseScreen')}/>

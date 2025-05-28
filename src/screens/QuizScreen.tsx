@@ -7,7 +7,15 @@ import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
 import {QuizSettingsContext} from "context/QuizSettingsContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {getQuestionCount, getQuestions, isDailyQuiz, isRegularQuiz, isReviewMode, QuizParams} from "util/quizUtils";
+import {
+    getQuestionCount,
+    getQuestions,
+    isDailyQuiz,
+    isFavoritesQuiz,
+    isRegularQuiz,
+    isReviewMode,
+    QuizParams
+} from "util/quizUtils";
 import ProgressBar from "components/ProgressBar";
 import {logEvent} from "util/logUtil";
 import {useTheme} from "hooks";
@@ -26,15 +34,18 @@ const QuizScreen = ({navigation}) => {
     const {showCorrectAnswer, showExplanationWhileSolving, skipQuestionImmediately} = useContext(QuizSettingsContext);
     const [quiz, setQuiz] = useState<any>();
     const [questionList, setQuestionList] = useState([{}]);
-    const [correctAnswerCounter, setCorrectAnswerCounter] = useState(0);
+    const [favoriteIds, setFavoriteIds] = useState([]);
+    const [answerCounter, setAnswerCounter] = useState({total: 0, correct: 0, wrong: 0});
     const {sizes} = useTheme();
 
     useEffect(() => {
+        setFavorites();
         if (isRegularQuiz(quizType) || isReviewMode(quizType)) {
             initRegularQuizData();
-        }
-        if (isDailyQuiz(quizType)) {
+        } else if (isDailyQuiz(quizType)) {
             initUserDailyQuizData();
+        } else if (isFavoritesQuiz(quizType)) {
+            initFavoritesData();
         }
     }, [quizId, quizType]);
 
@@ -58,11 +69,15 @@ const QuizScreen = ({navigation}) => {
     const initUserDailyQuizData = () => {
         apiCaller('quiz/get-user-daily-quiz', 'POST')
             .then((quizResponse) => {
+                const quizData = {name: 'Daily Quiz'};
+                setQuiz(quizData);
                 if (quizResponse?.userDailyQuizResponse) {
                     AsyncStorage.setItem('dailyQuiz', new Date().toISOString().split('T')[0]);
                     navigation.replace('CompletedQuizScreen', {
+                        quizName: quizData.name,
                         quizSize: quizResponse?.userDailyQuizResponse?.correctQuestionIdList?.length + quizResponse?.userDailyQuizResponse?.wrongQuestionIdList?.length,
                         correctAnswerSize: quizResponse?.userDailyQuizResponse?.correctQuestionIdList?.length,
+                        wrongAnswerSize: quizResponse?.userDailyQuizResponse?.wrongQuestionIdList?.length,
                         quizCardList: [],
                         quizType: quizType,
                         dailyQuizResponse: quizResponse?.userDailyQuizResponse
@@ -75,6 +90,24 @@ const QuizScreen = ({navigation}) => {
                     setActiveQuestionState(dailyQuestionList, 0);
                 }
             });
+    }
+
+    const initFavoritesData = () => {
+        apiCaller('favorite/get-user-questions')
+            .then((quizResponse) => {
+                setTitle('Favorites');
+                setQuiz(quizResponse);
+                setQuestionList(quizResponse?.questionList);
+                setActiveQuestionState(quizResponse?.questionList, 0);
+            });
+    }
+
+    const setFavorites = () => {
+        apiCaller('favorite/get-user-question-ids').then(response => {
+            if (response?.favoriteIds) {
+                setFavoriteIds(response?.favoriteIds)
+            }
+        });
     }
 
     const setStatesForQuiz = (quizResponse) => {
@@ -99,7 +132,11 @@ const QuizScreen = ({navigation}) => {
 
     const setStatesForOngoingQuiz = (quizResponse) => {
         let answersMap = new Map();
-        setCorrectAnswerCounter(quizResponse?.userQuiz?.correctQuestionList?.length);
+        setAnswerCounter({
+            total:  quizResponse?.questionList?.length ?? 0,
+            wrong: quizResponse?.userQuiz?.wrongQuestionList?.length ?? 0,
+            correct: quizResponse?.userQuiz?.correctQuestionList?.length ?? 0
+        });
         quizResponse?.userQuiz?.correctQuestionList?.forEach((questionId) => {
                 let question = quizResponse?.questionList.find((q) => q.id == questionId);
                 if (question) {
@@ -114,27 +151,16 @@ const QuizScreen = ({navigation}) => {
     }
 
     const getCompletedScreenBody = () => {
-        if (isReviewMode(quizType)) {
-            return {
-                quizType: quizType,
-                quizName: quiz?.name,
-                quizSize: quiz?.userQuiz?.correctQuestionList.length + quiz?.userQuiz?.wrongQuestionList?.length,
-                correctAnswerSize: quiz?.userQuiz?.correctQuestionList.length,
-                quizCardList: quizCardList,
-                quizGroupId: quizGroupId,
-                quizId: quizId
-            };
-        } else {
-            return {
-                quizName: quiz?.name,
-                quizSize: questionList.length,
-                correctAnswerSize: correctAnswerCounter,
-                quizCardList: quizCardList,
-                quizGroupId: quizGroupId,
-                quizId: quizId,
-                quizType: quizType
-            };
-        }
+        return {
+            quizName: quiz?.name,
+            quizSize: answerCounter.total,
+            correctAnswerSize: answerCounter.correct,
+            wrongAnswerSize: answerCounter.wrong,
+            quizCardList: quizCardList,
+            quizGroupId: quizGroupId,
+            quizId: quizId,
+            quizType: quizType
+        };
     }
 
     const updateDailyQuizData = (answerId) => {
@@ -161,7 +187,7 @@ const QuizScreen = ({navigation}) => {
     }
 
     function onSwipeLeft() { // to next question
-        let activeOneAnswered = answerMap.has(activeQuestion?.id);
+        let activeOneAnswered = answerMap.has(activeQuestion?.id) || isFavoritesQuiz(quizType);
         if (!activeOneAnswered) {
             startShake();
             return;
@@ -199,12 +225,14 @@ const QuizScreen = ({navigation}) => {
     const handleAnswer = (id) => {
         if (isDailyQuiz(quizType)) {
             updateDailyQuizData(id);
-        } else {
+        } else if (isRegularQuiz(quizType)) {
             updateUserQuizData(id, activeQuestion.correctAnswerId, activeQuestion.id);
         }
 
         if (id === activeQuestion.correctAnswerId) {
-            setCorrectAnswerCounter(correctAnswerCounter + 1);
+            setAnswerCounter(prev => ({...prev, correct: prev.correct + 1}));
+        } else {
+            setAnswerCounter(prev => ({...prev, wrong: prev.wrong + 1}));
         }
 
         updateAnswerMap(activeQuestion.id, id);
@@ -240,10 +268,13 @@ const QuizScreen = ({navigation}) => {
     }
 
     return (
-        <View onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} style={{alignItems: 'center',paddingBottom: sizes.base * 10 }}>
-            <ProgressBar progress={activeQuestion?.counter / questionList?.length || 0}/>
+        <View onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}
+              style={{alignItems: 'center', paddingBottom: sizes.base * 10}}>
+            <ProgressBar favOperation={(favIds) => setFavoriteIds(favIds)}
+                         isCurrentInFav={favoriteIds?.includes(activeQuestion?.id)} questionId={activeQuestion?.id}
+                         progress={activeQuestion?.counter / questionList?.length || 0}/>
             <Animated.View style={{transform: [{translateX: shakeAnimation} as any]}}>
-                <ScrollView>
+                <ScrollView style={{paddingTop: sizes.s}}>
                     <QuizQuestion id={activeQuestion?.id}
                                   questionOrder={activeQuestion.counter}
                                   content={activeQuestion?.content}

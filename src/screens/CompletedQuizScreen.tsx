@@ -6,13 +6,14 @@ import {useTheme} from "../hooks";
 import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
 import ScoreCard from "components/ScoreCard";
-import DataDistributionCard from "components/DataDistributionCard";
-import {isDailyQuiz} from "util/quizUtils";
+import {isDailyQuiz, isFavoritesQuiz, mapWrongsToPieChartData} from "util/quizUtils";
+import DataDistributionCard from "components/DataDistribution";
 
 type QuizParams = {
     quizName: string;
     quizSize: number;
     correctAnswerSize: number;
+    wrongAnswerSize: number;
     quizCardList: any[];
     quizGroupId: number;
     quizId: number;
@@ -29,6 +30,7 @@ const CompletedQuizScreen = ({navigation}) => {
         quizName,
         quizSize,
         correctAnswerSize,
+        wrongAnswerSize,
         quizCardList,
         quizGroupId,
         quizId,
@@ -39,7 +41,7 @@ const CompletedQuizScreen = ({navigation}) => {
     const [isNextQuizExist, setNextQuizExist] = useState(true);
     const {setTitle} = useContext(TitleContext);
     const [completedStatics, setCompletedStatics] = useState({betterCount: 0, equalCount: 0, worseCount: 0});
-    const [wrongsMap, setWrongsMap] = useState<any>(new Map());
+    const [incorrectList, setIncorrectList] = useState<any[]>([]);
 
     useEffect(() => {
         setTitle('Completed');
@@ -55,12 +57,12 @@ const CompletedQuizScreen = ({navigation}) => {
             });
         } else if (isDailyQuiz(quizType)) {
             if (dailyQuizResponse) {
-                setWrongsMap(dailyQuizResponse?.wrongQuestionsSubjects);
+                setIncorrectList(mapWrongsToPieChartData(dailyQuizResponse?.wrongQuestionsSubjects));
             } else {
                 apiCaller('quiz/get-user-daily-quiz', 'POST')
                     .then((quizResponse) => {
-                        if (quizResponse?.userDailyQuizResponse) {
-                            setWrongsMap(quizResponse?.userDailyQuizResponse?.wrongQuestionsSubjects)
+                        if (quizResponse?.userDailyQuizResponse?.wrongQuestionsSubjects) {
+                            setIncorrectList(mapWrongsToPieChartData(quizResponse?.userDailyQuizResponse?.wrongQuestionsSubjects));
                         }
                     });
             }
@@ -111,43 +113,44 @@ const CompletedQuizScreen = ({navigation}) => {
     }
 
     return (
-        <ScrollView contentContainerStyle={{alignItems: 'center', padding: sizes.sm, paddingTop: sizes.m}}>
+        <ScrollView contentContainerStyle={{paddingHorizontal:sizes.sm,paddingBottom: sizes.sm, paddingTop: sizes.m}}>
 
             <ScoreCard
                 onPress={(reviewType) => onPressReview(reviewType)}
-                quizName={isDailyQuiz(quizType) ? 'Daily Quiz' : quizName}
-                quizType={quizType}
+                quizName={quizName}
+                isTabsActive={!isDailyQuiz(quizType) && !isFavoritesQuiz(quizType)}
                 total={quizSize}
                 correct={correctAnswerSize}
-                wrong={quizSize - correctAnswerSize}
+                wrong={wrongAnswerSize}
             />
 
             {totalCompletedUserQuizzes > 1 &&
                 <>
-                    <View style={{marginBottom: sizes.xxxl, alignItems: 'center'}}>
+                    <View style={{marginVertical: sizes.m, alignItems: 'center'}}>
                         <Text style={{color: colors.text, fontSize: sizes.text, fontFamily: fonts.p}}>
-                            You scored higher than <Text style={{fontFamily: fonts.medium}}>{getPercentage()}%</Text> of
+                            You scored higher than <Text
+                            style={{fontFamily: fonts.medium}}>{getPercentage()}%</Text> of
                             people.
                         </Text>
                     </View>
                 </>
             }
-            {isDailyQuiz(quizType) && (Object.keys(wrongsMap)?.length > 0) &&
-                <DataDistributionCard incorrectMapProps={wrongsMap}/>
+            {isDailyQuiz(quizType) && (Object.keys(incorrectList)?.length > 0) &&
+                <DataDistributionCard propData={incorrectList} isLoadingProp={false}/>
             }
             {isDailyQuiz(quizType) &&
-                <View style={{marginBottom: sizes.m, alignItems: 'center'}}>
+                <View style={{ alignItems: 'center'}}>
                     <Text style={{color: colors.text, fontSize: sizes.text, fontFamily: fonts.p}}>
                         Don't forget to come back tomorrow!
                     </Text>
                 </View>
             }
 
-            {!isDailyQuiz(quizType) && correctAnswerSize !== quizSize &&
-                <ButtonCard onPress={() => onPressReview('REVIEW_ALL')} buttonText={'Review'}/>
+            {!isDailyQuiz(quizType) && !isFavoritesQuiz(quizType) && correctAnswerSize !== quizSize &&
+                <ButtonCard style={{alignSelf:'center',marginTop:sizes.l}} onPress={() => onPressReview('REVIEW_ALL')} buttonText={'Review'}/>
             }
             {isNextQuizExist &&
-                <ButtonCard onPress={onPressNextQuiz} buttonText={'Next Quiz'}/>
+                <ButtonCard style={{alignSelf:'center'}}  onPress={onPressNextQuiz} buttonText={'Next Quiz'}/>
             }
 
         </ScrollView>
