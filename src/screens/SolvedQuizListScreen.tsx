@@ -98,7 +98,6 @@ const SolvedQuizListScreen = ({navigation}) => {
                                     <ListCard
                                         key={index}
                                         title={card?.quiz?.name}
-                                        rightBottomTitle={'Difficulty: '}
                                         rightBottomDesc={card.quiz?.attributes?.difficulty}
                                         rightTopText1={tab === 0 ? card?.correctQuestionList?.length + card?.wrongQuestionList?.length : undefined}
                                         rightTopText2={tab === 0 ? card?.quiz?.activeQuestionCount : getProgress(card)}

@@ -93,7 +93,6 @@ const QuizListScreen = ({navigation}) => {
                                         key={index}
                                         locked={card.locked}
                                         title={card.name}
-                                        rightBottomTitle={'Difficulty: '}
                                         rightBottomDesc={card.attributes?.difficulty}
                                         rightTopText1={card.solvedCount + ''}
                                         rightTopText2={card.questionCount + ''}

@@ -165,6 +165,7 @@ const GetPremiumScreen = ({navigation}) => {
             shadowColor: colors.shadow,
             shadowOpacity: 0.1,
             shadowRadius: sizes.shadowRadius,
+            shadowOffset: {width: 0, height: 0},
             alignItems: "center",
             width: "90%",
             elevation: isCardEntering ? 0 : 1
@@ -196,6 +197,7 @@ const GetPremiumScreen = ({navigation}) => {
             shadowColor: colors.shadow,
             shadowOpacity: 0.2,
             shadowRadius: sizes.shadowRadius,
+            shadowOffset: {width: 0, height: 0},
             elevation: isCardEntering ? 0 : 2,
         },
         buttonText: {
