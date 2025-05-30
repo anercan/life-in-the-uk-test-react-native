@@ -131,7 +131,7 @@ export const COLORS: ThemeColors = {
     secondaryBackground: '#3e3d3d',
     tabBackground: '#777879',
     orderBoxBackGround: '#767474',
-    secondary: '#395e90', // '#8392AB',
+    secondary: '#a0b0ba', // '#8392AB',
     tertiary: '#E8AE4C',
     black: '#252F40',
     white: '#FFFFFF',

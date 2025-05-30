@@ -44,7 +44,7 @@ const ProgressBar = ({isCurrentInFav,questionId, progress,favOperation}) => {
                 flex: 7,
             }}>
                 <Progress.Bar height={sizes.sm} borderColor={String(colors.card)}
-                              color={String(colors.secondary)}
+                              color={String(colors.dark)}
                               style={styles.customProgressBar}
                               borderRadius={sizes.s}
                               width={width / 1.4}

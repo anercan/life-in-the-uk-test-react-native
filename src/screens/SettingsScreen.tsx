@@ -67,13 +67,13 @@ const SettingsScreen = ({navigation}) => {
                     buttonText: 'View',
                     onPress: () => navigation.push('GetPremiumScreen'),
                     show: !isPremiumUser,
-                    color:'#e8ae60'
+                    color: '#e8ae60'
                 },
                 {
                     icon: 'person-outline',
                     title: 'Profile',
                     buttonText: 'View',
-                    color:'#007AFF',
+                    color: '#007AFF',
                     onPress: () => navigation.reset({
                         index: 0,
                         routes: [{name: 'ProfileScreens'}]
@@ -83,21 +83,21 @@ const SettingsScreen = ({navigation}) => {
                     icon: 'chatbubble-ellipses-outline',
                     title: 'Leave a Review',
                     buttonText: 'Review',
-                    color:'#007AFF',
+                    color: '#007AFF',
                     onPress: () => getRequestReview(),
                 },
                 {
                     icon: 'document-text-outline',
                     title: 'Privacy Policy',
                     buttonText: 'Review',
-                    color:'#007AFF',
+                    color: '#007AFF',
                     onPress: () => Linking.openURL('https://quizmarkt.com/life-in-the-uk/privacy-policy.html'),
                 },
                 {
                     icon: 'exit-outline',
                     title: 'Logout',
                     buttonText: 'Logout',
-                    color:'#c63f3f',
+                    color: '#c63f3f',
                     onPress: () => logoutInternal(),
                 },
             ],
@@ -110,7 +110,7 @@ const SettingsScreen = ({navigation}) => {
                     title: 'Dark Mode',
                     hasSwitch: true,
                     value: isDark,
-                    color:'#007AFF',
+                    color: '#007AFF',
                     onToggle: () => setIsDark(!isDark),
                 },
                 {
@@ -118,7 +118,7 @@ const SettingsScreen = ({navigation}) => {
                     title: 'Skip Question Immediately',
                     hasSwitch: true,
                     value: skipQuestionImmediately,
-                    color:'#007AFF',
+                    color: '#007AFF',
                     onToggle: () => setSkipQuestion(!skipQuestionImmediately),
                 },
                 {
@@ -126,7 +126,7 @@ const SettingsScreen = ({navigation}) => {
                     title: 'Show Correct After Incorrect',
                     hasSwitch: true,
                     value: showCorrectAnswer,
-                    color:'#007AFF',
+                    color: '#007AFF',
                     onToggle: () => toggleCorrectAnswer(),
                 },
                 {
@@ -134,7 +134,7 @@ const SettingsScreen = ({navigation}) => {
                     title: 'Show Explanation After Incorrect',
                     hasSwitch: true,
                     value: showExplanationWhileSolving,
-                    color:'#007AFF',
+                    color: '#007AFF',
                     onToggle: () => toggleShowExplanationOnlyReview(),
                 },
             ],
@@ -156,7 +156,8 @@ const SettingsScreen = ({navigation}) => {
             <FlatList
                 data={settingsOptions}
                 renderItem={({item}) => {
-                    const itemSize = item.items.length;
+                    // @ts-ignore
+                    const itemSize = item.items.filter((setting: any) => setting?.show !== false)?.length;
                     return (
                         <View style={{marginVertical: sizes.s, paddingHorizontal: sizes.sm}}>
                             <Text style={{
@@ -168,52 +169,53 @@ const SettingsScreen = ({navigation}) => {
                             }}>
                                 {item.section}
                             </Text>
-                            {item.items.map((setting, idx) => (
-                                <TouchableOpacity
-                                    key={idx}
-                                    onPress={setting.onPress}
-                                    activeOpacity={setting.hasSwitch ? 1 : 0.5}
-                                    style={{
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        justifyContent: 'space-between',
-                                        paddingHorizontal: 14,
-                                        paddingVertical: 12,
-                                        backgroundColor: colors.card,
-                                        borderBottomWidth: 0.5,
-                                        borderBottomColor: colors.cardBorder,
-                                        borderTopLeftRadius: idx == 0 ? sizes.m : 0,
-                                        borderTopRightRadius: idx == 0 ? sizes.m : 0,
-                                        borderBottomLeftRadius: idx == itemSize - 1 ? sizes.m : 0,
-                                        borderBottomRightRadius: idx == itemSize - 1 ? sizes.m : 0
-                                    }}
-                                >
-                                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                                        <View
-                                            style={{
-                                                width: 30,
-                                                height: 30,
-                                                borderRadius: sizes.s,
-                                                backgroundColor: setting.color, // Mavi Apple tarzı arka plan rengi
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                marginRight: 12,
-                                            }}
-                                        >
-                                            <Icon name={setting.icon as any} size={18} color="#fff"/>
+                            {// @ts-ignore
+                                item.items.filter((setting: any) => setting?.show !== false).map((setting, idx) => (
+                                    <TouchableOpacity
+                                        key={idx}
+                                        onPress={setting.onPress}
+                                        activeOpacity={setting.hasSwitch ? 1 : 0.5}
+                                        style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between',
+                                            paddingHorizontal: 14,
+                                            paddingVertical: 12,
+                                            backgroundColor: colors.card,
+                                            borderBottomWidth: 0.5,
+                                            borderBottomColor: colors.cardBorder,
+                                            borderTopLeftRadius: idx == 0 ? sizes.m : 0,
+                                            borderTopRightRadius: idx == 0 ? sizes.m : 0,
+                                            borderBottomLeftRadius: idx == itemSize - 1 ? sizes.m : 0,
+                                            borderBottomRightRadius: idx == itemSize - 1 ? sizes.m : 0
+                                        }}
+                                    >
+                                        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                                            <View
+                                                style={{
+                                                    width: 30,
+                                                    height: 30,
+                                                    borderRadius: sizes.s,
+                                                    backgroundColor: setting.color, // Mavi Apple tarzı arka plan rengi
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    marginRight: 12,
+                                                }}
+                                            >
+                                                <Icon name={setting.icon as any} size={18} color="#fff"/>
+                                            </View>
+                                            <Text style={styles.text}>{setting.title}</Text>
                                         </View>
-                                        <Text style={styles.text}>{setting.title}</Text>
-                                    </View>
-                                    {setting.hasSwitch ? (
-                                        <Switch
-                                            value={setting.value}
-                                            onValueChange={setting.onToggle}
-                                        />
-                                    ) : (
-                                        <Icon name="chevron-forward" size={18} color="#999"/>
-                                    )}
-                                </TouchableOpacity>
-                            ))}
+                                        {setting.hasSwitch ? (
+                                            <Switch
+                                                value={setting.value}
+                                                onValueChange={setting.onToggle}
+                                            />
+                                        ) : (
+                                            <Icon name="chevron-forward" size={18} color="#999"/>
+                                        )}
+                                    </TouchableOpacity>
+                                ))}
                         </View>
 
                     );
