@@ -48,7 +48,7 @@ const QuizGroupListScreen = ({navigation}) => {
     const rows = chunkArray(quizGroupCards, 2);
 
     return (
-        <ScrollView contentContainerStyle={{alignItems: 'center', marginTop: sizes.m}}>
+        <ScrollView contentContainerStyle={{alignItems: 'center', marginTop: sizes.m,paddingBottom: sizes.xl}}>
             <View style={{flexDirection:'row',flex:1,marginBottom: sizes.md}}>
                 <DailyCard navigation={navigation}/>
             </View>

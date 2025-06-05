@@ -6,6 +6,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import {useNavigation} from '@react-navigation/native';
 import {getShortenText} from "util/commonUtil";
 import {AuthContext} from "context/AuthContext";
+import {SafeAreaView} from "react-native-safe-area-context";
 
 const Header = () => {
     const {getTitle} = useContext(TitleContext);
@@ -24,14 +25,13 @@ const Header = () => {
 
     const styles = StyleSheet.create({
         headerContainer: {
-            height: '12%',
+            justifyContent:"flex-end",
+            height: '11%',
             backgroundColor: colors.background
         },
         row: {
-            marginTop: sizes.xl + sizes.s,
             flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center'
+            marginBottom:sizes.s
         }, title: {
             fontFamily: fonts.text,
             textAlign: 'center',
@@ -41,7 +41,7 @@ const Header = () => {
     });
 
     return (
-        <View style={styles.headerContainer}>
+        <SafeAreaView style={styles.headerContainer}>
             <StatusBar backgroundColor={colors.background}/>
             {isLoggedIn &&
                 <View style={styles.row}>
@@ -63,7 +63,7 @@ const Header = () => {
                     </View>
                 </View>
             }
-        </View>
+        </SafeAreaView>
     );
 };
 
