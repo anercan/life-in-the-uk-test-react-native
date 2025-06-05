@@ -144,7 +144,7 @@ export const COLORS: ThemeColors = {
     info: '#0297b8',
     card: '#716e6e',
     cardBorder: '#9a9494',
-    shadow: '#636161',
+    shadow: '#363636',
     input: '#252F40',
     checkbox: ['#3A416F', '#141727'],
     checkboxIcon: '#FFFFFF',

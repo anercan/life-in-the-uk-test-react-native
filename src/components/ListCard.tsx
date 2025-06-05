@@ -63,7 +63,7 @@ const ListCard = (props: IListCard) => {
             shadowOpacity: 0.1,
             shadowRadius: sizes.shadowRadius,
             marginTop: '-5%',
-            elevation: 5,
+            elevation: 3,
         },
         rightBottom: {
             marginRight: sizes.sm,

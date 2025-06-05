@@ -4,7 +4,7 @@ import {useTheme} from "../hooks";
 import {TitleContext} from "context/TitleContext";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import {useNavigation} from '@react-navigation/native';
-import {getShortenText, isAndroid} from "util/commonUtil";
+import {getShortenText} from "util/commonUtil";
 import {AuthContext} from "context/AuthContext";
 
 const Header = () => {
@@ -24,15 +24,15 @@ const Header = () => {
 
     const styles = StyleSheet.create({
         headerContainer: {
-            height: sizes.base * 13,
+            height: '12%',
             backgroundColor: colors.background
         },
         row: {
             marginTop: sizes.xl + sizes.s,
             flexDirection: 'row',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            alignItems: 'center'
         }, title: {
-            marginTop: isAndroid() ? sizes.xs : sizes.s,
             fontFamily: fonts.text,
             textAlign: 'center',
             fontSize: sizes.h1,

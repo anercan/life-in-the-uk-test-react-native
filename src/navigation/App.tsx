@@ -178,8 +178,9 @@ export const TabMenu = () => {
                 tabBarActiveTintColor: '#ffffff', // White color for active items
                 tabBarInactiveTintColor: '#9c9595', // Light gray color for inactive items
                 tabBarStyle: {
+                    borderTopWidth: 0,
                     backgroundColor: isDark ? darkTheme.colors.background : lightTheme.colors.background, // Dark blue background
-                    height: Platform.OS === 'android' ? base * 8 : base * 11, // Custom height
+                    height: Platform.OS === 'android' ? base * 7 : base * 11, // Custom height
                     paddingTop: base
                 },
             }}
