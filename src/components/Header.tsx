@@ -25,13 +25,13 @@ const Header = () => {
 
     const styles = StyleSheet.create({
         headerContainer: {
-            justifyContent:"flex-end",
-            height: '11%',
+            justifyContent: "flex-end",
+            height: '13%',
             backgroundColor: colors.background
         },
         row: {
             flexDirection: 'row',
-            marginBottom:sizes.s
+            marginBottom: sizes.s
         }, title: {
             fontFamily: fonts.text,
             textAlign: 'center',

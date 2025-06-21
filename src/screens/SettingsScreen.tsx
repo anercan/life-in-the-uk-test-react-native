@@ -151,6 +151,14 @@ const SettingsScreen = ({navigation}) => {
         text: {fontSize: sizes.smallText, fontFamily: fonts.text, color: colors.text},
     });
 
+    const getLine = () => {
+        return <View style={{
+            height: 1,
+            backgroundColor: colors.tabBackground,
+            alignSelf: 'stretch',
+        }}/>;
+    }
+
     return (
         <View>
             <FlatList
@@ -170,51 +178,51 @@ const SettingsScreen = ({navigation}) => {
                                 {item.section}
                             </Text>
                             {// @ts-ignore
-                                item.items.filter((setting: any) => setting?.show !== false).map((setting, idx) => (
-                                    <TouchableOpacity
-                                        key={idx}
-                                        onPress={setting.onPress}
-                                        activeOpacity={setting.hasSwitch ? 1 : 0.5}
-                                        style={{
-                                            flexDirection: 'row',
-                                            alignItems: 'center',
-                                            justifyContent: 'space-between',
-                                            paddingHorizontal: 14,
-                                            paddingVertical: 12,
-                                            backgroundColor: colors.card,
-                                            borderBottomWidth: idx == itemSize - 1 ? 0 : 1,
-                                            borderBottomColor: colors.tabBackground,
-                                            borderTopLeftRadius: idx == 0 ? sizes.m : 0,
-                                            borderTopRightRadius: idx == 0 ? sizes.m : 0,
-                                            borderBottomLeftRadius: idx == itemSize - 1 ? sizes.m : 0,
-                                            borderBottomRightRadius: idx == itemSize - 1 ? sizes.m : 0
-                                        }}
-                                    >
-                                        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                                            <View
-                                                style={{
-                                                    width: 30,
-                                                    height: 30,
-                                                    borderRadius: sizes.s,
-                                                    backgroundColor: setting.color, // Mavi Apple tarzı arka plan rengi
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    marginRight: 12,
-                                                }}
-                                            >
-                                                <Icon name={setting.icon as any} size={18} color="#fff"/>
+                                item.items?.filter((setting: any) => setting?.show !== false).map((setting, idx) => (
+                                    <>
+                                        {idx !== 0 && getLine()}
+                                        <TouchableOpacity
+                                            key={idx}
+                                            onPress={setting.onPress}
+                                            activeOpacity={setting.hasSwitch ? 1 : 0.5}
+                                            style={{
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                justifyContent: 'space-between',
+                                                paddingHorizontal: 14,
+                                                paddingVertical: 12,
+                                                backgroundColor: colors.card,
+                                                borderTopLeftRadius: idx == 0 ? sizes.m : 0,
+                                                borderTopRightRadius: idx == 0 ? sizes.m : 0,
+                                                borderBottomLeftRadius: idx == itemSize - 1 ? sizes.m : 0,
+                                                borderBottomRightRadius: idx == itemSize - 1 ? sizes.m : 0
+                                            }}
+                                        >
+                                            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                                                <View
+                                                    style={{
+                                                        width: 30,
+                                                        height: 30,
+                                                        borderRadius: sizes.s,
+                                                        backgroundColor: setting.color,
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        marginRight: 12,
+                                                    }}
+                                                >
+                                                    <Icon name={setting.icon as any} size={18} color="#fff"/>
+                                                </View>
+                                                <Text style={styles.text}>{setting.title}</Text>
                                             </View>
-                                            <Text style={styles.text}>{setting.title}</Text>
-                                        </View>
-                                        {setting.hasSwitch ? (
-                                            <Switch
-                                                value={setting.value}
-                                                onValueChange={setting.onToggle}
-                                            />
-                                        ) : (
-                                            <Icon name="chevron-forward" size={18} color="#999"/>
-                                        )}
-                                    </TouchableOpacity>
+                                            {setting.hasSwitch ? (
+                                                <Switch
+                                                    value={setting.value}
+                                                    onValueChange={setting.onToggle}
+                                                />
+                                            ) : (
+                                                <Icon name="chevron-forward" size={18} color="#999"/>
+                                            )}
+                                        </TouchableOpacity></>
                                 ))}
                         </View>
 

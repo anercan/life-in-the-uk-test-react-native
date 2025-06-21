@@ -12,7 +12,6 @@ const DataDistributionCard = ({propData, isLoadingProp}) => {
     const [isLoading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        console.log(propData)
         setDataList(propData);
         setLoading(isLoadingProp);
     }, [propData]);
