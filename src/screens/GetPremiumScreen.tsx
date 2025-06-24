@@ -1,6 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {ScrollView, Text, TouchableOpacity} from 'react-native';
-import {View, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Animated, {
+    FadeInDown,
+    FadeInUp,
+    ZoomIn,
+} from 'react-native-reanimated';
 import useTheme from "../hooks/useTheme";
 import {TitleContext} from "context/TitleContext";
 import {
@@ -15,28 +21,34 @@ import {
 import {AuthContext} from "context/AuthContext";
 import useApiCaller from "../hooks/useApiCaller";
 import {getUserId} from "util/jwtUtil";
-import Animated, {FadeIn} from "react-native-reanimated";
-import {getBillingPeriod, isAndroid, isFreeTrialEligible} from "util/commonUtil";
+import {getBillingPeriod, isAndroid} from "util/commonUtil";
 import {logEvent} from "util/logUtil";
 
 let monthlySubProductId = 'level1';
 
-const GetPremiumScreen = ({navigation}) => {
+const benefits = [
+    'Access Premium+ Quizzes',
+    'Limitless Personal Daily Challenges',
+    'Create Favorite Questions List',
+    'Activity Tracker',
+    'Advanced Statistics & Analytics',
+    'Compare Results with Others',
+    'Cancellation Available Anytime!'
+];
+
+const PremiumScreen = ({navigation}) => {
     const {apiCaller} = useApiCaller();
     const {fonts, sizes, colors} = useTheme();
     const {login} = useContext(AuthContext);
     const {setTitle} = useContext(TitleContext);
     const [product, setProduct] = useState<any>();
     const [buttonDisable, setButtonDisable] = useState<boolean>(true);
-    const [isCardEntering, setCardEntering] = useState<boolean>(true);
     let purchaseErrorSubscription;
     let purchaseUpdateSubscription: any = null;
+
     useEffect(() => {
-        setTimeout(() => {
-            setCardEntering(false);
-        }, 1000);
         init();
-        setTitle('Subscription Plan');
+        setTitle('');
         return () => {
             purchaseUpdateSubscription?.remove();
             purchaseErrorSubscription?.remove();
@@ -128,128 +140,96 @@ const GetPremiumScreen = ({navigation}) => {
         return formattedPrice + '/' + billingPeriod;
     }
 
-    const premiumFeatures = [
-        'Access Premium+ Quizzes',
-        'Limitless Personal Daily Challenges',
-        'Create Favorite Questions List',
-        'Activity Tracker',
-        'Advanced Statistics & Analytics',
-        'Compare Results with Others',
-        'Cancellation Available Anytime!'
-    ];
-
-    const renderFeature = (item: any) => (
-        <View style={styles.featureItem}>
-            <Text style={styles.featureText}>• {item}</Text>
-        </View>
-    );
-
     const styles = StyleSheet.create({
-        title: {
-            color: colors.text,
-            fontSize: sizes.h1,
-            fontFamily: fonts.p,
-            fontWeight: "bold",
-            marginBottom: sizes.sm,
-        },
-        planContainer: {
-            marginTop: sizes.xl,
-            marginBottom: sizes.xl,
-            width: "100%",
-            alignItems: "center",
-        },
-        plan: {
+        container: {
+            flex: 1,
             padding: sizes.m,
-            borderRadius: sizes.sm,
-            backgroundColor: colors.card,
-            shadowColor: colors.shadow,
-            shadowOpacity: 0.1,
-            shadowRadius: sizes.shadowRadius,
-            shadowOffset: {width: 0, height: 0},
-            alignItems: "center",
-            width: "90%",
-            elevation: isCardEntering ? 0 : 1
+            justifyContent: 'space-between',
         },
-        planTitle: {
-            color: colors.text,
-            fontSize: sizes.h2,
-            fontWeight: "bold",
-            fontFamily: fonts.p,
-            marginBottom: sizes.s,
+        header: {
+            alignItems: 'center',
+            marginTop: sizes.xs,
         },
-        planPrice: {
-            color: "#062e5a",
-            fontSize: sizes.p,
+        title: {
+            fontFamily: fonts.text,
+            fontSize: 32,
+            color: colors.gray,
             fontWeight: 'bold',
-            fontFamily: fonts.p,
-            marginBottom: sizes.sm,
-            marginTop: sizes.s,
-            textDecorationLine: 'underline'
+            marginTop: sizes.xs,
         },
-        planDescription: {marginBottom: sizes.sm},
+        subtitle: {
+            color: colors.card,
+            marginTop: sizes.xs,
+            fontSize: sizes.smallText,
+            fontFamily: fonts.text,
+            textAlign: 'center',
+        },
+        benefitsContainer: {
+            marginTop: sizes.s
+        },
+        benefit: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginVertical: 12,
+        },
+        benefitText: {
+            color: colors.gray,
+            fontSize: sizes.smallText,
+            fontFamily: fonts.text,
+            marginLeft: sizes.s,
+        },
+        buttonContainer: {
+            alignItems: 'center',
+            marginBottom: sizes.xl,
+        },
         button: {
-            paddingVertical: sizes.sm,
+            borderRadius: sizes.m,
+            overflow: 'hidden',
+            elevation:1
+        },
+        gradient: {
+            paddingVertical: 14,
+            alignItems: 'center',
             paddingHorizontal: sizes.l,
-            borderRadius: sizes.xxl,
-            marginTop: sizes.md,
-            alignItems: "center",
-            backgroundColor: buttonDisable ? '#bababa' : colors.primary,
-            shadowColor: colors.shadow,
-            shadowOpacity: 0.2,
-            shadowRadius: sizes.shadowRadius,
-            shadowOffset: {width: 0, height: 0},
-            elevation: isCardEntering ? 0 : 2,
         },
         buttonText: {
-            color: "white",
-            fontSize: sizes.h3,
-            fontFamily: fonts.text,
-            fontWeight: "bold",
-        },
-        featureItem: {
-            marginVertical: sizes.s,
-        },
-        featureText: {
-            fontSize: sizes.h3,
-            textAlign: 'center',
-            fontFamily: fonts.p,
+            fontFamily: fonts.semibold,
             color: colors.text,
-        },
+            fontSize: 16,
+        }
     });
 
-    const getOfferText = () => {
-        if (product) {
-            return product && isFreeTrialEligible(product) ? getProductOffer(0) + ' then ' + getProductOffer(1) : getProductOffer(0);
-        }
-        return '';
-    }
-
     return (
-        <ScrollView contentContainerStyle={{
-            alignItems: 'center',
-            padding: sizes.s,
-        }}>
-            <Animated.View entering={FadeIn.duration(400)} style={styles.planContainer}>
-                <Text style={styles.title}>Premium+ Plan</Text>
-                <View style={styles.plan}>
-                    <Text style={styles.planTitle}>Unlock Full Access</Text>
-                    <Text style={styles.planPrice}>{getOfferText()}</Text>
-                    <View style={styles.planDescription}>
-                        {premiumFeatures.map((feature, index) => (
-                            <View key={index}>
-                                {renderFeature(feature)}
-                            </View>
-                        ))}
-                    </View>
-                </View>
-                <TouchableOpacity disabled={buttonDisable} onPress={handleUpgrade} style={styles.button}>
-                    <Text style={styles.buttonText}>
-                        {isFreeTrialEligible(product) ? 'Start Free Trial!' : 'Upgrade Now'}
-                    </Text>
+        <LinearGradient colors={[colors.background.toString(), '#abadb3',]} style={styles.container}>
+            <Animated.View entering={FadeInDown.duration(800)} style={styles.header}>
+                <Icon name="crown" size={60} color={colors.gray}/>
+                <Text style={styles.title}>Go Premium+</Text>
+                <Text style={styles.subtitle}>Unlock all features</Text>
+            </Animated.View>
+
+            <View style={styles.benefitsContainer}>
+                {benefits.map((text, index) => (
+                    <Animated.View
+                        key={text}
+                        entering={FadeInUp.delay(index * 75).duration(600)}
+                        style={styles.benefit}
+                    >
+                        <Icon name="check" size={22} color={colors.gray}/>
+                        <Text style={styles.benefitText}>{text}</Text>
+                    </Animated.View>
+                ))}
+            </View>
+
+            <Animated.View entering={ZoomIn.delay(100)} style={styles.buttonContainer}>
+                <TouchableOpacity disabled={buttonDisable} style={styles.button} onPress={() => handleUpgrade()}>
+                    <LinearGradient colors={['#eed345', buttonDisable ? '#bababa' : '#f5c042']} style={styles.gradient}>
+                        <Text style={styles.buttonText}>{'Upgrade for ' + getProductOffer(0)}</Text>
+                    </LinearGradient>
                 </TouchableOpacity>
             </Animated.View>
-        </ScrollView>
+        </LinearGradient>
     );
-
 };
-export default GetPremiumScreen
+
+
+export default PremiumScreen;

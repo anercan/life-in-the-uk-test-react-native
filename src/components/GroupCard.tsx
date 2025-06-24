@@ -75,7 +75,8 @@ const GroupCard = (props: IGroupCard) => {
                         {getProgress()}
                         <Text style={{
                             color: '#ecebeb',
-                            fontSize: sizes.h4
+                            fontSize: sizes.h4,
+                            fontFamily:fonts.text
                         }}>
                             %
                         </Text>

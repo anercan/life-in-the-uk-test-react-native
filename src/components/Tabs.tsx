@@ -101,4 +101,4 @@ const Tabs = (props: IHeader) => {
     );
 };
 
-export default React.memo(Tabs);
+export default Tabs;

@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Dimensions} from 'react-native';
 import {useTheme} from '../hooks';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -7,7 +7,7 @@ const {width} = Dimensions.get('window');
 
 const NavigationBox = ({header, icon, onPress}) => {
     const {fonts, sizes, colors} = useTheme();
-    const styles = useMemo(() => StyleSheet.create({
+    const styles = StyleSheet.create({
         container: {
             margin: sizes.s,
         },
@@ -51,7 +51,7 @@ const NavigationBox = ({header, icon, onPress}) => {
             flexDirection: 'row',
             flex: 2
         }
-    }), []);
+    });
 
     return (
         <TouchableOpacity

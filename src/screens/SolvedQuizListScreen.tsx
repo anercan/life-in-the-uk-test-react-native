@@ -12,8 +12,8 @@ import useApiCaller from "../hooks/useApiCaller";
 const SolvedQuizListScreen = ({navigation}) => {
     const {apiCaller} = useApiCaller();
     const [tab, setTab] = useState<number>(0);
-    const [quizCards, setQuizCards] = useState([{}]);
-    const [filteredQuizCards, setFilteredQuizCards] = useState([{}]);
+    const [quizCards, setQuizCards] = useState([]);
+    const [filteredQuizCards, setFilteredQuizCards] = useState([]);
     const {sizes} = useTheme();
     const {setTitle} = useContext(TitleContext);
 

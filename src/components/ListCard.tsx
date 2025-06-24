@@ -12,6 +12,7 @@ interface IListCard {
     rightBottomDesc?: string | undefined,
     locked?: boolean | undefined,
     onPress?: () => void;
+    key:number;
 }
 
 const ListCard = (props: IListCard) => {
@@ -92,7 +93,7 @@ const ListCard = (props: IListCard) => {
     }), [props.locked]);
 
     return (
-        <TouchableOpacity onPress={props.onPress} style={styles.card}>
+        <TouchableOpacity key={props.key} onPress={props.onPress} style={styles.card}>
             <View style={styles.orderBoxContainer}>
                 <View style={styles.orderBox}>
                     {props.locked ?
@@ -121,6 +122,11 @@ const ListCard = (props: IListCard) => {
                 }
             </View>
         </TouchableOpacity>
+/*    <Animated.View
+            key={props.key}
+            entering={FadeInUp.delay(props.key * 500).duration(props.key * 10)}
+        >
+        </Animated.View>*/
     );
 };
 
