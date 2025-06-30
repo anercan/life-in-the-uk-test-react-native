@@ -62,7 +62,7 @@ const Tabs = (props: IHeader) => {
             bottom: 4,
             left: 4,
             width: containerWidth / 2 - 8,
-            backgroundColor: colors.tabBackground,
+            backgroundColor: colors.mediumGray,
             borderRadius: sizes.m,
         },
         tab: {

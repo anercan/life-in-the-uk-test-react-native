@@ -41,7 +41,6 @@ export default () => {
 
     useEffect(() => {
         //crashlytics().log('App mounted');
-        setTheme(isDark ? darkTheme : lightTheme)
         checkVersionWithStoresInfo();
         Platform.OS === 'android' && StatusBar.setTranslucent(true);
         subscribeListener();
@@ -50,6 +49,10 @@ export default () => {
             StatusBar.setBarStyle('default');
         };
     }, []);
+
+    useEffect(() => {
+        setTheme(isDark ? darkTheme : lightTheme);
+    }, [isDark]);
 
     const subscribeListener = async () => {
         await initConnection().then(() => {

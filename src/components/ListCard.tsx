@@ -1,133 +1,115 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {useTheme} from "../hooks";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import {getShortenText} from "util/commonUtil";
 
 interface IListCard {
-    title?: string | undefined,
-    rightTopText1?: string | undefined,
-    rightTopText2?: string | undefined,
-    rightBottomDesc?: string | undefined,
-    locked?: boolean | undefined,
+    title?: string;
+    rightTopText1?: string;
+    rightTopText2?: string;
+    rightBottomDesc?: string;
+    locked?: boolean;
     onPress?: () => void;
-    key:number;
+    key: number;
 }
 
 const ListCard = (props: IListCard) => {
     const {fonts, colors, sizes} = useTheme();
 
-    const styles = useMemo(() => StyleSheet.create({
+    const styles = StyleSheet.create({
         card: {
-            height: sizes.base * 11,
-            width: '85%',
+            width: '90%',
             backgroundColor: colors.card,
             borderRadius: sizes.sm,
             marginBottom: sizes.md,
             borderLeftWidth: sizes.s,
             borderColor: colors.primary,
             shadowColor: colors.shadow,
-            shadowOffset: {width: 2, height: 0},
+            shadowOffset: {width: 0, height: 2},
             shadowOpacity: 0.1,
             shadowRadius: sizes.shadowRadius,
             elevation: 3,
-            flexDirection: "column",
-        },
-        orderBoxContainer: {
-            flex: 3,
-            alignItems: "flex-end",
-        },
-        titleContainer: {
-            marginLeft: sizes.sm,
-            justifyContent: "center",
-            flex: 3,
-        },
-        infoContainer: {
-            flex: 3,
-            justifyContent: "center",
-        },
-        title: {
-            color: !props.locked ? colors.text : colors.light,
-            fontSize: sizes.h3,
-            fontFamily: fonts.semibold,
-        },
-        orderBox: {
-            paddingVertical: sizes.xs,
-            width: '16%',
-            justifyContent: "center",
+            padding: sizes.sm,
+            flexDirection: 'row',
             alignItems: 'center',
-            borderRadius: sizes.m,
+        },
+        iconBox: {
+            width: 60,
+            height: 60,
+            borderRadius: sizes.s,
             backgroundColor: colors.orderBoxBackGround,
+            justifyContent: 'center',
+            alignItems: 'center',
             shadowColor: colors.shadow,
             shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.1,
             shadowRadius: sizes.shadowRadius,
-            marginTop: '-5%',
-            elevation: 3,
-        },
-        rightBottom: {
+            elevation: 1.5,
             marginRight: sizes.sm,
-            alignItems: 'flex-end',
         },
-        rightBottomTextOne: {
-            fontFamily: fonts.text,
-            color: !props.locked ? colors.text : colors.light,
-            fontSize: sizes.h4,
+        contentBox: {
+            flex: 1,
+            justifyContent: 'center',
         },
-        rightBottomTextTwo: {
+        title: {
+            color: props.locked ? colors.light : colors.text,
+            fontSize: sizes.h3,
             fontFamily: fonts.semibold,
-            color: !props.locked ? colors.secondary : colors.light,
+            marginBottom: 4,
+        },
+        topText: {
+            fontFamily: fonts.text,
+            fontSize: sizes.h2,
+            color: props.locked ? colors.light : colors.text,
+        },
+        topTextSecondary: {
+            fontFamily: fonts.text,
+            fontSize: sizes.h5,
+            color: props.locked ? colors.light : colors.text,
+        },
+        descText: {
+            fontFamily: fonts.text,
             fontSize: sizes.h4,
+            color: props.locked ? colors.light : colors.secondary,
+            marginTop: 2,
         },
-        text: {
-            fontFamily: fonts.text,
-            color: !props.locked ? colors.text : colors.light,
-            letterSpacing: 1
-        },
-        dateText: {
-            fontFamily: fonts.text,
-            color: colors.text,
-            fontSize: sizes.smallText,
+    });
+
+    const renderIconContent = () => {
+        if (props.locked) {
+            return <MaterialCommunityIcons name="lock" color={colors.light} size={sizes.m} />;
+        } else if (props.rightTopText1 !== undefined) {
+            return (
+                <Text style={styles.topText}>
+                    {props.rightTopText1}
+                    <Text style={styles.topTextSecondary}>/{props.rightTopText2}</Text>
+                </Text>
+            );
+        } else {
+            return (
+                <Text style={styles.topText}>
+                    {props.rightTopText2}
+                    <Text style={styles.topTextSecondary}>%</Text>
+                </Text>
+            );
         }
-    }), [props.locked]);
+    };
 
     return (
         <TouchableOpacity key={props.key} onPress={props.onPress} style={styles.card}>
-            <View style={styles.orderBoxContainer}>
-                <View style={styles.orderBox}>
-                    {props.locked ?
-                        <MaterialCommunityIcons name="lock" color={colors.light} size={sizes.m}/> :
-                        props.rightTopText1 !== undefined ?
-                            <Text style={[styles.text, {fontSize: sizes.h1}]}>{props.rightTopText1}<Text
-                                style={[styles.text, {fontSize: sizes.h5}]}>/{props.rightTopText2}</Text>
-                            </Text>
-                            :
-                            <Text style={styles.dateText}>
-                                <Text style={[styles.dateText, {fontSize: sizes.h2}]}>
-                                    {props.rightTopText2}
-                                </Text>{'%'}
-                            </Text>
-                    }
-                </View>
+            <View style={styles.iconBox}>
+                {renderIconContent()}
             </View>
-            <View style={styles.titleContainer}>
+            <View style={styles.contentBox}>
                 <Text style={styles.title}>{getShortenText(props.title, 30)}</Text>
-            </View>
-            <View style={styles.infoContainer}>
-                {(props.rightBottomDesc) &&
-                    <View style={styles.rightBottom}>
-                        <Text style={styles.rightBottomTextTwo}>{props.rightBottomDesc}</Text>
-                    </View>
-                }
+                {props.rightBottomDesc && (
+                    <Text style={styles.descText}>{props.rightBottomDesc}</Text>
+                )}
             </View>
         </TouchableOpacity>
-/*    <Animated.View
-            key={props.key}
-            entering={FadeInUp.delay(props.key * 500).duration(props.key * 10)}
-        >
-        </Animated.View>*/
     );
 };
 
-export default ListCard;
+export default React.memo(ListCard);

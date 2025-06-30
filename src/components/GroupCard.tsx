@@ -16,11 +16,11 @@ const GroupCard = (props: IGroupCard) => {
 
     const {fonts, sizes, colors} = useTheme();
 
-    const cardWidth = width / 2.5;
+    const cardWidth = width / 2.4;
     const styles = StyleSheet.create({
         container: {
             margin: sizes.xs,
-            marginHorizontal: 10,
+            marginHorizontal: 9,
         },
         card: {
             alignItems: 'center',

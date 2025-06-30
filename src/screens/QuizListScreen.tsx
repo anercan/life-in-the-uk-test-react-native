@@ -8,6 +8,7 @@ import Tabs from "../components/Tabs";
 import ListCard from "../components/ListCard";
 import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
+import {getProgress} from "util/commonUtil";
 
 type QuizParams = {
     quizGroupTitle: number;
@@ -61,12 +62,25 @@ const QuizListScreen = ({navigation}) => {
 
     const handleSelect = (card: IQuizCard, quizCardList: IQuizCard[]) => {
         if (!card.locked) {
-            navigation.navigate('QuizScreen', {
-                quizType:'REGULAR',
-                quizId: card?.id,
-                quizGroupId: quizGroupId,
-                quizCardList: quizCardList,
-            });
+            if (card?.state === 'COMPLETED') {
+                navigation.navigate('CompletedQuizScreen', {
+                    quizType: 'REGULAR',
+                    quizName: card.name,
+                    quizSize: card?.questionCount,
+                    correctAnswerSize: card?.correctCount,
+                    wrongAnswerSize: card?.questionCount - card?.correctCount,
+                    quizCardList: quizCardList,
+                    quizGroupId: quizGroupId,
+                    quizId: card.id,
+                });
+            } else {
+                navigation.navigate('QuizScreen', {
+                    quizType: 'REGULAR',
+                    quizId: card?.id,
+                    quizGroupId: quizGroupId,
+                    quizCardList: quizCardList,
+                });
+            }
         } else {
             navigation.navigate('GetPremiumScreen');
         }
@@ -94,8 +108,8 @@ const QuizListScreen = ({navigation}) => {
                                         locked={card.locked}
                                         title={card.name}
                                         rightBottomDesc={card.attributes?.difficulty}
-                                        rightTopText1={card.solvedCount + ''}
-                                        rightTopText2={card.questionCount + ''}
+                                        rightTopText1={tab === 0 ? card?.solvedCount + '' : undefined}
+                                        rightTopText2={tab === 0 ? card?.questionCount + '' : getProgress(card.correctCount, card.questionCount) + ''}
                                         onPress={() => handleSelect(card, filteredQuizCards)}
                                     />
                                 )) :

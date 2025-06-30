@@ -17,6 +17,7 @@ export interface IQuizCard {
   questionCount?: number;
   priority?: number;
   solvedCount?:number;
+  correctCount?:number;
   attributes?:any;
   state?:string;
   locked?:boolean | undefined;

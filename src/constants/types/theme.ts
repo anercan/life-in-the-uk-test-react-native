@@ -82,7 +82,7 @@ export interface ThemeColors {
     tabBackground: ColorValue;
     orderBoxBackGround: ColorValue;
     shadow: ColorValue;
-    input: ColorValue;
+    mediumGray: ColorValue;
     checkbox: string[];
     checkboxIcon: ColorValue;
     blurTint: 'light' | 'dark' | 'default';

@@ -8,6 +8,7 @@ import Tabs from "../components/Tabs";
 import ListCard from "../components/ListCard";
 import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
+import {getProgress} from "util/commonUtil";
 
 const SolvedQuizListScreen = ({navigation}) => {
     const {apiCaller} = useApiCaller();
@@ -74,10 +75,6 @@ const SolvedQuizListScreen = ({navigation}) => {
         }
     }
 
-    const getProgress = (card: any) => {
-        return Math.round((card?.correctQuestionList?.length / card?.quiz?.activeQuestionCount) * 100);
-    }
-
     return (
         <Block>
             <Block flex={0}>
@@ -89,6 +86,7 @@ const SolvedQuizListScreen = ({navigation}) => {
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={{paddingBottom: sizes.l}}
                 >
+
                     <Block
                         marginTop={sizes.m}
                         align={"center"}>
@@ -99,7 +97,7 @@ const SolvedQuizListScreen = ({navigation}) => {
                                     title={card?.quiz?.name}
                                     rightBottomDesc={card.quiz?.attributes?.difficulty}
                                     rightTopText1={tab === 0 ? card?.correctQuestionList?.length + card?.wrongQuestionList?.length : undefined}
-                                    rightTopText2={tab === 0 ? card?.quiz?.activeQuestionCount : getProgress(card)}
+                                    rightTopText2={tab === 0 ? card?.quiz?.activeQuestionCount : getProgress(card?.correctQuestionList?.length, card?.quiz?.activeQuestionCount)}
                                     onPress={() => cardOnPress(card)}
                                 />
                             ))

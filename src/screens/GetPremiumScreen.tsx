@@ -160,7 +160,7 @@ const PremiumScreen = ({navigation}) => {
         subtitle: {
             color: colors.card,
             marginTop: sizes.xs,
-            fontSize: sizes.smallText,
+            fontSize: sizes.smallestText,
             fontFamily: fonts.text,
             textAlign: 'center',
         },
@@ -170,7 +170,8 @@ const PremiumScreen = ({navigation}) => {
         benefit: {
             flexDirection: 'row',
             alignItems: 'center',
-            marginVertical: 12,
+            justifyContent: 'center',
+            marginVertical: 10,
         },
         benefitText: {
             color: colors.gray,
