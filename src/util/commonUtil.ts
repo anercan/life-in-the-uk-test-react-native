@@ -91,7 +91,7 @@ export const randomColors = [
     '#3b76b4', '#3b76b4',
 ];
 
-export const getBillingPeriod = (billingPeriod) => {
+export const getItemOfferText = (billingPeriod, formattedPrice: string | undefined) => {
     try {
         // Match duration and unit from the billingPeriod
         const regex = /P(\d+)([A-Za-z]+)/;
@@ -114,10 +114,14 @@ export const getBillingPeriod = (billingPeriod) => {
             const unitName = unitMap[unit] || unit;
 
             let period = quantity === "1" ? unitName : unitName + "s";
+            if(formattedPrice === 'Free' || formattedPrice === 'free') {
+                return formattedPrice + ' for ' + quantity + ' ' + period;
+            }
+
             if (quantity === '1') {
-                return unitName
+                return formattedPrice + '/' + unitName;
             } else {
-                return quantity + ' ' + period;
+                return formattedPrice + '/' + quantity + ' ' + period;
             }
         }
 
@@ -129,7 +133,7 @@ export const getBillingPeriod = (billingPeriod) => {
 
 export const isFreeTrialEligible = (product) => {
     try {
-        return product?.subscriptionOfferDetails[0]?.offerTags[0]?.includes('free-trial') || product?.subscriptionOfferDetails[0]?.pricingPhases.pricingPhaseList[0]?.formattedPrice === 0;
+        return product?.subscriptionOfferDetails[0]?.offerTags[0]?.includes('free') || product?.subscriptionOfferDetails[0]?.pricingPhases.pricingPhaseList[0]?.formattedPrice === 0;
     } catch (e) {
         return false;
     }

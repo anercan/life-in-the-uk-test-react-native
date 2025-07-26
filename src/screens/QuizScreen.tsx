@@ -19,6 +19,7 @@ import {
 import ProgressBar from "components/ProgressBar";
 import {logEvent} from "util/logUtil";
 import {useTheme} from "hooks";
+import {AppText} from "components";
 
 type QuizScreenRootProps = RouteProp<{ QuizScreen: QuizParams }, 'QuizScreen'>;
 
@@ -33,7 +34,7 @@ const QuizScreen = ({navigation}) => {
     const {quizId, quizGroupId, quizCardList, quizType} = route.params;
     const {showCorrectAnswer, showExplanationWhileSolving, skipQuestionImmediately} = useContext(QuizSettingsContext);
     const [quiz, setQuiz] = useState<any>();
-    const [questionList, setQuestionList] = useState([{}]);
+    const [questionList, setQuestionList] = useState([]);
     const [favoriteIds, setFavoriteIds] = useState([]);
     const [answerCounter, setAnswerCounter] = useState({total: 0, correct: 0, wrong: 0});
     const {sizes} = useTheme();
@@ -282,6 +283,23 @@ const QuizScreen = ({navigation}) => {
                 setFavoriteIds(response.favoriteIds);
             }
         })
+    }
+
+    if (isFavoritesQuiz(quizType) && questionList?.length === 0) {
+        return (
+            <>
+                <AppText h3 marginTop={sizes.xxl} align={'center'}>
+                    {'You don’t have any favorites yet.'}
+                </AppText>
+                <AppText h3 marginTop={sizes.s} align={'center'}>
+                    {'Start adding some with the hearth icon.'}
+                </AppText>
+            </>
+        );
+    }
+
+    if (questionList?.length === 0) {
+        return <></>;
     }
 
     return (

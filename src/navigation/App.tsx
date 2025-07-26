@@ -183,7 +183,7 @@ export const TabMenu = () => {
                 tabBarStyle: {
                     borderTopWidth: 0,
                     backgroundColor: isDark ? darkTheme.colors.background : lightTheme.colors.background, // Dark blue background
-                    height: Platform.OS === 'android' ? base * 7 : base * 11, // Custom height
+                    height: Platform.OS === 'android' ? base * 9 : base * 11, // Custom height
                     paddingTop: base
                 },
             }}

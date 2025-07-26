@@ -4,12 +4,8 @@ import {AppText, Block, Image} from '../components/';
 import {useTheme} from '../hooks/';
 import {TitleContext} from "context/TitleContext";
 import {useFocusEffect} from "@react-navigation/native";
-import {isPremium} from "util/jwtUtil";
 import useApiCaller from "../hooks/useApiCaller";
-import {
-    handleReviewRequest,
-    isAndroid
-} from "util/commonUtil";
+import {handleReviewRequest, isAndroid} from "util/commonUtil";
 import NavigationBox from "components/NavigationBox";
 import ActivityModal from "components/ActivityModal";
 
@@ -19,15 +15,9 @@ const Profile = ({navigation}) => {
     const [userData, setUserData] = useState<UserDataResponse>();
     const {setTitle} = useContext(TitleContext);
     const [modalVisible, setModalVisible] = useState(false);
-    const [isPremiumUser, setIsPremiumUser] = useState(false);
 
     useFocusEffect(
         useCallback(() => {
-            const checkPremiumStatus = async () => {
-                const premium = await isPremium();
-                setIsPremiumUser(premium);
-            };
-            checkPremiumStatus();
             setTitle('Profile');
             getUserInfo();
         }, [])
@@ -41,21 +31,6 @@ const Profile = ({navigation}) => {
                     handleReviewRequest();
                 }
             });
-    }
-
-    const navigate = (path, param?) => {
-        if (isPremiumUser) {
-            return navigation.navigate(path, param);
-        }
-        return navigation.navigate('GetPremiumScreen');
-    }
-
-    const getActivityModal = () => {
-        if (isPremiumUser) {
-            setModalVisible((prevState => !prevState));
-            return;
-        }
-        return navigation.navigate('GetPremiumScreen');
     }
 
     return (
@@ -151,16 +126,16 @@ const Profile = ({navigation}) => {
                                        quizCardList: [],
                                    })}/>
                     <NavigationBox icon={'cards-heart-outline'} header={'Favorites'}
-                                   onPress={() => navigate('QuizScreen', {
+                                   onPress={() => navigation.navigate('QuizScreen', {
                                        quizType: 'FAVORITES',
                                        quizCardList: [],
                                    })}/>
                 </View>
                 <View key={2} style={{flexDirection: 'row', justifyContent: 'center'}}>
                     <NavigationBox icon={'equalizer'} header={'Incorrect Distribution'}
-                                   onPress={() => navigate('AnalyseScreen')}/>
+                                   onPress={() => navigation.navigate('AnalyseScreen')}/>
                     <NavigationBox icon={'calendar-blank'} header={'Activity'}
-                                   onPress={() => getActivityModal()}/>
+                                   onPress={() => setModalVisible((prevState => !prevState))}/>
                 </View>
 
             </View>

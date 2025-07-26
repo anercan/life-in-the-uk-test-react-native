@@ -9,6 +9,7 @@ import {
     getShortenText,
 } from "util/commonUtil";
 import DataDistributionCard from "components/DataDistribution";
+import {AppText} from "components";
 
 const AnalyseScreen = ({navigation}) => {
     const {apiCaller} = useApiCaller(navigation);
@@ -38,6 +39,14 @@ const AnalyseScreen = ({navigation}) => {
                 }
             });
     }, []);
+
+    if (incorrectList?.length === 0) {
+        return (
+                <AppText h3 marginTop={sizes.xxl} align={'center'}>
+                    {'You haven’t made any mistakes to analyze yet.'}
+                </AppText>
+        );
+    }
 
     return (
         <ScrollView contentContainerStyle={{ paddingVertical: sizes.m,paddingHorizontal:sizes.sm}}>

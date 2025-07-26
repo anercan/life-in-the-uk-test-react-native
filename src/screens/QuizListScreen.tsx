@@ -102,9 +102,9 @@ const QuizListScreen = ({navigation}) => {
                             marginTop={sizes.m}
                             align={"center"}>
                             {filteredQuizCards?.length > 0 ?
-                                filteredQuizCards.map((card: IQuizCard, index) => (
+                                filteredQuizCards.map((card: IQuizCard) => (
                                     <ListCard
-                                        key={index}
+                                        key={card.name}
                                         locked={card.locked}
                                         title={card.name}
                                         rightBottomDesc={card.attributes?.difficulty}

@@ -91,9 +91,9 @@ const SolvedQuizListScreen = ({navigation}) => {
                         marginTop={sizes.m}
                         align={"center"}>
                         {filteredQuizCards?.length > 0 ?
-                            filteredQuizCards?.map((card: any, index) => (
+                            filteredQuizCards?.map((card: any) => (
                                 <ListCard
-                                    key={index}
+                                    key={card?.quiz?.name}
                                     title={card?.quiz?.name}
                                     rightBottomDesc={card.quiz?.attributes?.difficulty}
                                     rightTopText1={tab === 0 ? card?.correctQuestionList?.length + card?.wrongQuestionList?.length : undefined}

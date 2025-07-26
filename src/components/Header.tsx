@@ -26,7 +26,7 @@ const Header = () => {
     const styles = StyleSheet.create({
         headerContainer: {
             justifyContent: "flex-end",
-            height: '13%',
+            height: '12%',
             backgroundColor: colors.background
         },
         row: {

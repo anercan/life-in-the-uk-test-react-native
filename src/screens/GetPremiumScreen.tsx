@@ -21,7 +21,7 @@ import {
 import {AuthContext} from "context/AuthContext";
 import useApiCaller from "../hooks/useApiCaller";
 import {getUserId} from "util/jwtUtil";
-import {getBillingPeriod, isAndroid} from "util/commonUtil";
+import {getItemOfferText, isAndroid, isFreeTrialEligible} from "util/commonUtil";
 import {logEvent} from "util/logUtil";
 
 let monthlySubProductId = 'level1';
@@ -30,7 +30,6 @@ const benefits = [
     'Access Premium+ Quizzes',
     'Limitless Personal Daily Challenges',
     'Create Favorite Questions List',
-    'Activity Tracker',
     'Advanced Statistics & Analytics',
     'Compare Results with Others',
     'Cancellation Available Anytime!'
@@ -121,6 +120,13 @@ const PremiumScreen = ({navigation}) => {
         );
     }
 
+    const getOfferText = () => {
+        if (product) {
+            return product && isFreeTrialEligible(product) ? getProductOffer(0) + ' then ' + getProductOffer(1) : getProductOffer(0);
+        }
+        return '';
+    }
+
     const handleUpgrade = () => {
         setButtonDisable(true);
         let request = {
@@ -135,9 +141,7 @@ const PremiumScreen = ({navigation}) => {
     }
 
     const getProductOffer = (item) => {
-        let billingPeriod = getBillingPeriod(product?.subscriptionOfferDetails[item]?.pricingPhases.pricingPhaseList[0]?.billingPeriod);
-        let formattedPrice = product?.subscriptionOfferDetails[item]?.pricingPhases.pricingPhaseList[0]?.formattedPrice;
-        return formattedPrice + '/' + billingPeriod;
+        return getItemOfferText(product?.subscriptionOfferDetails[item]?.pricingPhases.pricingPhaseList[0]?.billingPeriod, product?.subscriptionOfferDetails[item]?.pricingPhases.pricingPhaseList[0]?.formattedPrice);
     }
 
     const styles = StyleSheet.create({
@@ -160,12 +164,11 @@ const PremiumScreen = ({navigation}) => {
         subtitle: {
             color: colors.card,
             marginTop: sizes.xs,
-            fontSize: sizes.smallestText,
+            fontSize: sizes.smallText,
             fontFamily: fonts.text,
             textAlign: 'center',
         },
         benefitsContainer: {
-            marginTop: sizes.s
         },
         benefit: {
             flexDirection: 'row',
@@ -186,7 +189,7 @@ const PremiumScreen = ({navigation}) => {
         button: {
             borderRadius: sizes.m,
             overflow: 'hidden',
-            elevation:1
+            elevation: 1
         },
         gradient: {
             paddingVertical: 14,
@@ -205,7 +208,7 @@ const PremiumScreen = ({navigation}) => {
             <Animated.View entering={FadeInDown.duration(800)} style={styles.header}>
                 <Icon name="crown" size={60} color={colors.gray}/>
                 <Text style={styles.title}>Go Premium+</Text>
-                <Text style={styles.subtitle}>Unlock all features</Text>
+                <Text style={styles.subtitle}>{getOfferText()}</Text>
             </Animated.View>
 
             <View style={styles.benefitsContainer}>
@@ -224,13 +227,12 @@ const PremiumScreen = ({navigation}) => {
             <Animated.View entering={ZoomIn.delay(100)} style={styles.buttonContainer}>
                 <TouchableOpacity disabled={buttonDisable} style={styles.button} onPress={() => handleUpgrade()}>
                     <LinearGradient colors={['#eed345', buttonDisable ? '#bababa' : '#f5c042']} style={styles.gradient}>
-                        <Text style={styles.buttonText}>{'Upgrade for ' + getProductOffer(0)}</Text>
+                        <Text style={styles.buttonText}>{isFreeTrialEligible(product) ? 'Start Free Trial!' : 'Upgrade Now!'}</Text>
                     </LinearGradient>
                 </TouchableOpacity>
             </Animated.View>
         </LinearGradient>
     );
 };
-
 
 export default PremiumScreen;

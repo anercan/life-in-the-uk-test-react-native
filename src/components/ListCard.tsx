@@ -12,7 +12,6 @@ interface IListCard {
     rightBottomDesc?: string;
     locked?: boolean;
     onPress?: () => void;
-    key: number;
 }
 
 const ListCard = (props: IListCard) => {
@@ -98,7 +97,7 @@ const ListCard = (props: IListCard) => {
     };
 
     return (
-        <TouchableOpacity key={props.key} onPress={props.onPress} style={styles.card}>
+        <TouchableOpacity onPress={props.onPress} style={styles.card}>
             <View style={styles.iconBox}>
                 {renderIconContent()}
             </View>
