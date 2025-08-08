@@ -1,30 +1,16 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {Platform} from "react-native";
-import InAppReview from "react-native-in-app-review";
 import {logEvent} from "util/logUtil";
 
-export const handleReviewRequest = () => {
-    try {
-        checkReviewModalShown().then((reviewModalShownBefore: any) => {
-            if (!reviewModalShownBefore && InAppReview.isAvailable()) {
-                InAppReview.RequestInAppReview()
-                    .then((hasFlowFinishedSuccessfully) => {
-                        if (hasFlowFinishedSuccessfully) {
-                            AsyncStorage.setItem('reviewModalShownBefore', 'true');
-                            logEvent('review');
-                        }
-                    })
-                    .catch((error) => {
-                        AsyncStorage.setItem('reviewModalShownBefore', 'true');
-                        logEvent('error-review-request', {errorDesc:error});
-                    });
-            }
-        });
-    } catch (e) {
+export const handleReviewRequest = async () => {
+    const reviewModalShownBefore = await checkReviewModalShown();
+    if (!reviewModalShownBefore) {
         AsyncStorage.setItem('reviewModalShownBefore', 'true');
-        logEvent('error-review-request');
+        logEvent('review-modal');
+        return true;
     }
-};
+    return false;
+}
 
 export const getShortenText = (title: string | undefined, number: number) => {
     if (!title) return '';

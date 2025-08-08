@@ -12,15 +12,14 @@ export default function App() {
     SystemNavigationBar.setNavigationColor(COLORS.background?.toString());
 
     return (
-            <AuthProvider>
-                <TitleProvider>
-                    <DataProvider>
-                        <QuizSettingsProvider>
-                            <AppNavigation/>
-                        </QuizSettingsProvider>
-                    </DataProvider>
-                </TitleProvider>
-            </AuthProvider>
-
+        <AuthProvider>
+            <TitleProvider>
+                <DataProvider>
+                    <QuizSettingsProvider>
+                        <AppNavigation/>
+                    </QuizSettingsProvider>
+                </DataProvider>
+            </TitleProvider>
+        </AuthProvider>
     );
 }

@@ -50,6 +50,7 @@ const GroupCard = (props: IGroupCard) => {
             shadowOpacity: 0.2,
             shadowRadius: sizes.shadowRadius,
             elevation: 2,
+            padding:1,
             marginBottom: -sizes.md,
             marginRight: -sizes.s,
             alignItems: "flex-end"
@@ -101,4 +102,4 @@ const GroupCard = (props: IGroupCard) => {
     );
 };
 
-export default GroupCard;
+export default React.memo(GroupCard);

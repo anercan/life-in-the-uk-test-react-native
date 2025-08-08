@@ -170,7 +170,6 @@ const Tab = createBottomTabNavigator();
 export const TabMenu = () => {
     const {isDark} = useData();
 
-    let base = lightTheme.sizes.base;
     return (
 
         <Tab.Navigator
@@ -183,8 +182,8 @@ export const TabMenu = () => {
                 tabBarStyle: {
                     borderTopWidth: 0,
                     backgroundColor: isDark ? darkTheme.colors.background : lightTheme.colors.background, // Dark blue background
-                    height: Platform.OS === 'android' ? base * 9 : base * 11, // Custom height
-                    paddingTop: base
+                    height: Platform.OS === 'android' ? 75 : 75, // Custom height
+                    paddingTop: 8
                 },
             }}
         >

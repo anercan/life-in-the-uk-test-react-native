@@ -1,7 +1,7 @@
 import React, {useCallback, useContext, useState} from 'react';
 
 import {useTheme} from '../hooks/';
-import {AppText, Block} from '../components/';
+import {Block} from '../components/';
 import {useFocusEffect} from "@react-navigation/native";
 import {ISolvedQuizCard} from "constants/types";
 import Tabs from "../components/Tabs";
@@ -9,6 +9,7 @@ import ListCard from "../components/ListCard";
 import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
 import {getProgress} from "util/commonUtil";
+import StatusBox from "components/StatusBox";
 
 const SolvedQuizListScreen = ({navigation}) => {
     const {apiCaller} = useApiCaller();
@@ -102,9 +103,7 @@ const SolvedQuizListScreen = ({navigation}) => {
                                 />
                             ))
                             :
-                            <AppText h3 marginTop={sizes.sm} align={'center'}>
-                                {tab === 1 ? 'There is no completed quiz.' : 'There is no ongoing quiz!'}
-                            </AppText>
+                            <StatusBox text={tab === 1 ? 'You haven’t completed any quizzes yet.' : 'There are no ongoing quizzes right now.'}/>
                         }
                     </Block>
                 </Block>

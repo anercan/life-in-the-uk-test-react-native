@@ -1,7 +1,7 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 
 import {useTheme} from '../hooks/';
-import {AppText, Block} from '../components/';
+import {Block} from '../components/';
 import {RouteProp, useFocusEffect, useRoute} from "@react-navigation/native";
 import {IQuizCard} from "constants/types";
 import Tabs from "../components/Tabs";
@@ -9,6 +9,7 @@ import ListCard from "../components/ListCard";
 import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
 import {getProgress} from "util/commonUtil";
+import StatusBox from "components/StatusBox";
 
 type QuizParams = {
     quizGroupTitle: number;
@@ -86,42 +87,40 @@ const QuizListScreen = ({navigation}) => {
         }
     }
 
+    if (loading) {
+        return (<></>);
+    }
+
     return (
         <Block>
             <Block flex={0}>
                 <Tabs tabOneText={'Recent'} selectedTab={tab} tabTwoText={'Completed'} callback={setTabChange}/>
             </Block>
             <Block flex={9}>
-                {!loading ?
+                <Block
+                    scroll
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{paddingBottom: sizes.l}}
+                >
                     <Block
-                        scroll
-                        showsVerticalScrollIndicator={false}
-                        contentContainerStyle={{paddingBottom: sizes.l}}
-                    >
-                        <Block
-                            marginTop={sizes.m}
-                            align={"center"}>
-                            {filteredQuizCards?.length > 0 ?
-                                filteredQuizCards.map((card: IQuizCard) => (
-                                    <ListCard
-                                        key={card.name}
-                                        locked={card.locked}
-                                        title={card.name}
-                                        rightBottomDesc={card.attributes?.difficulty}
-                                        rightTopText1={tab === 0 ? card?.solvedCount + '' : undefined}
-                                        rightTopText2={tab === 0 ? card?.questionCount + '' : getProgress(card.correctCount, card.questionCount) + ''}
-                                        onPress={() => handleSelect(card, filteredQuizCards)}
-                                    />
-                                )) :
-                                <AppText h3 marginTop={sizes.sm} align={'center'}>
-                                    {tab === 1 ? 'There is no completed ' + quizGroupTitle + ' quiz!' : 'Congratulations, you solved them all!'}
-                                </AppText>
-                            }
-                        </Block>
+                        marginTop={sizes.m}
+                        align={"center"}>
+                        {filteredQuizCards?.length > 0 ?
+                            filteredQuizCards.map((card: IQuizCard) => (
+                                <ListCard
+                                    key={card.name}
+                                    locked={card.locked}
+                                    title={card.name}
+                                    rightBottomDesc={card.attributes?.difficulty}
+                                    rightTopText1={tab === 0 ? card?.solvedCount + '' : undefined}
+                                    rightTopText2={tab === 0 ? card?.questionCount + '' : getProgress(card.correctCount, card.questionCount) + ''}
+                                    onPress={() => handleSelect(card, filteredQuizCards)}
+                                />
+                            )) :
+                            <StatusBox text={`You haven't completed any ${quizGroupTitle} quizzes yet.`}/>
+                        }
                     </Block>
-                    :
-                    <></>
-                }
+                </Block>
             </Block>
         </Block>
     );

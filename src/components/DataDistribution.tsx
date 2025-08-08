@@ -3,6 +3,7 @@ import {PieChart} from "react-native-gifted-charts";
 import {Instagram} from 'react-content-loader/native'
 import {useTheme} from '../hooks/';
 import {Dimensions, Text, TouchableOpacity, View} from "react-native";
+import StatusBox from "components/StatusBox";
 
 const {width} = Dimensions.get('window');
 
@@ -24,29 +25,27 @@ const DataDistributionCard = ({propData, isLoadingProp}) => {
         return (
             dataList?.length > 0 &&
             dataList.map((data, index) => (
-                <>
-                    <TouchableOpacity key={'t'+index} onPress={() => focusPressed(index)}
-                                      style={{
-                                          flexDirection: 'row',
-                                          alignItems: 'center'
-                                      }}>
-                        <View key={'v'+index}
-                            style={{
-                                height: sizes.sm,
-                                width: sizes.sm,
-                                borderRadius: sizes.xs,
-                                backgroundColor: data?.color,
-                                marginRight: sizes.s,
-                            }}
-                        />
-                        <Text key={'text'+index} style={{
-                            marginVertical: sizes.xs,
-                            fontFamily: data.focused ? fonts.bold : fonts.text,
-                            color: colors.text,
-                            fontSize: sizes.smallText
-                        }}>{data?.name}</Text>
-                    </TouchableOpacity>
-                </>
+                <TouchableOpacity key={'t' + index} onPress={() => focusPressed(index)}
+                                  style={{
+                                      flexDirection: 'row',
+                                      alignItems: 'center'
+                                  }}>
+                    <View
+                        style={{
+                            height: sizes.sm,
+                            width: sizes.sm,
+                            borderRadius: sizes.xs,
+                            backgroundColor: data?.color,
+                            marginRight: sizes.s,
+                        }}
+                    />
+                    <Text style={{
+                        marginVertical: sizes.xs,
+                        fontFamily: data.focused ? fonts.bold : fonts.text,
+                        color: colors.text,
+                        fontSize: sizes.smallText
+                    }}>{data?.name}</Text>
+                </TouchableOpacity>
             ))
         );
     };
@@ -95,7 +94,8 @@ const DataDistributionCard = ({propData, isLoadingProp}) => {
                                             }}>
                                                 {dataList.find(value => value.focused === true)?.value}
                                             </Text>
-                                            <Text style={{fontSize: sizes.smallestText, color: colors.text}}>Incorrect Answers</Text>
+                                            <Text style={{fontSize: sizes.smallestText, color: colors.text}}>Incorrect
+                                                Answers</Text>
                                         </View>
                                     );
                                 }}
@@ -104,7 +104,7 @@ const DataDistributionCard = ({propData, isLoadingProp}) => {
                         {renderLegendComponent()}
                     </View>
                     :
-                    <Text style={{textAlign: 'center'}}>{'Start solving to monitor analytics data!'}</Text>
+                    <StatusBox text={'Start solving to monitor analytics data!'}/>
                 :
                 <View style={{alignItems: 'center'}}>
                     <Instagram width={width / 1.1} color={colors.secondaryBackground}/>

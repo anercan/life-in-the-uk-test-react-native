@@ -7,7 +7,11 @@ export const logEvent = (eventName, param?) => {
         if (__DEV__) {
             console.log(`Event: ${eventName}`, param);
         } else {
-            analytics().logEvent(eventName, param);
+            if (param) {
+                analytics().logEvent(eventName, param);
+            } else {
+                analytics().logEvent(eventName);
+            }
         }
     } catch (e) {
         console.error("Log event failed:", e);

@@ -19,7 +19,7 @@ import {
 import ProgressBar from "components/ProgressBar";
 import {logEvent} from "util/logUtil";
 import {useTheme} from "hooks";
-import {AppText} from "components";
+import StatusBox from "components/StatusBox";
 
 type QuizScreenRootProps = RouteProp<{ QuizScreen: QuizParams }, 'QuizScreen'>;
 
@@ -136,7 +136,7 @@ const QuizScreen = ({navigation}) => {
     const setStatesForOngoingQuiz = (quizResponse) => {
         let answersMap = new Map();
         setAnswerCounter({
-            total:  quizResponse?.questionList?.length ?? 0,
+            total: quizResponse?.questionList?.length ?? 0,
             wrong: quizResponse?.userQuiz?.wrongQuestionList?.length ?? 0,
             correct: quizResponse?.userQuiz?.correctQuestionList?.length ?? 0
         });
@@ -287,14 +287,7 @@ const QuizScreen = ({navigation}) => {
 
     if (isFavoritesQuiz(quizType) && questionList?.length === 0) {
         return (
-            <>
-                <AppText h3 marginTop={sizes.xxl} align={'center'}>
-                    {'You don’t have any favorites yet.'}
-                </AppText>
-                <AppText h3 marginTop={sizes.s} align={'center'}>
-                    {'Start adding some with the hearth icon.'}
-                </AppText>
-            </>
+            <StatusBox text={'You don’t have any favorites yet.'}/>
         );
     }
 
@@ -305,7 +298,7 @@ const QuizScreen = ({navigation}) => {
     return (
         <View onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}
               style={{alignItems: 'center', paddingBottom: sizes.base * 10}}>
-            <ProgressBar favOperation={(questionId,isAddOperation) => favOperation(questionId,isAddOperation)}
+            <ProgressBar favOperation={(questionId, isAddOperation) => favOperation(questionId, isAddOperation)}
                          isCurrentInFav={favoriteIds?.includes(activeQuestion?.id)} questionId={activeQuestion?.id}
                          progress={activeQuestion?.counter / questionList?.length || 0}/>
             <Animated.View style={{transform: [{translateX: shakeAnimation} as any]}}>

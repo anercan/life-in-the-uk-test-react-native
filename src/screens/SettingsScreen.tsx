@@ -179,7 +179,7 @@ const SettingsScreen = ({navigation}) => {
                             </Text>
                             {// @ts-ignore
                                 item.items?.filter((setting: any) => setting?.show !== false).map((setting, idx) => (
-                                    <>
+                                    <React.Fragment key={idx}>
                                         {idx !== 0 && getLine()}
                                         <TouchableOpacity
                                             key={idx}
@@ -222,10 +222,10 @@ const SettingsScreen = ({navigation}) => {
                                             ) : (
                                                 <Icon name="chevron-forward" size={18} color="#999"/>
                                             )}
-                                        </TouchableOpacity></>
+                                        </TouchableOpacity>
+                                    </React.Fragment>
                                 ))}
                         </View>
-
                     );
                 }}
             />
