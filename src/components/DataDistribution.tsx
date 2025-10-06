@@ -1,11 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {PieChart} from "react-native-gifted-charts";
-import {Instagram} from 'react-content-loader/native'
 import {useTheme} from '../hooks/';
-import {Dimensions, Text, TouchableOpacity, View} from "react-native";
+import {Text, TouchableOpacity, View} from "react-native";
 import StatusBox from "components/StatusBox";
-
-const {width} = Dimensions.get('window');
 
 const DataDistributionCard = ({propData, isLoadingProp}) => {
     const [dataList, setDataList] = useState<any[]>();
@@ -107,7 +104,9 @@ const DataDistributionCard = ({propData, isLoadingProp}) => {
                     <StatusBox text={'Start solving to monitor analytics data!'}/>
                 :
                 <View style={{alignItems: 'center'}}>
+{/*
                     <Instagram width={width / 1.1} color={colors.secondaryBackground}/>
+*/}
                 </View>
             }
         </View>
