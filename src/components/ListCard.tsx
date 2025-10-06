@@ -59,13 +59,13 @@ const ListCard = (props: IListCard) => {
             marginBottom: 4,
         },
         topText: {
-            fontFamily: fonts.text,
+            fontFamily: fonts.semibold,
             fontSize: sizes.h2,
             color: props.locked ? colors.light : colors.text,
         },
-        topTextSecondary: {
-            fontFamily: fonts.text,
-            fontSize: sizes.h5,
+        percentageText: {
+            fontFamily: fonts.semibold,
+            fontSize: sizes.h2,
             color: props.locked ? colors.light : colors.text,
         },
         descText: {
@@ -74,11 +74,16 @@ const ListCard = (props: IListCard) => {
             color: props.locked ? colors.light : colors.secondary,
             marginTop: 2,
         },
+        topTextSecondary: {
+            fontFamily: fonts.semibold,
+            fontSize: sizes.h5,
+            color: props.locked ? colors.light : colors.text,
+        },
     });
 
     const renderIconContent = () => {
         if (props.locked) {
-            return <MaterialCommunityIcons name="lock" color={colors.light} size={sizes.m} />;
+            return <MaterialCommunityIcons name="lock" color={colors.light} size={sizes.m}/>;
         } else if (props.rightTopText1 !== undefined) {
             return (
                 <Text style={styles.topText}>
@@ -88,9 +93,9 @@ const ListCard = (props: IListCard) => {
             );
         } else {
             return (
-                <Text style={styles.topText}>
+                <Text style={styles.percentageText}>
                     {props.rightTopText2}
-                    <Text style={styles.topTextSecondary}>%</Text>
+                    <Text style={{...styles.percentageText, fontSize: sizes.h5}}>%</Text>
                 </Text>
             );
         }

@@ -77,7 +77,11 @@
     		<string>Octicons.ttf</string>
     		<string>SimpleLineIcons.ttf</string>
     		<string>Zocial.ttf</string>
+            <string>resources/fonts/OpenSans-Light.ttf</string>
+            <string>resources/fonts/OpenSans-Regular.ttf</string>
+            <string>resources/fonts/OpenSans-SemiBold.ttf</string>
+            <string>resources/fonts/OpenSans-ExtraBold.ttf</string>
+            <string>resources/fonts/OpenSans-Bold.ttf</string>
     	</array>
-
 </dict>
 </plist>

@@ -60,6 +60,7 @@ const PremiumScreen = ({navigation}) => {
                 .then((r: any) => {
                     setButtonDisable(false);
                     setProduct(r[0]);
+                    //console.log(JSON.stringify(r[0]))
                 })
                 .catch(() => setButtonDisable(true));
 
@@ -141,7 +142,7 @@ const PremiumScreen = ({navigation}) => {
     }
 
     const getProductOffer = (item) => {
-        return getItemOfferText(product?.subscriptionOfferDetails[item]?.pricingPhases.pricingPhaseList[0]?.billingPeriod, product?.subscriptionOfferDetails[item]?.pricingPhases.pricingPhaseList[0]?.formattedPrice);
+        return getItemOfferText(product?.subscriptionOfferDetails[item]?.pricingPhases.pricingPhaseList[0]?.billingPeriod, product?.subscriptionOfferDetails[item]?.pricingPhases.pricingPhaseList[0]?.formattedPrice, product?.subscriptionOfferDetails[item]?.pricingPhases.pricingPhaseList[0]?.priceAmountMicros);
     }
 
     const styles = StyleSheet.create({
@@ -168,8 +169,7 @@ const PremiumScreen = ({navigation}) => {
             fontFamily: fonts.text,
             textAlign: 'center',
         },
-        benefitsContainer: {
-        },
+        benefitsContainer: {},
         benefit: {
             flexDirection: 'row',
             alignItems: 'center',
@@ -227,7 +227,8 @@ const PremiumScreen = ({navigation}) => {
             <Animated.View entering={ZoomIn.delay(100)} style={styles.buttonContainer}>
                 <TouchableOpacity disabled={buttonDisable} style={styles.button} onPress={() => handleUpgrade()}>
                     <LinearGradient colors={['#eed345', buttonDisable ? '#bababa' : '#f5c042']} style={styles.gradient}>
-                        <Text style={styles.buttonText}>{isFreeTrialEligible(product) ? 'Start Free Trial!' : 'Upgrade Now!'}</Text>
+                        <Text
+                            style={styles.buttonText}>{isFreeTrialEligible(product) ? 'Start Free Trial!' : 'Upgrade Now!'}</Text>
                     </LinearGradient>
                 </TouchableOpacity>
             </Animated.View>

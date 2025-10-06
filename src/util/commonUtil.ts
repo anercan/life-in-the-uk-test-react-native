@@ -77,7 +77,7 @@ export const randomColors = [
     '#3b76b4', '#3b76b4',
 ];
 
-export const getItemOfferText = (billingPeriod, formattedPrice: string | undefined) => {
+export const getItemOfferText = (billingPeriod, formattedPrice: string | undefined, priceAmountMicros: string | undefined) => {
     try {
         // Match duration and unit from the billingPeriod
         const regex = /P(\d+)([A-Za-z]+)/;
@@ -98,12 +98,11 @@ export const getItemOfferText = (billingPeriod, formattedPrice: string | undefin
 
             // Handle pluralization (e.g., "1 day" vs "2 days")
             const unitName = unitMap[unit] || unit;
-
             let period = quantity === "1" ? unitName : unitName + "s";
-            if(formattedPrice === 'Free' || formattedPrice === 'free') {
-                return formattedPrice + ' for ' + quantity + ' ' + period;
-            }
 
+            if(priceAmountMicros == "0" ) { // burası her dil için free textini dönmüyo ('Ücretsiz' vs dönüyor)
+                return 'Free for ' + quantity + ' ' + period;
+            }
             if (quantity === '1') {
                 return formattedPrice + '/' + unitName;
             } else {
