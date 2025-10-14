@@ -5,7 +5,7 @@ import {useTheme} from '../hooks/';
 import {TitleContext} from "context/TitleContext";
 import {useFocusEffect} from "@react-navigation/native";
 import useApiCaller from "../hooks/useApiCaller";
-import {handleReviewRequest, isAndroid} from "util/commonUtil";
+import {handleReviewRequest} from "util/commonUtil";
 import NavigationBox from "components/NavigationBox";
 import ActivityModal from "components/ActivityModal";
 import QuestionModal from "components/QuestionModal";
@@ -92,11 +92,13 @@ const Profile = ({navigation}) => {
                     <Block
                         flex={0}
                         radius={sizes.sm}
-                        style={{elevation: 2}}
-                        shadow={!isAndroid()}
                         marginTop={-sizes.l}
                         marginHorizontal="8%"
                         color="rgba(255,255,255,0.2)"
+                        style={{
+                            borderWidth: 0.5,
+                            borderColor: "rgba(255,255,255,0.2)"
+                        }}
                     >
 
                         <Block

@@ -10,7 +10,7 @@ export interface IScoreCard {
     wrong: number;
     quizName: string;
     onPress: (reviewType: string) => void;
-    isTabsActive:boolean
+    isTabsActive: boolean
 }
 
 const ScoreCard = (props: IScoreCard) => {
@@ -29,25 +29,14 @@ const ScoreCard = (props: IScoreCard) => {
             borderColor: colors.cardBorder,
             marginBottom: sizes.s,
             backgroundColor: colors.card,
-            elevation: 2,
-            shadowColor: colors.shadow,
-            shadowOffset: {width: 0, height: 0},
-            shadowOpacity: 0.2,
-            shadowRadius: sizes.shadowRadius,
             borderRadius: sizes.m,
             padding: sizes.sm,
         }, progress: {
-            borderRadius: sizes.xxxl, backgroundColor: colors.primary, elevation: 2,
-            shadowColor: colors.shadow,
-            shadowOffset: {width: 0, height: 0},
-            shadowOpacity: 0.2,
-            shadowRadius: sizes.shadowRadius,
+            borderRadius: sizes.xxxl,
+            backgroundColor: colors.primary,
+            borderWidth: 1,
+            borderColor: colors.cardBorder
         }, scoreBox: {
-            elevation: 2,
-            shadowColor: colors.shadow,
-            shadowOffset: {width: 0, height: 0},
-            shadowOpacity: 0.2,
-            shadowRadius: sizes.shadowRadius,
             flexDirection: 'column',
             alignItems: 'center',
             flex: 1,
@@ -60,7 +49,9 @@ const ScoreCard = (props: IScoreCard) => {
             flex: 1,
             marginHorizontal: sizes.s
         }, scoreText: {
-            color: colors.text, fontSize: sizes.h2, fontFamily: fonts.p,
+            color: colors.text,
+            fontSize: sizes.h2,
+            fontFamily: fonts.p,
         },
     });
 

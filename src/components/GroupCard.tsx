@@ -23,6 +23,8 @@ const GroupCard = (props: IGroupCard) => {
             marginHorizontal: 9,
         },
         card: {
+            borderWidth:1,
+            borderColor:props.backgroundColor,
             alignItems: 'center',
             justifyContent: 'center',
             width: cardWidth,
@@ -30,10 +32,6 @@ const GroupCard = (props: IGroupCard) => {
             backgroundColor: props.backgroundColor,
             borderRadius: sizes.sm,
             shadowColor: colors.shadow,
-            shadowOffset: {width: 0, height: 0},
-            shadowOpacity: 0.2,
-            shadowRadius: sizes.shadowRadius,
-            elevation: 4,
         },
         cardText: {
             textAlign: 'center',
@@ -42,14 +40,10 @@ const GroupCard = (props: IGroupCard) => {
             color: colors.gray
         },
         orderBox: {
+            borderColor:props.backgroundColor,
             zIndex: 1,
             borderRadius: sizes.sm,
             backgroundColor: '#474a50',
-            shadowColor: colors.shadow,
-            shadowOffset: {width: 0, height: 0},
-            shadowOpacity: 0.2,
-            shadowRadius: sizes.shadowRadius,
-            elevation: 2,
             padding:1,
             marginBottom: -sizes.md,
             marginRight: -sizes.s,

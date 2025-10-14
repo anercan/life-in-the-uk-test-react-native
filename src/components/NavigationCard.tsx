@@ -22,11 +22,7 @@ const NavigationCard = ({id, header, subText, onPress}) => {
             borderRadius: sizes.sm,
             borderLeftWidth: sizes.s,
             borderColor: colors.secondary,
-            shadowColor: colors.shadow,
-            shadowOffset: {width: 0, height: 0},
-            shadowOpacity: 0.15,
-            shadowRadius: sizes.m,
-            elevation: 4,
+            borderWidth:0.5,
         },
         textContainer: {
             flex: 1,

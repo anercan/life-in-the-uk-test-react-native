@@ -112,11 +112,16 @@ export default () => {
     );
 };
 
+
 const Stack = createStackNavigator();
 
 const getScreenOptions = (color) => {
     return {headerShown: false, cardStyle: {backgroundColor: color}};
 }
+
+const stackOptions = {
+    gestureEnabled: true
+};
 
 export const QuizGroupListStack = () => {
     const {isDark} = useData();
@@ -124,12 +129,11 @@ export const QuizGroupListStack = () => {
     return (
         <Stack.Navigator initialRouteName="QuizGroupListScreen" screenOptions={getScreenOptions(isDark ? darkTheme.colors.secondaryBackground : lightTheme.colors.secondaryBackground)}>
             <Stack.Screen name="QuizGroupListScreen" component={QuizGroupListScreen}/>
-            <Stack.Screen name="QuizListScreen" component={QuizListScreen}/>
-            <Stack.Screen name="QuizScreen" component={QuizScreen}/>
-            <Stack.Screen name="CompletedQuizScreen" component={CompletedQuizScreen}/>
-
-            <Stack.Screen name="GetPremiumScreen" component={GetPremiumScreen}/>
-            <Stack.Screen name="SettingsScreen" component={SettingsScreen}/>
+            <Stack.Screen name="QuizListScreen" component={QuizListScreen} options={stackOptions}/>
+            <Stack.Screen name="QuizScreen" component={QuizScreen} options={stackOptions}/>
+            <Stack.Screen name="CompletedQuizScreen" component={CompletedQuizScreen} options={stackOptions}/>
+            <Stack.Screen name="GetPremiumScreen" component={GetPremiumScreen} options={stackOptions}/>
+            <Stack.Screen name="SettingsScreen" component={SettingsScreen} options={stackOptions}/>
         </Stack.Navigator>
     );
 };
@@ -139,12 +143,12 @@ export const SolvedQuizListStack = () => {
 
     return (
         <Stack.Navigator initialRouteName="SolvedQuizListScreen" screenOptions={getScreenOptions(isDark ? darkTheme.colors.secondaryBackground : lightTheme.colors.secondaryBackground)}>
-            <Stack.Screen name="SolvedQuizListScreen" component={SolvedQuizListScreen}/>
-            <Stack.Screen name="QuizScreen" component={QuizScreen}/>
-            <Stack.Screen name="CompletedQuizScreen" component={CompletedQuizScreen}/>
+            <Stack.Screen name="SolvedQuizListScreen" component={SolvedQuizListScreen} options={stackOptions}/>
+            <Stack.Screen name="QuizScreen" component={QuizScreen} options={stackOptions}/>
+            <Stack.Screen name="CompletedQuizScreen" component={CompletedQuizScreen} options={stackOptions}/>
 
-            <Stack.Screen name="GetPremiumScreen" component={GetPremiumScreen}/>
-            <Stack.Screen name="SettingsScreen" component={SettingsScreen}/>
+            <Stack.Screen name="GetPremiumScreen" component={GetPremiumScreen} options={stackOptions}/>
+            <Stack.Screen name="SettingsScreen" component={SettingsScreen} options={stackOptions}/>
         </Stack.Navigator>
     );
 };
@@ -155,12 +159,12 @@ export const ProfileStack = () => {
     return (
         <Stack.Navigator initialRouteName="Profile" screenOptions={getScreenOptions(isDark ? darkTheme.colors.secondaryBackground : lightTheme.colors.secondaryBackground)}>
             <Stack.Screen name="Profile" component={Profile}/>
-            <Stack.Screen name="QuizScreen" component={QuizScreen}/>
-            <Stack.Screen name="CompletedQuizScreen" component={CompletedQuizScreen}/>
+            <Stack.Screen name="QuizScreen" component={QuizScreen} options={stackOptions}/>
+            <Stack.Screen name="CompletedQuizScreen" component={CompletedQuizScreen} options={stackOptions}/>
 
-            <Stack.Screen name="AnalyseScreen" component={AnalyseScreen}/>
-            <Stack.Screen name="GetPremiumScreen" component={GetPremiumScreen}/>
-            <Stack.Screen name="SettingsScreen" component={SettingsScreen}/>
+            <Stack.Screen name="AnalyseScreen" component={AnalyseScreen} options={stackOptions}/>
+            <Stack.Screen name="GetPremiumScreen" component={GetPremiumScreen} options={stackOptions}/>
+            <Stack.Screen name="SettingsScreen" component={SettingsScreen} options={stackOptions}/>
         </Stack.Navigator>
     );
 };

@@ -44,16 +44,13 @@ const Tabs = (props: IHeader) => {
     const styles = StyleSheet.create({
         container: {
             backgroundColor:colors.secondaryBackground,
-            elevation:3,
-            shadowColor: colors.shadow,
-            shadowOffset: {width: 0, height: 0},
-            shadowOpacity: 0.2,
-            shadowRadius: sizes.shadowRadius,
             flexDirection: 'row',
             marginTop: sizes.s,
             marginBottom: sizes.s,
             marginHorizontal: sizes.xl,
             borderRadius: sizes.l,
+            borderWidth:1,
+            borderColor:colors.cardBorder,
             height: sizes.xl,
         },
         switch: {

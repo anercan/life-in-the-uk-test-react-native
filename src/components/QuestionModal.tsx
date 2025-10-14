@@ -49,11 +49,6 @@ const QuestionModal: React.FC<ReviewModalProps> = (props: ReviewModalProps) => {
             paddingHorizontal: 20,
             borderRadius: 20,
             alignItems: 'center',
-            shadowColor: '#000',
-            shadowOffset: {width: 0, height: 6},
-            shadowOpacity: 0.15,
-            shadowRadius: 10,
-            elevation: 10,
         },
         title: {
             fontFamily: fonts.medium,
@@ -72,7 +67,6 @@ const QuestionModal: React.FC<ReviewModalProps> = (props: ReviewModalProps) => {
             borderRadius: 12,
             minWidth: 100,
             alignItems: 'center',
-            elevation:1
         },
         yesButton: {
             backgroundColor: '#5b935d',

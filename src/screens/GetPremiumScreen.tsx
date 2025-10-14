@@ -189,7 +189,8 @@ const PremiumScreen = ({navigation}) => {
         button: {
             borderRadius: sizes.m,
             overflow: 'hidden',
-            elevation: 1
+            borderWidth:1,
+            borderColor:colors.cardBorder,
         },
         gradient: {
             paddingVertical: 14,

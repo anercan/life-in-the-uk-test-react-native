@@ -53,23 +53,15 @@ const QuizQuestion = (props: IQuizQuestion) => {
             marginHorizontal: sizes.s,
             alignItems: 'center',
             backgroundColor: colors.card,
-            shadowColor: colors.shadow,
-            shadowOffset: {width: 0, height: 0},
-            shadowOpacity: 0.1,
-            shadowRadius: sizes.shadowRadius,
-            elevation: 5,
         }, orderBox: {
             height: sizes.xl,
             width: sizes.xl,
             justifyContent: 'center',
             borderRadius: sizes.xxl,
             backgroundColor: colors.tabBackground,
-            shadowColor: colors.shadow,
-            shadowOffset: {width: 0, height: 0},
-            shadowOpacity: 0.1,
-            shadowRadius: sizes.shadowRadius,
-            elevation: 3,
-            marginTop: -sizes.md
+            marginTop: -sizes.md,
+            borderWidth:1,
+            borderColor:colors.cardBorder,
         },
         questionBox: {
             borderWidth: 1,
@@ -81,11 +73,6 @@ const QuizQuestion = (props: IQuizQuestion) => {
             marginHorizontal: sizes.s,
             marginBottom: sizes.l,
             backgroundColor: colors.tabBackground,
-            shadowColor: colors.shadow,
-            shadowOffset: {width: 0, height: 0},
-            shadowOpacity: 0.1,
-            shadowRadius: sizes.shadowRadius,
-            elevation: 4,
         }, explanationBox: {
             marginTop: sizes.s,
             width: sizes.base * 42,
@@ -101,11 +88,6 @@ const QuizQuestion = (props: IQuizQuestion) => {
             borderRadius: sizes.sm,
             marginVertical: sizes.s,
             margin: sizes.s,
-            shadowColor: colors.shadow,
-            shadowOffset: {width: 0, height: 0},
-            shadowOpacity: 0.1,
-            shadowRadius: sizes.shadowRadius,
-            elevation: 2,
         }, questionText: {
             fontFamily: fonts.p,
             color: colors.text,
@@ -138,6 +120,7 @@ const QuizQuestion = (props: IQuizQuestion) => {
         return answerList?.map((answer) => (
             <TouchableOpacity
                 disabled={props.isAnswered}
+                activeOpacity={0.6}
                 key={answer.id}
                 onPress={() => handleSelect(answer)}>
                 <View style={{...styles.answerBox, backgroundColor: getBackgroundColor(answer.id)}}>
