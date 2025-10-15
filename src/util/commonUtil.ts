@@ -71,10 +71,10 @@ export const groupCardBackgroundImages = {
 };
 
 export const randomColors = [
-    '#74808d', '#74808d',
-    '#6680a1', '#6680a1',
+    '#447bb4', '#447bb4',
     '#5582b3', '#5582b3',
-    '#3b76b4', '#3b76b4',
+    '#6680a1', '#6680a1',
+    '#74808d', '#74808d'
 ];
 
 export const getItemOfferText = (billingPeriod, formattedPrice: string | undefined, priceAmountMicros: string | undefined) => {

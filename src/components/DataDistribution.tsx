@@ -86,8 +86,13 @@ const DataDistributionCard = ({propData, isLoadingProp}) => {
                                             }}>
                                                 {dataList.find(value => value.focused === true)?.value}
                                             </Text>
-                                            <Text style={{fontSize: sizes.smallestText, color: colors.text}}>Incorrect
-                                                Answers</Text>
+                                            <Text style={{
+                                                fontSize: sizes.smallestText,
+                                                color: colors.text,
+                                                textAlign: 'center'
+                                            }}>
+                                                Incorrect Answers
+                                            </Text>
                                         </View>
                                     );
                                 }}
@@ -99,7 +104,7 @@ const DataDistributionCard = ({propData, isLoadingProp}) => {
                     <StatusBox text={'Start solving to monitor analytics data!'}/>
                 :
                 <View style={{alignItems: 'center'}}>
-{/*
+                    {/*
                     <Instagram width={width / 1.1} color={colors.secondaryBackground}/>
 */}
                 </View>

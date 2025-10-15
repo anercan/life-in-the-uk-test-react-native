@@ -131,11 +131,6 @@ const LoginScreen = () => {
             paddingVertical: sizes.xs,
             paddingHorizontal: sizes.xs,
             borderRadius: sizes.md,
-            shadowColor: colors.shadow,
-            shadowOffset: {width: 0, height: 0},
-            shadowOpacity: 0.3,
-            shadowRadius: sizes.shadowRadius,
-            elevation: 5,
         },
         iconContainer: {
             backgroundColor: '#fff',
@@ -160,12 +155,7 @@ const LoginScreen = () => {
             overflow: 'hidden',
             borderWidth: 2,
             borderColor: '#cecece',
-            shadowColor: colors.shadow,
-            shadowOffset: {width: 0, height: 0},
-            shadowOpacity: 0.2,
-            shadowRadius: sizes.shadowRadius,
             marginBottom: sizes.base * 14,
-            elevation: 5, // Drop shadow on Android
         },
         logo: {
             width: '100%',
@@ -192,7 +182,7 @@ const LoginScreen = () => {
                 </View>
                 <Text style={styles.text}>Login with Google</Text>
             </TouchableOpacity>
-            <View style={{marginTop: sizes.xxl}}>
+            <View style={{marginTop: sizes.xxxl}}>
                 <AppText center={true} size={sizes.smallText} color={colors.gray}>team@quizmarkt.com</AppText>
                 <AppText onPress={() => Linking.openURL('https://quizmarkt.com/life-in-the-uk/privacy-policy.html')}
                          style={{textDecorationLine: 'underline'}} size={sizes.smallText} center={true}

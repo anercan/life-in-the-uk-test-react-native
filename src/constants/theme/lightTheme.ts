@@ -125,12 +125,12 @@ export const LINE_HEIGHTS: ThemeLineHeights = {
 
 export const COLORS: ThemeColors = {
   text: '#444444',
-  primary: '#084a86',
-  background: '#084a86',
+  primary: '#1465ad',
+  background: '#1465ad',
   secondaryBackground:'#e9e9ec',
   tabBackground:'#c6c8ce',
   orderBoxBackGround:'#dddede',
-  secondary: '#395e90', // '#8392AB',
+  secondary: '#1465ad', // '#8392AB',
   tertiary: '#E8AE4C',
   black: '#252F40',
   white: '#FFFFFF',
