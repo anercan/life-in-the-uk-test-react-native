@@ -40,7 +40,6 @@ export default () => {
     const [isFirstLaunch, setIsFirstLaunch] = useState<boolean | null>(null);
 
     useEffect(() => {
-        //crashlytics().log('App mounted');
         checkVersionWithStoresInfo();
         Platform.OS === 'android' && StatusBar.setTranslucent(true);
         subscribeListener();

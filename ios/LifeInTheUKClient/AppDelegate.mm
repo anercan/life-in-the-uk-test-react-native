@@ -30,4 +30,9 @@
 #endif
 }
 
+- (BOOL)newArchEnabled
+{
+    return YES;
+}
+
 @end

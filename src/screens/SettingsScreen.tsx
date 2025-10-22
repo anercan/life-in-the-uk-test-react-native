@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, Text, Switch, TouchableOpacity, StyleSheet, FlatList, Linking, Platform} from 'react-native';
+import {View, Text, Switch, TouchableOpacity, StyleSheet, FlatList, Linking, Platform, Share} from 'react-native';
 import {useData, useTheme} from "hooks";
 import {TitleContext} from "context/TitleContext";
 import {AuthContext} from "context/AuthContext";
@@ -7,6 +7,7 @@ import {GoogleSignin} from "@react-native-google-signin/google-signin";
 import {isPremium} from "util/jwtUtil";
 import {QuizSettingsContext} from "context/QuizSettingsContext";
 import Icon from "react-native-vector-icons/Ionicons";
+import {logEvent} from "util/logUtil";
 
 const SettingsScreen = ({navigation}) => {
     const {setTitle} = useContext(TitleContext);
@@ -57,6 +58,24 @@ const SettingsScreen = ({navigation}) => {
         return;
     }
 
+    const onShare = async () => {
+        try {
+            const result = await Share.share({
+                message: 'Check out this Quiz App! https://play.google.com/store/apps/details?id=com.quizmarkt.lifeintheuk',
+                url: 'https://play.google.com/store/apps/details?id=com.quizmarkt.lifeintheuk'
+            });
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                    logEvent('shareAction', {type: result.activityType});
+                } else {
+                    logEvent('shareAction', {});
+                }
+            } else if (result.action === Share.dismissedAction) {
+            }
+        } catch (error: any) {
+        }
+    };
+
     const settingsOptions = [
         {
             section: 'Account',
@@ -87,6 +106,13 @@ const SettingsScreen = ({navigation}) => {
                     onPress: () => getRequestReview(),
                 },
                 {
+                    icon: 'share-social-outline',
+                    title: 'Share',
+                    buttonText: 'Share',
+                    color: '#007AFF',
+                    onPress: () => onShare(),
+                },
+                {
                     icon: 'document-text-outline',
                     title: 'Privacy Policy',
                     buttonText: 'Review',
@@ -115,7 +141,7 @@ const SettingsScreen = ({navigation}) => {
                 },
                 {
                     icon: 'play-skip-forward-outline',
-                    title: 'Skip Question Immediately',
+                    title: 'Skip Questions Fast',
                     hasSwitch: true,
                     value: skipQuestionImmediately,
                     color: '#007AFF',
@@ -123,7 +149,7 @@ const SettingsScreen = ({navigation}) => {
                 },
                 {
                     icon: 'checkmark-outline',
-                    title: 'Show Correct After Incorrect',
+                    title: 'Show Correct Answer',
                     hasSwitch: true,
                     value: showCorrectAnswer,
                     color: '#007AFF',
@@ -131,7 +157,7 @@ const SettingsScreen = ({navigation}) => {
                 },
                 {
                     icon: 'document-text-outline',
-                    title: 'Show Explanation After Incorrect',
+                    title: 'Show Explanation',
                     hasSwitch: true,
                     value: showExplanationWhileSolving,
                     color: '#007AFF',
