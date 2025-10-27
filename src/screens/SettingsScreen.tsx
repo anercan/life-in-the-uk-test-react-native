@@ -20,7 +20,9 @@ const SettingsScreen = ({navigation}) => {
         showCorrectAnswer,
         showExplanationWhileSolving,
         skipQuestionImmediately,
-        setSkipQuestion
+        setSkipQuestion,
+        setPlaySound,
+        playSounds
     } = useContext(QuizSettingsContext);
 
     const [isPremiumUser, setIsPremiumUser] = useState(false);
@@ -162,6 +164,14 @@ const SettingsScreen = ({navigation}) => {
                     value: showExplanationWhileSolving,
                     color: '#007AFF',
                     onToggle: () => toggleShowExplanationOnlyReview(),
+                },
+                {
+                    icon: 'volume-medium-outline',
+                    title: 'Mute Effects',
+                    hasSwitch: true,
+                    value: !playSounds,
+                    color: '#007AFF',
+                    onToggle: () => setPlaySound((prev) => !prev),
                 },
             ],
         },

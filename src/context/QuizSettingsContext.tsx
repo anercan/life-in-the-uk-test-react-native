@@ -7,11 +7,13 @@ export const QuizSettingsProvider = ({children}) => {
     const [showCorrectAnswer, setShowCorrectAnswer] = useState(true);
     const [showExplanationWhileSolving, setShowExplanationWhileSolving] = useState(true);
     const [skipQuestionImmediately, setSkipQuestionImmediately] = useState(false);
+    const [playSounds, setPlaySounds] = useState(true);
 
     useEffect(() => {
         Storage.getItem('setting.showCorrectAnswer').then(data => setShowCorrectAnswer(data ? JSON.parse(data) : showCorrectAnswer));
         Storage.getItem('setting.showExplanation').then(data => setShowExplanationWhileSolving(data ? JSON.parse(data) : showExplanationWhileSolving));
-        Storage.getItem('setting.skipQuestionImmediatly').then(data => setSkipQuestionImmediately(data ? JSON.parse(data) : skipQuestionImmediately));
+        Storage.getItem('setting.skipQuestionImmediately').then(data => setSkipQuestionImmediately(data ? JSON.parse(data) : skipQuestionImmediately));
+        Storage.getItem('setting.playSounds').then(data => setPlaySounds(data ? JSON.parse(data) : playSounds));
     }, []);
 
     const setExplanationWhileSolving = (newState: boolean) => {
@@ -29,6 +31,11 @@ export const QuizSettingsProvider = ({children}) => {
         setSkipQuestionImmediately(newState);
     }
 
+    const setPlaySound = (newState: boolean) => {
+        Storage.setItem('setting.playSounds', String(newState));
+        setPlaySounds(newState);
+    }
+
     return (
         <QuizSettingsContext.Provider value={{
             showExplanationWhileSolving,
@@ -36,7 +43,9 @@ export const QuizSettingsProvider = ({children}) => {
             showCorrectAnswer,
             setCorrectAnswer,
             skipQuestionImmediately,
-            setSkipQuestion
+            setSkipQuestion,
+            playSounds,
+            setPlaySound
         }}>
             {children}
         </QuizSettingsContext.Provider>

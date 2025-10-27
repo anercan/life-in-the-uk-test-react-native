@@ -20,6 +20,7 @@ import ProgressBar from "components/ProgressBar";
 import {logEvent} from "util/logUtil";
 import {useTheme} from "hooks";
 import StatusBox from "components/StatusBox";
+import {useSound} from "hooks/useSound";
 
 type QuizScreenRootProps = RouteProp<{ QuizScreen: QuizParams }, 'QuizScreen'>;
 
@@ -38,6 +39,7 @@ const QuizScreen = ({navigation}) => {
     const [favoriteIds, setFavoriteIds] = useState([]);
     const [answerCounter, setAnswerCounter] = useState({total: 0, correct: 0, wrong: 0});
     const {sizes} = useTheme();
+    const { play } = useSound('correct.mp3');
 
     useEffect(() => {
         setFavorites();
@@ -234,6 +236,7 @@ const QuizScreen = ({navigation}) => {
         }
 
         if (id === activeQuestion.correctAnswerId) {
+            play();
             setAnswerCounter(prev => ({...prev, correct: prev.correct + 1}));
         } else {
             setAnswerCounter(prev => ({...prev, wrong: prev.wrong + 1}));
