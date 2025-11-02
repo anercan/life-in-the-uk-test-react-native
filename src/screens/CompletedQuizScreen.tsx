@@ -8,6 +8,9 @@ import useApiCaller from "../hooks/useApiCaller";
 import ScoreCard from "components/ScoreCard";
 import {isDailyQuiz, isFavoritesQuiz, mapWrongsToPieChartData} from "util/quizUtils";
 import DataDistributionCard from "components/DataDistribution";
+import InAppReview from 'react-native-in-app-review';
+import {logEvent} from "util/logUtil";
+import {handleReviewRequest} from "util/commonUtil";
 
 type QuizParams = {
     quizName: string;
@@ -48,7 +51,25 @@ const CompletedQuizScreen = ({navigation}) => {
         let nextQuiz = getNextQuiz();
         setNextQuizExist(nextQuiz !== undefined);
         getStaticalData();
+        reviewModal();
     }, []);
+
+    const reviewModal = async () => {
+        const isAvailable = InAppReview.isAvailable();
+        if (isAvailable) {
+            handleReviewRequest().then((shouldShowModal) => {
+                if (shouldShowModal) {
+                    InAppReview.RequestInAppReview()
+                        .then(() => {
+                            logEvent('reviewShown');
+                        })
+                        .catch((error) => {
+                            logEvent('reviewError', {error: error})
+                        });
+                }
+            });
+        }
+    }
 
     const getStaticalData = async () => {
         if (quizId) {
@@ -113,12 +134,12 @@ const CompletedQuizScreen = ({navigation}) => {
     }
 
     return (
-        <ScrollView contentContainerStyle={{paddingHorizontal:sizes.sm,paddingBottom: sizes.sm, paddingTop: sizes.m}}>
+        <ScrollView contentContainerStyle={{paddingHorizontal: sizes.sm, paddingBottom: sizes.sm, paddingTop: sizes.m}}>
 
             <ScoreCard
                 onPress={(reviewType) => onPressReview(reviewType)}
                 quizName={quizName}
-                isTabsActive={!isDailyQuiz(quizType) && !isFavoritesQuiz(quizType)}
+                isTabsActive={!(isDailyQuiz(quizType) || isFavoritesQuiz(quizType))}
                 total={quizSize}
                 correct={correctAnswerSize}
                 wrong={wrongAnswerSize}
@@ -139,7 +160,7 @@ const CompletedQuizScreen = ({navigation}) => {
                 <DataDistributionCard propData={incorrectList} isLoadingProp={false}/>
             }
             {isDailyQuiz(quizType) &&
-                <View style={{ alignItems: 'center'}}>
+                <View style={{alignItems: 'center'}}>
                     <Text style={{color: colors.text, fontSize: sizes.text, fontFamily: fonts.p}}>
                         Don't forget to come back tomorrow!
                     </Text>
@@ -147,10 +168,11 @@ const CompletedQuizScreen = ({navigation}) => {
             }
 
             {!isDailyQuiz(quizType) && !isFavoritesQuiz(quizType) && correctAnswerSize !== quizSize &&
-                <ButtonCard style={{alignSelf:'center',marginTop:sizes.l}} onPress={() => onPressReview('REVIEW_ALL')} buttonText={'Review'}/>
+                <ButtonCard style={{alignSelf: 'center', marginTop: sizes.l}}
+                            onPress={() => onPressReview('REVIEW_ALL')} buttonText={'Review'}/>
             }
             {isNextQuizExist &&
-                <ButtonCard style={{alignSelf:'center'}}  onPress={onPressNextQuiz} buttonText={'Next Quiz'}/>
+                <ButtonCard style={{alignSelf: 'center'}} onPress={onPressNextQuiz} buttonText={'Next Quiz'}/>
             }
 
         </ScrollView>

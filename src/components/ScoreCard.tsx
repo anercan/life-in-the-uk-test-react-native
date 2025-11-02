@@ -18,7 +18,7 @@ const ScoreCard = (props: IScoreCard) => {
     const [progress, setProgress] = useState(0);
 
     useEffect(() => {
-        if (props?.total) {
+        if (props?.total && props?.total > 0) {
             setProgress(props.correct / props.total);
         }
     }, [progress]);
@@ -67,13 +67,13 @@ const ScoreCard = (props: IScoreCard) => {
     }
 
     const onPressScore = (reviewType) => {
-        if (props.isTabsActive) {
-            props.onPress(reviewType);
+        if (props?.isTabsActive) {
+            props?.onPress(reviewType);
         }
     }
 
     const getActiveOpacity = () => {
-        return props.isTabsActive ? 1 : 0.4;
+        return props?.isTabsActive ? 0.5 : 1;
     }
 
     return (
@@ -90,7 +90,7 @@ const ScoreCard = (props: IScoreCard) => {
                         borderWidth={0}
                         textStyle={{fontFamily: fonts.p, fontSize: sizes.h1}}
                         thickness={sizes.sm}
-                        color={'#eeeeee'}
+                        color={colors.gray.toString()}
                         showsText={true}
                         formatText={() => getScoreText()}
                         size={sizes.base * 20}

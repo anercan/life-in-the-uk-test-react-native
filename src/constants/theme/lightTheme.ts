@@ -134,7 +134,7 @@ export const COLORS: ThemeColors = {
   tertiary: '#E8AE4C',
   black: '#252F40',
   white: '#FFFFFF',
-  dark: '#8a8c8e',
+  dark: '#707274',
   light: '#8e939a',
   gray: '#f1f0f0',
   danger: '#9e0202',

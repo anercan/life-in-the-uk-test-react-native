@@ -6,7 +6,7 @@ import Animated, {FadeIn} from "react-native-reanimated";
 import SwipeIndicator from "components/SwipeIndicator";
 import {useTap} from "hooks/useTap";
 
-const {height, width} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 const QuizQuestion = (props: IQuizQuestion) => {
     const {onTouchStart, onTouchEnd} = useTap(() => triggerTap());
@@ -43,14 +43,13 @@ const QuizQuestion = (props: IQuizQuestion) => {
 
     const styles = StyleSheet.create({
         box: {
-            marginBottom: sizes.md,
-            marginTop: height / 30,
+            flex: 1,
             borderWidth: 1,
             borderColor: colors.cardBorder,
             padding: sizes.s,
             paddingBottom: sizes.sm,
             borderRadius: sizes.m,
-            marginHorizontal: sizes.s,
+            marginHorizontal: sizes.sm,
             alignItems: 'center',
             backgroundColor: colors.card,
         }, orderBox: {
@@ -60,8 +59,8 @@ const QuizQuestion = (props: IQuizQuestion) => {
             borderRadius: sizes.xxl,
             backgroundColor: colors.tabBackground,
             marginTop: -sizes.md,
-            borderWidth:1,
-            borderColor:colors.cardBorder,
+            borderWidth: 1,
+            borderColor: colors.cardBorder,
         },
         questionBox: {
             borderWidth: 1,
@@ -70,7 +69,6 @@ const QuizQuestion = (props: IQuizQuestion) => {
             padding: sizes.m,
             borderRadius: sizes.sm,
             marginTop: sizes.sm,
-            marginHorizontal: sizes.s,
             marginBottom: sizes.l,
             backgroundColor: colors.tabBackground,
         }, explanationBox: {

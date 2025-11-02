@@ -6,48 +6,58 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 
 const {width} = Dimensions.get('window');
 
-const ProgressBar = ({isCurrentInFav,questionId, progress,favOperation}) => {
+const ProgressBar = ({isCurrentInFav, questionId, progress, favOperation, isMuted, setPlaySound}) => {
     const {sizes, colors} = useTheme();
     const [isFav, setFav] = useState(isCurrentInFav);
 
     useEffect(() => {
         setFav(isCurrentInFav);
-    }, [isCurrentInFav]);
+    }, [questionId]);
 
     const styles = StyleSheet.create({
         progressBar: {
-            zIndex:1,
+            borderWidth: 0.8,
+            borderColor: colors.cardBorder,
             flexDirection: 'row',
-            paddingVertical: sizes.xs,
             paddingHorizontal: sizes.s,
             backgroundColor: colors.card,
-            elevation: 5,
-            shadowColor: colors.shadow,
-            shadowOffset: {width: 0, height: 0},
-            shadowOpacity: 0.2,
-            shadowRadius: sizes.shadowRadius,
-        }, customProgressBar: {}
+            alignItems: "center",
+            flex: 1
+        },
+        customProgressBar: {alignSelf: "center"}
     });
 
     const onPressFav = () => {
         const isAddOperation = !isFav;
         setFav(prevState => !prevState);
-        favOperation(questionId,isAddOperation);
+        favOperation(questionId, isAddOperation);
+    }
+
+    const onPressSound = () => {
+        setPlaySound();
     }
 
     return (
         <View style={styles.progressBar}>
-            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
-            </View>
+            <TouchableOpacity onPress={() => onPressSound()} style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}>
+                <MaterialCommunityIcons name={isMuted ? 'volume-off' : 'volume-high'}
+                                        color={isMuted ? colors.light : colors.primary} size={sizes.md}/>
+            </TouchableOpacity>
+
             <View style={{
-                alignItems: 'center', justifyContent: 'center',
-                flex: 7,
+                alignItems: 'center',
+                justifyContent: 'center',
+                flex: 6,
             }}>
                 <Progress.Bar height={sizes.sm} borderColor={String(colors.card)}
                               color={String(colors.dark)}
                               style={styles.customProgressBar}
                               borderRadius={sizes.s}
-                              width={width / 1.4}
+                              width={width / 1.5}
                               unfilledColor={String('#aeb2b8')}
                               progress={progress || 0}
                 />
@@ -59,7 +69,9 @@ const ProgressBar = ({isCurrentInFav,questionId, progress,favOperation}) => {
                 justifyContent: 'center'
             }}>
                 <MaterialCommunityIcons name={isFav ? 'heart' : 'heart-outline'}
-                                        color={isFav ? colors.secondary : colors.light} size={sizes.md}/>
+                                        color={colors.secondary}
+                                        size={sizes.md}
+                />
             </TouchableOpacity>
 
         </View>

@@ -1,16 +1,31 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {Platform} from "react-native";
-import {logEvent} from "util/logUtil";
 
-export const handleReviewRequest = async () => {
-    const reviewModalShownBefore = await checkReviewModalShown();
-    if (!reviewModalShownBefore) {
-        AsyncStorage.setItem('reviewModalShownBefore', 'true');
-        logEvent('review-modal');
+export const handleReviewRequest = async (): Promise<boolean> => {
+    const shouldShow = await checkReviewModalShown();
+    if (shouldShow) {
+        await AsyncStorage.setItem('reviewModalTimestamp5', Date.now().toString());
         return true;
     }
     return false;
-}
+};
+
+export const checkReviewModalShown = async (): Promise<boolean> => {
+    try {
+        const timestamp = await AsyncStorage.getItem('reviewModalTimestamp5');
+        if (!timestamp) {
+            return true;
+        }
+
+        const savedTime = parseInt(timestamp, 10);
+        const now = Date.now();
+        const diffDays = (now - savedTime) / (1000 * 60 * 60 * 24);
+
+        return diffDays >= 2;
+    } catch (error) {
+        return false;
+    }
+};
 
 export const getShortenText = (title: string | undefined, number: number) => {
     if (!title) return '';
@@ -44,15 +59,6 @@ export const checkFirstLaunch = async (): Promise<boolean> => {
     } catch (error) {
         console.error("Error checking launch status:", error);
         return false;
-    }
-};
-
-export const checkReviewModalShown = async (): Promise<boolean> => {
-    try {
-        const value = await AsyncStorage.getItem('reviewModalShownBefore');
-        return !(!value && value == null);
-    } catch (error) {
-        return true;
     }
 };
 

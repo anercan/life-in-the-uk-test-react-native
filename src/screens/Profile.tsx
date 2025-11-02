@@ -1,15 +1,12 @@
 import React, {useCallback, useContext, useState} from 'react';
-import {Linking, Platform, ScrollView, TouchableOpacity, View} from 'react-native';
+import {ScrollView, TouchableOpacity, View} from 'react-native';
 import {AppText, Block, Image} from '../components/';
 import {useTheme} from '../hooks/';
 import {TitleContext} from "context/TitleContext";
 import {useFocusEffect} from "@react-navigation/native";
 import useApiCaller from "../hooks/useApiCaller";
-import {handleReviewRequest} from "util/commonUtil";
 import NavigationBox from "components/NavigationBox";
 import ActivityModal from "components/ActivityModal";
-import QuestionModal from "components/QuestionModal";
-import {logEvent} from "util/logUtil";
 
 const Profile = ({navigation}) => {
     const {apiCaller} = useApiCaller(navigation);
@@ -17,7 +14,6 @@ const Profile = ({navigation}) => {
     const [userData, setUserData] = useState<UserDataResponse>();
     const {setTitle} = useContext(TitleContext);
     const [modalVisible, setModalVisible] = useState(false);
-    const [reviewModalVisible, setReviewModalVisible] = useState(false);
 
     useFocusEffect(
         useCallback(() => {
@@ -30,22 +26,7 @@ const Profile = ({navigation}) => {
         apiCaller('profile/get-user-info')
             .then((profileResponse: any) => {
                 setUserData(profileResponse);
-                if (profileResponse?.userOngoingQuizCount + profileResponse?.userSolvedQuizCount > 4) {
-                    handleReviewRequest().then((shouldShowModal) => {
-                        if (shouldShowModal) {
-                            setReviewModalVisible(true);
-                        }
-                    });
-                }
             });
-    }
-
-    const getRequestReview = () => {
-        if (Platform.OS == "android") {
-            logEvent('show-review-page');
-            Linking.openURL('market://details?id=com.quizmarkt.lifeintheuk');
-        }
-        return;
     }
 
     return (
@@ -57,13 +38,6 @@ const Profile = ({navigation}) => {
                 marginHorizontal: sizes.s,
                 flex: 1
             }}>
-                <QuestionModal visible={reviewModalVisible}
-                               question={'Would you like to leave a quick review to help us improve the app?'}
-                               positiveAction={() => getRequestReview()}
-                               onClose={() => setReviewModalVisible((prevState => !prevState))}
-                               onCloseText={'No'}
-                               positiveText={'Yes'}
-                />
                 {/* Profile Image and Stats */}
                 <View style={{marginHorizontal: sizes.xs, marginBottom: sizes.m}}>
                     <Image

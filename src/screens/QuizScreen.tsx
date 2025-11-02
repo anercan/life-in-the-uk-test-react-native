@@ -33,13 +33,19 @@ const QuizScreen = ({navigation}) => {
     const shakeAnimation = new Animated.Value(0);
     const route = useRoute<QuizScreenRootProps>();
     const {quizId, quizGroupId, quizCardList, quizType} = route.params;
-    const {showCorrectAnswer, showExplanationWhileSolving, skipQuestionImmediately} = useContext(QuizSettingsContext);
+    const {
+        showCorrectAnswer,
+        showExplanationWhileSolving,
+        skipQuestionImmediately,
+        playSounds,
+        setPlaySound
+    } = useContext(QuizSettingsContext);
     const [quiz, setQuiz] = useState<any>();
     const [questionList, setQuestionList] = useState([]);
     const [favoriteIds, setFavoriteIds] = useState([]);
     const [answerCounter, setAnswerCounter] = useState({total: 0, correct: 0, wrong: 0});
     const {sizes} = useTheme();
-    const { play } = useSound('correct.mp3');
+    const {play} = useSound('correct.mp3');
 
     useEffect(() => {
         setFavorites();
@@ -299,29 +305,40 @@ const QuizScreen = ({navigation}) => {
     }
 
     return (
-        <View onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}
-              style={{alignItems: 'center', paddingBottom: sizes.base * 10}}>
-            <ProgressBar favOperation={(questionId, isAddOperation) => favOperation(questionId, isAddOperation)}
-                         isCurrentInFav={favoriteIds?.includes(activeQuestion?.id)} questionId={activeQuestion?.id}
-                         progress={activeQuestion?.counter / questionList?.length || 0}/>
-            <Animated.View style={{transform: [{translateX: shakeAnimation} as any]}}>
-                <ScrollView style={{paddingTop: sizes.s}}>
-                    <QuizQuestion id={activeQuestion?.id}
-                                  questionOrder={activeQuestion.counter}
-                                  content={activeQuestion?.content}
-                                  imgUrl={activeQuestion?.imgUrl}
-                                  correctAnswerId={activeQuestion?.correctAnswerId}
-                                  answersList={activeQuestion?.answersList}
-                                  selectedId={answerMap.get(activeQuestion?.id)}
-                                  onSelect={handleAnswer}
-                                  isAnswered={answerMap.get(activeQuestion?.id) !== undefined}
-                                  isReviewPage={isReviewMode(quizType)}
-                                  explanation={getExplanation()}
-                                  showCorrectAnswer={isReviewMode(quizType) ? false : showCorrectAnswer}
-                                  onSkipTap={() => onSwipeLeft()}
-                    />
+        <View onTouchStart={onTouchStart}
+              onTouchEnd={onTouchEnd}
+              style={{flex: 1, flexDirection: 'column'}}
+        >
+            <View style={{flex: 1}}>
+                <ProgressBar favOperation={(questionId, isAddOperation) => favOperation(questionId, isAddOperation)}
+                             isCurrentInFav={favoriteIds?.includes(activeQuestion?.id)}
+                             questionId={activeQuestion?.id}
+                             isMuted={!playSounds}
+                             setPlaySound={() => setPlaySound(!playSounds)}
+                             progress={activeQuestion?.counter / questionList?.length || 0}/>
+            </View>
+            <View style={{flex: 14, justifyContent: 'flex-start'}}>
+                <ScrollView style={{paddingTop: sizes.md}}
+                            contentContainerStyle={{paddingBottom: sizes.xxl}}
+                >
+                    <Animated.View style={{transform: [{translateX: shakeAnimation} as any]}}>
+                        <QuizQuestion id={activeQuestion?.id}
+                                      questionOrder={activeQuestion.counter}
+                                      content={activeQuestion?.content}
+                                      imgUrl={activeQuestion?.imgUrl}
+                                      correctAnswerId={activeQuestion?.correctAnswerId}
+                                      answersList={activeQuestion?.answersList}
+                                      selectedId={answerMap.get(activeQuestion?.id)}
+                                      onSelect={handleAnswer}
+                                      isAnswered={answerMap.get(activeQuestion?.id) !== undefined}
+                                      isReviewPage={isReviewMode(quizType)}
+                                      explanation={getExplanation()}
+                                      showCorrectAnswer={isReviewMode(quizType) ? false : showCorrectAnswer}
+                                      onSkipTap={() => onSwipeLeft()}
+                        />
+                    </Animated.View>
                 </ScrollView>
-            </Animated.View>
+            </View>
         </View>
     );
 };
