@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {ScrollView, Text, View} from 'react-native';
+import {ScrollView, View} from 'react-native';
 import {RouteProp, useRoute} from "@react-navigation/native";
 import {ButtonCard} from "../components";
 import {useTheme} from "../hooks";
@@ -11,6 +11,7 @@ import DataDistributionCard from "components/DataDistribution";
 import InAppReview from 'react-native-in-app-review';
 import {logEvent} from "util/logUtil";
 import {handleReviewRequest} from "util/commonUtil";
+import {AppText} from "components";
 
 type QuizParams = {
     quizName: string;
@@ -57,11 +58,11 @@ const CompletedQuizScreen = ({navigation}) => {
     const reviewModal = async () => {
         const isAvailable = InAppReview.isAvailable();
         if (isAvailable) {
-            handleReviewRequest().then((shouldShowModal) => {
+            handleReviewRequest('CompletedScreenReview').then((shouldShowModal) => {
                 if (shouldShowModal) {
                     InAppReview.RequestInAppReview()
                         .then(() => {
-                            logEvent('reviewShown');
+                            logEvent('review');
                         })
                         .catch((error) => {
                             logEvent('reviewError', {error: error})
@@ -148,11 +149,17 @@ const CompletedQuizScreen = ({navigation}) => {
             {totalCompletedUserQuizzes > 1 &&
                 <>
                     <View style={{marginVertical: sizes.m, alignItems: 'center'}}>
-                        <Text style={{color: colors.text, fontSize: sizes.text, fontFamily: fonts.p}}>
-                            You scored higher than <Text
-                            style={{fontFamily: fonts.medium}}>{getPercentage()}%</Text> of
+                        <AppText style={{
+                            textAlign: 'auto',
+                            fontFamily: fonts.p
+                        }}>
+                            You scored higher than <AppText
+                            style={{
+                                textAlign: 'auto',
+                                fontFamily: fonts.medium
+                            }}>{getPercentage()}%</AppText> of
                             people.
-                        </Text>
+                        </AppText>
                     </View>
                 </>
             }
@@ -161,9 +168,9 @@ const CompletedQuizScreen = ({navigation}) => {
             }
             {isDailyQuiz(quizType) &&
                 <View style={{alignItems: 'center'}}>
-                    <Text style={{color: colors.text, fontSize: sizes.text, fontFamily: fonts.p}}>
+                    <AppText style={{color: colors.text, fontSize: sizes.text, fontFamily: fonts.p}}>
                         Don't forget to come back tomorrow!
-                    </Text>
+                    </AppText>
                 </View>
             }
 

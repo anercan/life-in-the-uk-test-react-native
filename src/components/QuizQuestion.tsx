@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Dimensions} from 'react-native';
+import {View, TouchableOpacity, StyleSheet, Dimensions} from 'react-native';
 import {IAnswerResponse, IQuizQuestion} from "constants/types";
 import {useTheme} from "../hooks";
 import Animated, {FadeIn} from "react-native-reanimated";
 import SwipeIndicator from "components/SwipeIndicator";
 import {useTap} from "hooks/useTap";
+import {AppText} from "components/index";
 
 const {width} = Dimensions.get('window');
 
@@ -28,11 +29,20 @@ const QuizQuestion = (props: IQuizQuestion) => {
         if (!props.isAnswered) {
             return colors.orderBoxBackGround; // cevaplanmamışsa, varsayılan renk
         }
+        const dontHighlightCorrect = !props.showCorrectAnswer && !props.isReviewPage;
         let selectedAnswer = id === selectedId;
         if (selectedAnswer) {
+            if (dontHighlightCorrect) {
+                return colors.light;
+            }
             return id === props.correctAnswerId ? '#75c78a' : '#c97d80'; // doğru cevap yeşil, yanlış kırmızı
+        } else {
+            if (!dontHighlightCorrect && id === props.correctAnswerId) {
+                return '#75c78a'
+            } else {
+                return colors.orderBoxBackGround
+            }
         }
-        return id === props.correctAnswerId && (props.isReviewPage || props.showCorrectAnswer) ? '#75c78a' : colors.orderBoxBackGround; // doğru cevap yeşil, geri kalan gri
     }
 
     const triggerTap = () => {
@@ -87,23 +97,13 @@ const QuizQuestion = (props: IQuizQuestion) => {
             marginVertical: sizes.s,
             margin: sizes.s,
         }, questionText: {
-            fontFamily: fonts.p,
-            color: colors.text,
-            fontSize: sizes.text
+            fontFamily: fonts.p
         }, explanationText: {
-            fontFamily: fonts.text,
-            color: colors.text,
-            fontSize: sizes.text,
+            textAlign: 'auto',
             marginTop: sizes.xs
         }, orderText: {
             fontFamily: fonts.h1,
-            textAlign: "center",
-            color: colors.text,
             fontSize: sizes.h2
-        }, answerText: {
-            color: colors.text,
-            fontFamily: fonts.text,
-            fontSize: sizes.text
         }
     });
 
@@ -122,7 +122,7 @@ const QuizQuestion = (props: IQuizQuestion) => {
                 key={answer.id}
                 onPress={() => handleSelect(answer)}>
                 <View style={{...styles.answerBox, backgroundColor: getBackgroundColor(answer.id)}}>
-                    <Text style={styles.answerText}>{answer.content}</Text>
+                    <AppText style={{textAlign: 'auto'}}>{answer.content}</AppText>
                 </View>
             </TouchableOpacity>
         ));
@@ -135,18 +135,18 @@ const QuizQuestion = (props: IQuizQuestion) => {
     return (
         <View onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} style={styles.box}>
             <View style={styles.orderBox}>
-                <Text
-                    style={styles.orderText}>{props?.questionOrder || props?.questionOrder == 0 ? props?.questionOrder + 1 : null}</Text>
+                <AppText
+                    style={styles.orderText}>{props?.questionOrder || props?.questionOrder == 0 ? props?.questionOrder + 1 : null}</AppText>
             </View>
             <View style={styles.questionBox}>
-                <Text style={styles.questionText}>{props.content}</Text>
+                <AppText style={styles.questionText}>{props.content}</AppText>
             </View>
             {answers(props.answersList)}
             {(props.isAnswered && props.selectedId != props.correctAnswerId && props.explanation?.trim()?.length > 0) ?
                 <Animated.View entering={FadeIn} style={styles.explanationBox}>
-                    <Text style={styles.explanationText}>
+                    <AppText style={styles.explanationText}>
                         {props.explanation}
-                    </Text>
+                    </AppText>
                 </Animated.View>
                 : ''
             }

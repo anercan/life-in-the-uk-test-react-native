@@ -3,14 +3,13 @@ import {View, StyleSheet} from 'react-native';
 import AppText from './AppText';
 import {useTheme} from "hooks";
 
-
 const StatusBox = ({text}) => {
 
-    const {sizes,colors} = useTheme();
+    const {sizes, colors, fonts} = useTheme();
 
     const styles = StyleSheet.create({
         container: {
-            marginHorizontal:sizes.sm,
+            marginHorizontal: sizes.sm,
             padding: sizes.sm,
             borderRadius: sizes.sm,
             marginTop: sizes.sm,
@@ -25,11 +24,7 @@ const StatusBox = ({text}) => {
                 {backgroundColor: colors.tabBackground},
             ]}
         >
-            <AppText
-                h3
-                align="center"
-                color={colors.text}
-            >
+            <AppText style={{fontSize: sizes.text, fontFamily: fonts.semibold}}>
                 {text}
             </AppText>
         </View>

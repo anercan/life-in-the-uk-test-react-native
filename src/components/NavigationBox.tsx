@@ -1,7 +1,8 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Dimensions} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Dimensions} from 'react-native';
 import {useTheme} from '../hooks';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import {AppText} from "components/index";
 
 const {width} = Dimensions.get('window');
 
@@ -32,9 +33,9 @@ const NavigationBox = ({header, icon, onPress}) => {
             justifyContent: 'flex-end',
         },
         header: {
+            textAlign:'auto',
             fontFamily: fonts.medium,
             fontSize: sizes.smallText,
-            color: colors.text,
             marginBottom: sizes.s,
         },
         iconOutline: {
@@ -68,7 +69,7 @@ const NavigationBox = ({header, icon, onPress}) => {
                 </View>
                 <View style={{flexDirection: 'row', flex: 3}}>
                     <View style={styles.textContainer}>
-                        <Text style={styles.header}>{header}</Text>
+                        <AppText style={styles.header}>{header}</AppText>
                     </View>
                 </View>
 

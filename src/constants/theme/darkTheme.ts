@@ -3,7 +3,6 @@ import {
     ITheme,
     ThemeAssets, ThemeColors,
     ThemeFonts,
-    ThemeIcons,
     ThemeLineHeights, ThemeSizes, ThemeSpacing,
     ThemeWeights,
 } from '../types';
@@ -43,44 +42,6 @@ export const WEIGHTS: ThemeWeights = {
     bold: Platform.OS === 'ios' ? '700' : 'normal',
     extrabold: Platform.OS === 'ios' ? '800' : 'normal',
     black: Platform.OS === 'ios' ? '900' : 'normal',
-};
-
-export const ICONS: ThemeIcons = {
-    apple: require('../../assets/icons/apple.png'),
-    google: require('../../assets/icons/google.png'),
-    facebook: require('../../assets/icons/facebook.png'),
-    arrow: require('../../assets/icons/arrow.png'),
-    articles: require('../../assets/icons/articles.png'),
-    basket: require('../../assets/icons/basket.png'),
-    bell: require('../../assets/icons/bell.png'),
-    calendar: require('../../assets/icons/calendar.png'),
-    chat: require('../../assets/icons/chat.png'),
-    check: require('../../assets/icons/check.png'),
-    clock: require('../../assets/icons/clock.png'),
-    close: require('../../assets/icons/close.png'),
-    components: require('../../assets/icons/components.png'),
-    document: require('../../assets/icons/document.png'),
-    documentation: require('../../assets/icons/documentation.png'),
-    extras: require('../../assets/icons/extras.png'),
-    flight: require('../../assets/icons/flight.png'),
-    home: require('../../assets/icons/home.png'),
-    hotel: require('../../assets/icons/hotel.png'),
-    image: require('../../assets/icons/image.png'),
-    location: require('../../assets/icons/location.png'),
-    menu: require('../../assets/icons/menu.png'),
-    more: require('../../assets/icons/more.png'),
-    notification: require('../../assets/icons/notification.png'),
-    office: require('../../assets/icons/office.png'),
-    payment: require('../../assets/icons/payment.png'),
-    profile: require('../../assets/icons/profile.png'),
-    register: require('../../assets/icons/register.png'),
-    rental: require('../../assets/icons/rental.png'),
-    search: require('../../assets/icons/search.png'),
-    settings: require('../../assets/icons/settings.png'),
-    star: require('../../assets/icons/star.png'),
-    train: require('../../assets/icons/train.png'),
-    users: require('../../assets/icons/users.png'),
-    warning: require('../../assets/icons/warning.png'),
 };
 
 export const ASSETS: ThemeAssets = {
@@ -232,8 +193,7 @@ export const SPACING: ThemeSpacing = {
 export const DARK_THEME: ITheme = {
     colors: COLORS,
     sizes: {...SIZES, ...SPACING},
-    assets: {...ICONS, ...ASSETS},
-    icons: ICONS,
+    assets: ASSETS,
     fonts: FONTS,
     weights: WEIGHTS,
     lines: LINE_HEIGHTS

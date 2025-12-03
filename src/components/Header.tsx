@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {View, Text, StyleSheet, StatusBar, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, StatusBar, TouchableOpacity} from 'react-native';
 import {useTheme} from "../hooks";
 import {TitleContext} from "context/TitleContext";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -7,10 +7,11 @@ import {useNavigation} from '@react-navigation/native';
 import {getShortenText} from "util/commonUtil";
 import {AuthContext} from "context/AuthContext";
 import {SafeAreaView} from "react-native-safe-area-context";
+import {AppText} from "components/index";
 
 const Header = () => {
     const {getTitle} = useContext(TitleContext);
-    const {fonts, colors, sizes} = useTheme();
+    const {colors, sizes} = useTheme();
     const navigation = useNavigation();
     const {isLoggedIn} = useContext(AuthContext);
 
@@ -33,8 +34,6 @@ const Header = () => {
             flexDirection: 'row',
             marginBottom: sizes.s
         }, title: {
-            fontFamily: fonts.text,
-            textAlign: 'center',
             fontSize: sizes.h1,
             color: colors.gray
         }
@@ -52,9 +51,9 @@ const Header = () => {
                             </TouchableOpacity>}
                     </View>
                     <View style={{flex: 5}}>
-                        <Text style={styles.title}>
+                        <AppText style={styles.title}>
                             {getShortenText(getTitle(), 20)}
-                        </Text>
+                        </AppText>
                     </View>
                     <View style={{flex: 1}}>
                         <TouchableOpacity onPress={handleSettings} style={{marginLeft: sizes.s}}>

@@ -7,11 +7,11 @@ import {
     Dimensions,
     Modal,
     StyleSheet,
-    Text,
     TouchableWithoutFeedback,
     View
 } from "react-native";
 import {ContributionGraph} from "react-native-chart-kit";
+import {AppText} from "components/index";
 
 const {height, width} = Dimensions.get('window');
 
@@ -83,12 +83,12 @@ const ActivityModal = ({navigation, modalVisible, onPressClose}) => {
                     <View style={styles.modalOverlay}>
                         <View style={styles.modalContainer}>
                             <View style={{flex: 1}}>
-                                <Text style={{
+                                <AppText style={{
                                     fontFamily: fonts.text,
                                     fontSize: sizes.text,
                                     color: colors.text,
                                     textAlign: 'center'
-                                }}>Activity (Last 3 Months)</Text>
+                                }}>Activity (Last 3 Months)</AppText>
                                 <View style={{marginTop:sizes.m}}>
                                     <ContributionGraph
                                         values={activityData}

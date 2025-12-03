@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, StyleSheet, TouchableOpacity, Text, Image, Linking} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Image, Linking} from 'react-native';
 import {
     GoogleSignin,
     isErrorWithCode,
@@ -162,6 +162,11 @@ const LoginScreen = () => {
             height: '100%',
             resizeMode: 'cover', // Ensures the image scales to fill the circle
         },
+        mailText: {
+            textAlign: "center",
+            fontSize: sizes.smallText,
+            color: colors.gray
+        }
     });
 
     return (
@@ -180,17 +185,16 @@ const LoginScreen = () => {
                         source={require('../assets/icons/google2.png')}
                     />
                 </View>
-                <Text style={styles.text}>Login with Google</Text>
+                <AppText style={styles.text}>Login with Google</AppText>
             </TouchableOpacity>
             <View style={{marginTop: sizes.xxxl}}>
-                <AppText center={true} size={sizes.smallText} color={colors.gray}>team@quizmarkt.com</AppText>
+                <AppText style={styles.mailText}>team@quizmarkt.com</AppText>
                 <AppText onPress={() => Linking.openURL('https://quizmarkt.com/life-in-the-uk/privacy-policy.html')}
-                         style={{textDecorationLine: 'underline'}} size={sizes.smallText} center={true}
-                         color={colors.gray}>
+                         style={{...styles.mailText, textDecorationLine: 'underline'}}>
                     Privacy Policy
                 </AppText>
                 {version != '' && version != 'null' &&
-                    <AppText center={true} size={sizes.smallText} color={colors.gray}>{version}</AppText>
+                    <AppText style={styles.mailText}>{version}</AppText>
                 }
             </View>
         </View>

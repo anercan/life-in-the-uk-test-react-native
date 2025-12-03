@@ -1,7 +1,8 @@
 import React, {useEffect, useRef} from 'react';
-import {Animated, StyleSheet, Text} from 'react-native';
+import {Animated, StyleSheet} from 'react-native';
 import {useTheme} from "hooks";
 import Image from "components/Image";
+import {AppText} from "components/index";
 
 const SwipeIndicator = () => {
     const translateX = useRef(new Animated.Value(250)).current; // Start from 500px to the right (off-screen)
@@ -48,12 +49,11 @@ const SwipeIndicator = () => {
                 },
             ]}
         >
-            <Text style={{
-                textAlign: 'center',
+            <AppText style={{
                 fontFamily: fonts.p,
                 fontSize: sizes.smallText,
                 color: colors.background
-            }}>Swipe or Tap the Card!</Text>
+            }}>Swipe or Tap the Card!</AppText>
             <Image
                 width={sizes.xxl}
                 height={sizes.xxl}

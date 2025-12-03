@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
-import {StyleSheet, Text, TouchableOpacity, View, Animated, LayoutChangeEvent} from "react-native";
+import {StyleSheet, TouchableOpacity, View, Animated, LayoutChangeEvent} from "react-native";
 import {useTheme} from "../hooks";
+import {AppText} from "components/index";
 
 export interface IHeader {
     callback: (tabNumber: number) => void;
@@ -70,7 +71,7 @@ const Tabs = (props: IHeader) => {
             zIndex: 1,
         },
         text: {
-            fontSize: sizes.h4,
+            fontSize: sizes.h3,
             fontFamily: fonts.text,
             color: colors.text,
         },
@@ -85,14 +86,14 @@ const Tabs = (props: IHeader) => {
                 <Animated.View style={[styles.switch, {transform: [{translateX: animation}]}]}/>
             )}
             <TouchableOpacity style={styles.tab} onPress={() => setTabChange(0)}>
-                <Text style={[styles.text, tab === 0 && styles.activeText]}>
+                <AppText style={[styles.text, tab === 0 && styles.activeText]}>
                     {props.tabOneText}
-                </Text>
+                </AppText>
             </TouchableOpacity>
             <TouchableOpacity style={styles.tab} onPress={() => setTabChange(1)}>
-                <Text style={[styles.text, tab === 1 && styles.activeText]}>
+                <AppText style={[styles.text, tab === 1 && styles.activeText]}>
                     {props.tabTwoText}
-                </Text>
+                </AppText>
             </TouchableOpacity>
         </View>
     );

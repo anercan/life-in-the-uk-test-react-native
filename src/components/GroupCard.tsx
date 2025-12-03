@@ -1,7 +1,8 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, ImageProps, Dimensions} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, ImageProps, Dimensions} from 'react-native';
 import {useTheme} from "../hooks";
 import Image from "components/Image";
+import {AppText} from "components/index";
 
 interface IGroupCard {
     card: any,
@@ -51,8 +52,6 @@ const GroupCard = (props: IGroupCard) => {
         }, orderBoxText: {
             color: colors.gray,
             fontSize: sizes.h2,
-            fontFamily: fonts.text,
-            alignItems: 'center',
             paddingVertical: sizes.s,
             paddingHorizontal: sizes.s
         }
@@ -66,20 +65,20 @@ const GroupCard = (props: IGroupCard) => {
         <TouchableOpacity id={`card-${props?.card?.id}`} style={styles.container} onPress={props.onPress}>
             <View style={{alignItems: 'flex-end'}}>
                 <View style={styles.orderBox}>
-                    <Text style={styles.orderBoxText}>
+                    <AppText style={styles.orderBoxText}>
                         {getProgress()}
-                        <Text style={{
+                        <AppText style={{
                             color: '#ecebeb',
                             fontSize: sizes.h4,
                             fontFamily:fonts.text
                         }}>
                             %
-                        </Text>
-                    </Text>
+                        </AppText>
+                    </AppText>
                 </View>
             </View>
             <View style={styles.card}>
-                <Text style={styles.cardText}>{props.card?.title?.replace(/(?<!\bof|is)\s/g, '\n')}</Text>
+                <AppText style={styles.cardText}>{props.card?.title?.replace(/(?<!\bof|is)\s/g, '\n')}</AppText>
                 <Image style={{
                     position: 'absolute',
                     top: sizes.m,

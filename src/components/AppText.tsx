@@ -1,148 +1,27 @@
-import React from 'react';
-import {Platform, StyleSheet, Text, TextStyle} from 'react-native';
+import React from "react";
+import {Text, TextProps, StyleSheet} from "react-native";
+import {LIGHT_THEME} from "constants/theme/lightTheme";
 
-import useTheme from '../hooks/useTheme';
-import {ITextProps} from '../constants/types';
+interface AppTextProps extends TextProps {
+    children: React.ReactNode;
+    style?: TextProps["style"];
+}
 
-const Typography = (props: ITextProps) => {
-  const {
-    id = 'Text',
-    children,
-    style,
-    center,
-    gradient,
-    color,
-    opacity,
-    // predefined colors
-    primary,
-    secondary,
-    tertiary,
-    black,
-    white,
-    gray,
-    danger,
-    warning,
-    success,
-    info,
-    size,
-    bold,
-    semibold,
-    weight,
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    p,
-    font,
-    align,
-    transform,
-    lineHeight,
-    position,
-    right,
-    left,
-    top,
-    bottom,
-    marginBottom,
-    marginTop,
-    marginHorizontal,
-    marginVertical,
-    marginRight,
-    marginLeft,
-    paddingBottom,
-    paddingTop,
-    paddingHorizontal,
-    paddingVertical,
-    paddingRight,
-    paddingLeft,
-    ...rest
-  } = props;
-  const {colors, sizes, weights, fonts} = useTheme();
-
-  const textColor = color ? color : undefined;
-
-  const textStyles = StyleSheet.flatten([
-    style,
-    {
-      color: colors.text,
-      fontSize: sizes.text,
-      fontWeight: weights.text,
-      fontFamily: fonts.text,
-      ...(textColor && {color: textColor}),
-      ...(h1 && {
-        fontSize: sizes.h1,
-        fontWeight: weights.h1,
-        fontFamily: fonts.h1,
-      }),
-      ...(h2 && {
-        fontSize: sizes.h2,
-        fontWeight: weights.h2,
-        fontFamily: fonts.h2,
-      }),
-      ...(h3 && {
-        fontSize: sizes.h3,
-        fontWeight: weights.h3,
-        fontFamily: fonts.h3,
-      }),
-      ...(h4 && {
-        fontSize: sizes.h4,
-        fontWeight: weights.h4,
-        fontFamily: fonts.h4,
-      }),
-      ...(h5 && {
-        fontSize: sizes.h5,
-        fontWeight: weights.h5,
-        fontFamily: fonts.h5,
-      }),
-      ...(p && {
-        fontSize: sizes.p,
-        fontWeight: weights.p,
-        fontFamily: fonts.p,
-      }),
-      ...(p && {
-        fontSize: sizes.text,
-        fontWeight: weights.text,
-        fontFamily: fonts.p,
-      }),
-      ...(marginBottom && {marginBottom}),
-      ...(marginTop && {marginTop}),
-      ...(marginHorizontal && {marginHorizontal}),
-      ...(marginVertical && {marginVertical}),
-      ...(marginRight && {marginRight}),
-      ...(marginLeft && {marginLeft}),
-      ...(paddingBottom && {paddingBottom}),
-      ...(paddingTop && {paddingTop}),
-      ...(paddingHorizontal && {paddingHorizontal}),
-      ...(paddingVertical && {paddingVertical}),
-      ...(paddingRight && {paddingRight}),
-      ...(paddingLeft && {paddingLeft}),
-      ...(center && {textAlign: 'center'}),
-      ...(align && {textAlign: align}),
-      ...(bold && {fontFamily: fonts.bold}),
-      ...(semibold && {fontFamily: fonts.semibold}),
-      ...(weight && {fontWeight: weight}),
-      ...(transform && {textTransform: transform}),
-      ...(font && {fontFamily: font}),
-      ...(size && {fontSize: size}),
-      ...(color && {color}),
-      ...(opacity && {opacity}),
-      ...(lineHeight && {lineHeight}),
-      ...(position && {position}),
-      ...(right !== undefined && {right}),
-      ...(left !== undefined && {left}),
-      ...(top !== undefined && {top}),
-      ...(bottom !== undefined && {bottom}),
-    },
-  ]) as TextStyle;
-
-  // generate component testID or accessibilityLabel based on Platform.OS
-  const textID =
-    Platform.OS === 'android' ? {accessibilityLabel: id} : {testID: id};
-  return (
-    <Text {...textID} {...rest} style={textStyles}>
-      {children}
-    </Text>
-  );
+const AppText: React.FC<AppTextProps> = ({children, style, ...rest}) => {
+    return (
+        <Text style={[styles.default, style]} {...rest}>
+            {children}
+        </Text>
+    );
 };
 
-export default React.memo(Typography);
+const styles = StyleSheet.create({
+    default: {
+        textAlign: "center",
+        fontSize: LIGHT_THEME.sizes.text,
+        color: LIGHT_THEME.colors.text,
+        fontFamily: LIGHT_THEME.fonts.text
+    },
+});
+
+export default AppText;

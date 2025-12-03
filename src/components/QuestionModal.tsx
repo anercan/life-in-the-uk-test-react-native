@@ -2,11 +2,11 @@ import React, {useEffect, useState} from 'react';
 import {
     Modal,
     View,
-    Text,
     TouchableOpacity,
     StyleSheet,
 } from 'react-native';
 import {useTheme} from "hooks";
+import {AppText} from "components/index";
 
 type ReviewModalProps = {
     visible: boolean;
@@ -53,8 +53,6 @@ const QuestionModal: React.FC<ReviewModalProps> = (props: ReviewModalProps) => {
         title: {
             fontFamily: fonts.medium,
             fontSize: 16,
-            textAlign: 'center',
-            color: colors.text,
             marginBottom: 20,
         },
         buttonGroup: {
@@ -88,7 +86,7 @@ const QuestionModal: React.FC<ReviewModalProps> = (props: ReviewModalProps) => {
         <Modal transparent animationType="fade" visible={visibility}>
             <View style={styles.overlay}>
                 <View style={styles.card}>
-                    <Text style={styles.title}>{props.question}</Text>
+                    <AppText style={styles.title}>{props.question}</AppText>
                     <View style={styles.buttonGroup}>
                         <TouchableOpacity
                             style={[
@@ -97,7 +95,7 @@ const QuestionModal: React.FC<ReviewModalProps> = (props: ReviewModalProps) => {
                             ]}
                             onPress={() => positiveActionInternal()}
                         >
-                            <Text style={styles.buttonText}>{props.positiveText}</Text>
+                            <AppText style={styles.buttonText}>{props.positiveText}</AppText>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={[
@@ -106,7 +104,7 @@ const QuestionModal: React.FC<ReviewModalProps> = (props: ReviewModalProps) => {
                             ]}
                             onPress={() => onCloseAction()}
                         >
-                            <Text style={styles.buttonText}>{props.onCloseText}</Text>
+                            <AppText style={styles.buttonText}>{props.onCloseText}</AppText>
                         </TouchableOpacity>
                     </View>
                 </View>

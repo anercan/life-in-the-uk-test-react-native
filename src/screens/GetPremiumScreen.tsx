@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Animated, {
@@ -23,6 +23,7 @@ import useApiCaller from "../hooks/useApiCaller";
 import {getUserId} from "util/jwtUtil";
 import {getItemOfferText, isAndroid, isFreeTrialEligible} from "util/commonUtil";
 import {logEvent} from "util/logUtil";
+import {AppText} from "components";
 
 let monthlySubProductId = 'level1';
 
@@ -156,7 +157,7 @@ const PremiumScreen = ({navigation}) => {
             marginTop: sizes.xs,
         },
         title: {
-            fontFamily: fonts.text,
+            textAlign:'auto',
             fontSize: 32,
             color: colors.gray,
             fontWeight: 'bold',
@@ -166,8 +167,6 @@ const PremiumScreen = ({navigation}) => {
             color: colors.card,
             marginTop: sizes.xs,
             fontSize: sizes.smallText,
-            fontFamily: fonts.text,
-            textAlign: 'center',
         },
         benefitsContainer: {},
         benefit: {
@@ -177,9 +176,9 @@ const PremiumScreen = ({navigation}) => {
             marginVertical: 10,
         },
         benefitText: {
+            textAlign:'auto',
             color: colors.gray,
             fontSize: sizes.smallText,
-            fontFamily: fonts.text,
             marginLeft: sizes.s,
         },
         buttonContainer: {
@@ -199,7 +198,6 @@ const PremiumScreen = ({navigation}) => {
         },
         buttonText: {
             fontFamily: fonts.semibold,
-            color: colors.text,
             fontSize: 16,
         }
     });
@@ -208,8 +206,8 @@ const PremiumScreen = ({navigation}) => {
         <LinearGradient colors={[colors.background.toString(), '#abadb3',]} style={styles.container}>
             <Animated.View entering={FadeInDown.duration(800)} style={styles.header}>
                 <Icon name="crown" size={60} color={colors.gray}/>
-                <Text style={styles.title}>Go Premium+</Text>
-                <Text style={styles.subtitle}>{getOfferText()}</Text>
+                <AppText style={styles.title}>Go Premium+</AppText>
+                <AppText style={styles.subtitle}>{getOfferText()}</AppText>
             </Animated.View>
 
             <View style={styles.benefitsContainer}>
@@ -220,7 +218,7 @@ const PremiumScreen = ({navigation}) => {
                         style={styles.benefit}
                     >
                         <Icon name="check" size={22} color={colors.gray}/>
-                        <Text style={styles.benefitText}>{text}</Text>
+                        <AppText style={styles.benefitText}>{text}</AppText>
                     </Animated.View>
                 ))}
             </View>
@@ -228,8 +226,8 @@ const PremiumScreen = ({navigation}) => {
             <Animated.View entering={ZoomIn.delay(100)} style={styles.buttonContainer}>
                 <TouchableOpacity disabled={buttonDisable} style={styles.button} onPress={() => handleUpgrade()}>
                     <LinearGradient colors={['#eed345', buttonDisable ? '#bababa' : '#f5c042']} style={styles.gradient}>
-                        <Text
-                            style={styles.buttonText}>{isFreeTrialEligible(product) ? 'Start Free Trial!' : 'Upgrade Now!'}</Text>
+                        <AppText
+                            style={styles.buttonText}>{isFreeTrialEligible(product) ? 'Start Free Trial!' : 'Upgrade Now!'}</AppText>
                     </LinearGradient>
                 </TouchableOpacity>
             </Animated.View>

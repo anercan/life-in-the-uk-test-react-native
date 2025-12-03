@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import * as Progress from 'react-native-progress';
 
 import useTheme from '../hooks/useTheme';
+import {AppText} from "components/index";
 
 export interface IScoreCard {
     total: number;
@@ -49,7 +50,6 @@ const ScoreCard = (props: IScoreCard) => {
             flex: 1,
             marginHorizontal: sizes.s
         }, scoreText: {
-            color: colors.text,
             fontSize: sizes.h2,
             fontFamily: fonts.p,
         },
@@ -79,9 +79,9 @@ const ScoreCard = (props: IScoreCard) => {
     return (
         <View style={styles.container}>
             <View style={{alignItems: 'center', marginBottom: sizes.m}}>
-                <Text style={{textAlign: 'center', color: colors.text, fontSize: sizes.h2, fontFamily: fonts.medium}}>
+                <AppText style={{fontSize: sizes.h2, fontFamily: fonts.medium}}>
                     {props.quizName}
-                </Text>
+                </AppText>
             </View>
             <View style={{alignItems: 'center', marginBottom: sizes.md}}>
                 <View style={styles.progress}>
@@ -100,18 +100,18 @@ const ScoreCard = (props: IScoreCard) => {
             <View style={styles.scoreBoxContainer}>
                 <TouchableOpacity activeOpacity={getActiveOpacity()} onPress={() => onPressScore('REVIEW_ALL')}
                                   style={styles.scoreBox}>
-                    <Text style={{...styles.scoreText}}>{props.total}</Text>
-                    <Text style={{...styles.scoreText, color: colors.text, fontSize: sizes.p}}>{'Total'}</Text>
+                    <AppText style={{...styles.scoreText}}>{props.total}</AppText>
+                    <AppText style={{...styles.scoreText, fontSize: sizes.p}}>{'Total'}</AppText>
                 </TouchableOpacity>
                 <TouchableOpacity activeOpacity={getActiveOpacity()} onPress={() => onPressScore('REVIEW_CORRECTS')}
                                   style={styles.scoreBox}>
-                    <Text style={{...styles.scoreText}}>{props.correct}</Text>
-                    <Text style={{...styles.scoreText, color: colors.text, fontSize: sizes.p}}>{'Correct'}</Text>
+                    <AppText style={{...styles.scoreText}}>{props.correct}</AppText>
+                    <AppText style={{...styles.scoreText, fontSize: sizes.p}}>{'Correct'}</AppText>
                 </TouchableOpacity>
                 <TouchableOpacity activeOpacity={getActiveOpacity()} onPress={() => onPressScore('REVIEW_WRONGS')}
                                   style={styles.scoreBox}>
-                    <Text style={{...styles.scoreText}}>{props.wrong}</Text>
-                    <Text style={{...styles.scoreText, color: colors.text, fontSize: sizes.p}}>{'Wrong'}</Text>
+                    <AppText style={{...styles.scoreText}}>{props.wrong}</AppText>
+                    <AppText style={{...styles.scoreText, fontSize: sizes.p}}>{'Wrong'}</AppText>
                 </TouchableOpacity>
             </View>
         </View>

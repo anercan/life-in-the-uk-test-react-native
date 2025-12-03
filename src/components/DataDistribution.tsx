@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {PieChart} from "react-native-gifted-charts";
 import {useTheme} from '../hooks/';
-import {Text, TouchableOpacity, View} from "react-native";
+import {TouchableOpacity, View} from "react-native";
 import StatusBox from "components/StatusBox";
+import {AppText} from "components/index";
 
 const DataDistributionCard = ({propData, isLoadingProp}) => {
     const [dataList, setDataList] = useState<any[]>();
@@ -36,12 +37,11 @@ const DataDistributionCard = ({propData, isLoadingProp}) => {
                             marginRight: sizes.s,
                         }}
                     />
-                    <Text style={{
+                    <AppText style={{
                         marginVertical: sizes.xs,
                         fontFamily: data.focused ? fonts.bold : fonts.text,
-                        color: colors.text,
                         fontSize: sizes.smallText
-                    }}>{data?.name}</Text>
+                    }}>{data?.name}</AppText>
                 </TouchableOpacity>
             ))
         );
@@ -57,14 +57,9 @@ const DataDistributionCard = ({propData, isLoadingProp}) => {
                         padding: sizes.sm,
                         borderRadius: sizes.sm,
                     }}>
-                        <Text style={{
-                            fontFamily: fonts.semibold,
-                            textAlign: 'center',
-                            color: colors.text,
-                            fontSize: sizes.text
-                        }}>
+                        <AppText style={{fontFamily: fonts.semibold}}>
                             Incorrect Distribution
-                        </Text>
+                        </AppText>
                         <View style={{marginVertical: 30, alignItems: 'center'}}>
                             <PieChart
                                 focusOnPress
@@ -79,20 +74,16 @@ const DataDistributionCard = ({propData, isLoadingProp}) => {
                                 centerLabelComponent={() => {
                                     return (
                                         <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                                            <Text style={{
-                                                fontSize: sizes.h1,
-                                                fontFamily: fonts.semibold,
-                                                color: colors.text,
-                                            }}>
+                                            <AppText style={{fontSize: sizes.h1, fontFamily: fonts.semibold}}>
                                                 {dataList.find(value => value.focused === true)?.value}
-                                            </Text>
-                                            <Text style={{
+                                            </AppText>
+                                            <AppText style={{
                                                 fontSize: sizes.smallestText,
                                                 color: colors.text,
                                                 textAlign: 'center'
                                             }}>
                                                 Incorrect Answers
-                                            </Text>
+                                            </AppText>
                                         </View>
                                     );
                                 }}

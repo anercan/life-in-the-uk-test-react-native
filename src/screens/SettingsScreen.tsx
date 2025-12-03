@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, Text, Switch, TouchableOpacity, StyleSheet, FlatList, Linking, Platform, Share} from 'react-native';
+import {View, Switch, TouchableOpacity, StyleSheet, FlatList, Linking, Platform, Share} from 'react-native';
 import {useData, useTheme} from "hooks";
 import {TitleContext} from "context/TitleContext";
 import {AuthContext} from "context/AuthContext";
@@ -8,6 +8,7 @@ import {isPremium} from "util/jwtUtil";
 import {QuizSettingsContext} from "context/QuizSettingsContext";
 import Icon from "react-native-vector-icons/Ionicons";
 import {logEvent} from "util/logUtil";
+import {AppText} from "components";
 
 const SettingsScreen = ({navigation}) => {
     const {setTitle} = useContext(TitleContext);
@@ -204,15 +205,14 @@ const SettingsScreen = ({navigation}) => {
                     const itemSize = item.items.filter((setting: any) => setting?.show !== false)?.length;
                     return (
                         <View style={{marginVertical: sizes.s, paddingHorizontal: sizes.sm}}>
-                            <Text style={{
-                                color: colors.text,
+                            <AppText style={{
+                                textAlign:'auto',
                                 marginHorizontal: 16,
                                 marginBottom: 8,
                                 fontFamily: fonts.semibold,
-                                fontSize: sizes.text
                             }}>
                                 {item.section}
-                            </Text>
+                            </AppText>
                             {// @ts-ignore
                                 item.items?.filter((setting: any) => setting?.show !== false).map((setting, idx) => (
                                     <React.Fragment key={idx}>
@@ -248,7 +248,7 @@ const SettingsScreen = ({navigation}) => {
                                                 >
                                                     <Icon name={setting.icon as any} size={18} color="#fff"/>
                                                 </View>
-                                                <Text style={styles.text}>{setting.title}</Text>
+                                                <AppText style={styles.text}>{setting.title}</AppText>
                                             </View>
                                             {setting.hasSwitch ? (
                                                 <Switch

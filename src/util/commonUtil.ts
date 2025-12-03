@@ -1,18 +1,18 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {Platform} from "react-native";
 
-export const handleReviewRequest = async (): Promise<boolean> => {
-    const shouldShow = await checkReviewModalShown();
+export const handleReviewRequest = async (key): Promise<boolean> => {
+    const shouldShow = await checkReviewModalShown(key);
     if (shouldShow) {
-        await AsyncStorage.setItem('reviewModalTimestamp5', Date.now().toString());
+        await AsyncStorage.setItem(key, Date.now().toString());
         return true;
     }
     return false;
 };
 
-export const checkReviewModalShown = async (): Promise<boolean> => {
+export const checkReviewModalShown = async (key): Promise<boolean> => {
     try {
-        const timestamp = await AsyncStorage.getItem('reviewModalTimestamp5');
+        const timestamp = await AsyncStorage.getItem(key);
         if (!timestamp) {
             return true;
         }
@@ -161,5 +161,5 @@ export const getProgress = (part,total) => {
     if (part && total) {
         return Math.round((part/ total) * 100);
     }
-    return '-';
+    return 0;
 }

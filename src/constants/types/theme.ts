@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
     ColorValue,
     FlexStyle,
-    ImageSourcePropType,
     TextStyle,
 } from 'react-native';
 
@@ -48,8 +47,7 @@ export type TWeight =
 export interface ITheme {
     colors: ThemeColors;
     sizes: ThemeSizes & ThemeSpacing;
-    assets: ThemeAssets & ThemeIcons;
-    icons: ThemeIcons;
+    assets: ThemeAssets;
     fonts: ThemeFonts;
     weights: ThemeWeights;
     lines: ThemeLineHeights;
@@ -173,44 +171,6 @@ export interface ThemeWeights {
     bold?: TextStyle['fontWeight'];
     extrabold?: TextStyle['fontWeight'];
     black?: TextStyle['fontWeight'];
-}
-
-export interface ThemeIcons {
-    apple: ImageSourcePropType;
-    google: ImageSourcePropType;
-    facebook: ImageSourcePropType;
-    arrow: ImageSourcePropType;
-    articles: ImageSourcePropType;
-    basket: ImageSourcePropType;
-    bell: ImageSourcePropType;
-    calendar: ImageSourcePropType;
-    chat: ImageSourcePropType;
-    check: ImageSourcePropType;
-    clock: ImageSourcePropType;
-    close: ImageSourcePropType;
-    components: ImageSourcePropType;
-    document: ImageSourcePropType;
-    documentation: ImageSourcePropType;
-    extras: ImageSourcePropType;
-    flight: ImageSourcePropType;
-    home: ImageSourcePropType;
-    hotel: ImageSourcePropType;
-    image: ImageSourcePropType;
-    location: ImageSourcePropType;
-    menu: ImageSourcePropType;
-    more: ImageSourcePropType;
-    notification: ImageSourcePropType;
-    office: ImageSourcePropType;
-    payment: ImageSourcePropType;
-    profile: ImageSourcePropType;
-    register: ImageSourcePropType;
-    rental: ImageSourcePropType;
-    search: ImageSourcePropType;
-    settings: ImageSourcePropType;
-    star: ImageSourcePropType;
-    train: ImageSourcePropType;
-    users: ImageSourcePropType;
-    warning: ImageSourcePropType;
 }
 
 export interface ThemeAssets {

@@ -680,7 +680,7 @@ export interface ISwitchProps extends ISpacing {
  * ## Text
  * Default usage:
  * ```
- * <Text>...</Text>
+ * <AppText>...</AppText>
  * ```
  *
  */

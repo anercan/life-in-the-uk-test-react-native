@@ -1,7 +1,8 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, StyleProp, ViewStyle,} from 'react-native';
+import {View, TouchableOpacity, StyleSheet, StyleProp, ViewStyle,} from 'react-native';
 
 import useTheme from '../hooks/useTheme';
+import {AppText} from "components/index";
 
 export interface IButton {
     onPress?: () => void;
@@ -20,8 +21,8 @@ const ButtonCard = (props: IButton) => {
             paddingVertical:sizes.sm,
             width: sizes.base * 20,
             margin: sizes.s,
-            justifyContent: 'center', //Centered vertically
-            alignItems: 'center', //Centered horizontally
+            justifyContent: 'center',
+            alignItems: 'center',
             borderWidth:1,
             borderColor:colors.cardBorder,
         }, buttonText: {
@@ -41,7 +42,7 @@ const ButtonCard = (props: IButton) => {
     return (
         <TouchableOpacity onPress={onPress}>
             <View style={[styles.card, props.style]}>
-                <Text style={styles.buttonText}>{props.buttonText}</Text>
+                <AppText style={styles.buttonText}>{props.buttonText}</AppText>
             </View>
         </TouchableOpacity>
     )

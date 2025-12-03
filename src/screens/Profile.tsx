@@ -10,7 +10,7 @@ import ActivityModal from "components/ActivityModal";
 
 const Profile = ({navigation}) => {
     const {apiCaller} = useApiCaller(navigation);
-    const {sizes, colors} = useTheme();
+    const {sizes, colors, fonts} = useTheme();
     const [userData, setUserData] = useState<UserDataResponse>();
     const {setTitle} = useContext(TitleContext);
     const [modalVisible, setModalVisible] = useState(false);
@@ -91,24 +91,27 @@ const Profile = ({navigation}) => {
                                                       index: 0,
                                                       routes: [{name: 'QuizGroupListStack'}]
                                                   })}>
-                                    <AppText size={sizes.p} semibold={true}
-                                             p>{userData?.totalQuizCount}</AppText>
+                                    <AppText style={{fontFamily: fonts.medium}}>
+                                        {userData?.totalQuizCount}
+                                    </AppText>
                                     <AppText>Total</AppText>
                                 </TouchableOpacity>
                             </Block>
                             <Block>
                                 <TouchableOpacity style={{alignItems: 'center'}}
                                                   onPress={() => navigation.navigate('SolvedQuizListScreens')}>
-                                    <AppText size={sizes.p} semibold={true}
-                                             p>{userData?.userOngoingQuizCount}</AppText>
+                                    <AppText style={{fontFamily: fonts.medium}}>
+                                        {userData?.userOngoingQuizCount}
+                                    </AppText>
                                     <AppText>Ongoing</AppText>
                                 </TouchableOpacity>
                             </Block>
                             <Block>
                                 <TouchableOpacity style={{alignItems: 'center'}}
                                                   onPress={() => navigation.navigate('SolvedQuizListScreens')}>
-                                    <AppText size={sizes.p} semibold={true}
-                                             p>{userData?.userSolvedQuizCount}</AppText>
+                                    <AppText style={{fontFamily: fonts.medium}}>
+                                        {userData?.userSolvedQuizCount}
+                                    </AppText>
                                     <AppText>Solved</AppText>
                                 </TouchableOpacity>
                             </Block>

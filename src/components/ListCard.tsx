@@ -1,9 +1,10 @@
 import React from 'react';
-import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {useTheme} from "../hooks";
 import {getShortenText} from "util/commonUtil";
+import {AppText} from "components/index";
 
 interface IListCard {
     title?: string;
@@ -19,8 +20,10 @@ const ListCard = (props: IListCard) => {
 
     const styles = StyleSheet.create({
         card: {
+            padding: sizes.s,
+            flexDirection: 'row',
             width: '90%',
-            borderWidth:0.2,
+            borderWidth: 0.2,
             backgroundColor: colors.card,
             borderRadius: sizes.m,
             marginBottom: sizes.md,
@@ -28,9 +31,6 @@ const ListCard = (props: IListCard) => {
             borderBottomRightRadius: sizes.s,
             borderTopRightRadius: sizes.s,
             borderColor: props.locked ? colors.primary : colors.primary,
-            padding: sizes.sm,
-            flexDirection: 'row',
-            alignItems: 'center',
         },
         iconBox: {
             width: 60,
@@ -43,13 +43,12 @@ const ListCard = (props: IListCard) => {
         },
         contentBox: {
             flex: 1,
-            justifyContent: 'center',
         },
         title: {
             color: props.locked ? colors.light : colors.text,
             fontSize: sizes.h3,
+            textAlign: 'auto',
             fontFamily: fonts.semibold,
-            marginBottom: 4,
         },
         topText: {
             fontFamily: fonts.semibold,
@@ -62,8 +61,8 @@ const ListCard = (props: IListCard) => {
             color: props.locked ? colors.light : colors.text,
         },
         descText: {
-            fontFamily: fonts.text,
             fontSize: sizes.h4,
+            textAlign: 'right',
             color: props.locked ? colors.light : colors.secondary,
             marginTop: 2,
         },
@@ -79,32 +78,41 @@ const ListCard = (props: IListCard) => {
             return <MaterialCommunityIcons name="lock" color={colors.light} size={sizes.m}/>;
         } else if (props.rightTopText1 !== undefined) {
             return (
-                <Text style={styles.topText}>
+                <AppText style={styles.topText}>
                     {props.rightTopText1}
-                    <Text style={styles.topTextSecondary}>/{props.rightTopText2}</Text>
-                </Text>
+                    <AppText style={styles.topTextSecondary}>/{props.rightTopText2}</AppText>
+                </AppText>
             );
         } else {
             return (
-                <Text style={styles.percentageText}>
+                <AppText style={styles.percentageText}>
                     {props.rightTopText2}
-                    <Text style={{...styles.percentageText, fontSize: sizes.h5}}>%</Text>
-                </Text>
+                    <AppText style={{...styles.percentageText, fontSize: sizes.h5}}>%</AppText>
+                </AppText>
             );
         }
     };
 
     return (
-        <TouchableOpacity onPress={props.onPress} style={styles.card}>
-            <View style={styles.iconBox}>
-                {renderIconContent()}
+        <TouchableOpacity onPress={props.onPress} style={{}}>
+            <View style={styles.card}>
+                <View style={styles.iconBox}>
+                    {renderIconContent()}
+                </View>
+                <View style={styles.contentBox}>
+                    <View style={{flex: 4, marginBottom: -sizes.s, justifyContent: 'flex-end'}}>
+                        <AppText style={styles.title}>{getShortenText(props.title, 30)}</AppText>
+                    </View>
+                    <View style={{flex: 1, justifyContent: 'flex-end'}}>
+                        {props.rightBottomDesc && (
+                            <AppText style={styles.descText}>{props.rightBottomDesc}</AppText>
+                        )}
+                    </View>
+
+                </View>
+
             </View>
-            <View style={styles.contentBox}>
-                <Text style={styles.title}>{getShortenText(props.title, 30)}</Text>
-                {props.rightBottomDesc && (
-                    <Text style={styles.descText}>{props.rightBottomDesc}</Text>
-                )}
-            </View>
+
         </TouchableOpacity>
     );
 };

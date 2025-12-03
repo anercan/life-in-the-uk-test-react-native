@@ -16,7 +16,7 @@ const AnalyseScreen = ({navigation}) => {
     const [incorrectList, setIncorrectList] = useState<any[]>([]);
     const {sizes} = useTheme();
     const {setTitle} = useContext(TitleContext);
-    const [isLoading,setLoading] = useState<boolean>(true);
+    const [isLoading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         setTitle('Analytics')
@@ -42,14 +42,14 @@ const AnalyseScreen = ({navigation}) => {
 
     if (incorrectList?.length === 0) {
         return (
-                <AppText h3 marginTop={sizes.xxl} align={'center'}>
-                    {'You haven’t made any mistakes to analyze yet.'}
-                </AppText>
+            <AppText style={{fontSize: sizes.h3, marginTop: sizes.xxl}}>
+                {'You haven’t made any mistakes to analyze yet.'}
+            </AppText>
         );
     }
 
     return (
-        <ScrollView contentContainerStyle={{ paddingVertical: sizes.m,paddingHorizontal:sizes.sm}}>
+        <ScrollView contentContainerStyle={{paddingVertical: sizes.m, paddingHorizontal: sizes.sm}}>
             <DataDistributionCard propData={incorrectList} isLoadingProp={isLoading}/>
         </ScrollView>
     );

@@ -1,7 +1,8 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import {useTheme} from '../hooks';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {AppText} from "components/index";
 
 const NavigationCard = ({id, header, subText, onPress}) => {
     const {fonts, sizes, colors} = useTheme();
@@ -31,10 +32,11 @@ const NavigationCard = ({id, header, subText, onPress}) => {
             fontFamily: fonts.medium,
             fontSize: sizes.smallText,
             color: colors.secondary,
+            textAlign:'auto',
             marginBottom: sizes.s,
         },
         subText: {
-            fontFamily: fonts.text,
+            textAlign: "auto",
             fontSize: sizes.text,
             color: colors.text
         },
@@ -51,8 +53,8 @@ const NavigationCard = ({id, header, subText, onPress}) => {
         >
             <View style={styles.card}>
                 <View style={styles.textContainer}>
-                    <Text style={styles.header}>{header}</Text>
-                    <Text style={styles.subText}>{subText}</Text>
+                    <AppText style={styles.header}>{header}</AppText>
+                    <AppText style={styles.subText}>{subText}</AppText>
                 </View>
                 <Icon
                     name="chevron-forward"
