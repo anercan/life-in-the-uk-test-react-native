@@ -20,10 +20,9 @@ const ListCard = (props: IListCard) => {
 
     const styles = StyleSheet.create({
         card: {
-            padding: sizes.s,
             flexDirection: 'row',
             width: '90%',
-            borderWidth: 0.2,
+            borderWidth: 0.3,
             backgroundColor: colors.card,
             borderRadius: sizes.m,
             marginBottom: sizes.md,
@@ -33,13 +32,14 @@ const ListCard = (props: IListCard) => {
             borderColor: props.locked ? colors.primary : colors.primary,
         },
         iconBox: {
-            width: 60,
-            height: 60,
-            borderRadius: sizes.s,
+            margin:9,
+            marginRight: sizes.sm,
+            width: 65,
+            height: 65,
+            borderRadius: sizes.sm,
             backgroundColor: colors.orderBoxBackGround,
             justifyContent: 'center',
             alignItems: 'center',
-            marginRight: sizes.sm,
         },
         contentBox: {
             flex: 1,
@@ -100,10 +100,10 @@ const ListCard = (props: IListCard) => {
                     {renderIconContent()}
                 </View>
                 <View style={styles.contentBox}>
-                    <View style={{flex: 4, marginBottom: -sizes.s, justifyContent: 'flex-end'}}>
+                    <View style={{flex: 4, justifyContent: 'flex-end'}}>
                         <AppText style={styles.title}>{getShortenText(props.title, 30)}</AppText>
                     </View>
-                    <View style={{flex: 1, justifyContent: 'flex-end'}}>
+                    <View style={{flex: 1,paddingHorizontal:sizes.s}}>
                         {props.rightBottomDesc && (
                             <AppText style={styles.descText}>{props.rightBottomDesc}</AppText>
                         )}

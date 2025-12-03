@@ -23,7 +23,7 @@ const NavigationCard = ({id, header, subText, onPress}) => {
             borderRadius: sizes.sm,
             borderLeftWidth: sizes.s,
             borderColor: colors.secondary,
-            borderWidth:0.5,
+            borderWidth: 0.5,
         },
         textContainer: {
             flex: 1,
@@ -32,7 +32,7 @@ const NavigationCard = ({id, header, subText, onPress}) => {
             fontFamily: fonts.medium,
             fontSize: sizes.smallText,
             color: colors.secondary,
-            textAlign:'auto',
+            textAlign: 'auto',
             marginBottom: sizes.s,
         },
         subText: {
@@ -40,8 +40,7 @@ const NavigationCard = ({id, header, subText, onPress}) => {
             fontSize: sizes.text,
             color: colors.text
         },
-        icon: {
-        },
+        icon: {},
     });
 
     return (

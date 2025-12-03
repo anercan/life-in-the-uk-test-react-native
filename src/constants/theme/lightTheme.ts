@@ -3,9 +3,9 @@ import {
     ITheme,
     ThemeAssets, ThemeColors,
     ThemeFonts,
-    ThemeLineHeights, ThemeSizes, ThemeSpacing,
+    ThemeLineHeights, ThemeSizes,
     ThemeWeights,
-} from '../types';
+} from './theme';
 
 const {width} = Dimensions.get('window');
 
@@ -25,23 +25,12 @@ export function normalizeFont(size) {
 }
 
 export const WEIGHTS: ThemeWeights = {
-    text: 'normal',
-    h1: Platform.OS === 'ios' ? '700' : 'normal',
-    h2: Platform.OS === 'ios' ? '700' : 'normal',
-    h3: Platform.OS === 'ios' ? '700' : 'normal',
-    h4: Platform.OS === 'ios' ? '700' : 'normal',
-    h5: Platform.OS === 'ios' ? '600' : 'normal',
-    p: 'normal',
-
     thin: Platform.OS === 'ios' ? '100' : 'normal',
-    extralight: Platform.OS === 'ios' ? '200' : 'normal',
     light: Platform.OS === 'ios' ? '300' : 'normal',
     normal: Platform.OS === 'ios' ? '400' : 'normal',
     medium: Platform.OS === 'ios' ? '500' : 'normal',
     semibold: Platform.OS === 'ios' ? '600' : 'normal',
     bold: Platform.OS === 'ios' ? '700' : 'normal',
-    extrabold: Platform.OS === 'ios' ? '800' : 'normal',
-    black: Platform.OS === 'ios' ? '900' : 'normal',
 };
 
 export const ASSETS: ThemeAssets = {
@@ -64,21 +53,19 @@ export const FONTS: ThemeFonts = {
 
     // based on fontWeight
     thin: 'OpenSans-Light',
-    extralight: 'OpenSans-Light',
     light: 'OpenSans-Light',
     normal: 'OpenSans-Regular',
     medium: 'OpenSans-SemiBold',
     semibold: 'OpenSans-SemiBold',
     bold: 'OpenSans-Bold',
     extrabold: 'OpenSans-ExtraBold',
-    black: 'OpenSans-ExtraBold',
 };
 
 export const LINE_HEIGHTS: ThemeLineHeights = {
     // font lineHeight
     text: normalize(15),
-    h1: normalize(18),
-    h2: normalize(20),
+    h1: normalize(30),
+    h2: normalize(28),
     h3: normalize(24),
     h4: normalize(15),
     h5: normalize(12),
@@ -107,14 +94,12 @@ export const COLORS: ThemeColors = {
     cardBorder: '#c7c2c2',
     shadow: '#000000',
     mediumGray: '#b9bbbf',
-    checkbox: ['#3A416F', '#141727'],
-    checkboxIcon: '#FFFFFF',
-    blurTint: 'light',
 };
 
+const baseSize = normalize(7);
 export const SIZES: ThemeSizes = {
     // global sizes
-    base: normalize(7),
+    base: baseSize,
     radius: normalize(4),
     padding: normalize(30),
 
@@ -132,9 +117,6 @@ export const SIZES: ThemeSizes = {
     // button sizes
     buttonBorder: normalize(1),
     buttonRadius: normalize(13),
-    socialSize: normalize(64),
-    socialRadius: normalize(16),
-    socialIconSize: normalize(26),
 
     // button shadow
     shadowOffsetWidth: normalize(0),
@@ -143,56 +125,28 @@ export const SIZES: ThemeSizes = {
     shadowRadius: normalize(4),
     elevation: 2,
 
-    // input sizes
-    inputHeight: normalize(46),
-    inputBorder: normalize(1),
-    inputRadius: normalize(8),
-    inputPadding: normalize(12),
-
     // card sizes
     cardRadius: normalize(16),
     cardPadding: normalize(10),
 
     // image sizes
     imageRadius: normalize(14),
-    avatarSize: normalize(32),
-    avatarRadius: normalize(8),
 
-    // switch sizes
-    switchWidth: normalize(50),
-    switchHeight: normalize(24),
-    switchThumb: normalize(20),
-
-    // checkbox sizes
-    checkboxWidth: normalize(18),
-    checkboxHeight: normalize(18),
-    checkboxRadius: normalize(5),
-    checkboxIconWidth: normalize(10),
-    checkboxIconHeight: normalize(8),
-
-    // product link size
-    linkSize: normalize(12),
-
-    /** font size multiplier: for maxFontSizeMultiplier prop */
-    multiplier: 2,
-};
-
-export const SPACING: ThemeSpacing = {
-    xs: SIZES.base * 0.5,
-    s: SIZES.base,
-    sm: SIZES.base * 2,
-    m: SIZES.base * 3,
-    md: SIZES.base * 4,
-    l: SIZES.base * 5,
-    xl: SIZES.base * 6,
-    xxl: SIZES.base * 8,
-    xxxl: SIZES.base * 15,
-    xxxxl: SIZES.base * 25,
+    xs: baseSize * 0.5,
+    s: baseSize,
+    sm: baseSize * 2,
+    m: baseSize * 3,
+    md: baseSize * 4,
+    l: baseSize * 5,
+    xl: baseSize * 6,
+    xxl: baseSize * 8,
+    xxxl: baseSize * 15,
+    xxxxl: baseSize * 25,
 };
 
 export const LIGHT_THEME: ITheme = {
     colors: COLORS,
-    sizes: {...SIZES, ...SPACING},
+    sizes: SIZES,
     assets: ASSETS,
     fonts: FONTS,
     weights: WEIGHTS,

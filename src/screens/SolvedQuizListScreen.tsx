@@ -81,16 +81,9 @@ const SolvedQuizListScreen = ({navigation}) => {
             <Block flex={0}>
                 <Tabs tabOneText={'Ongoing'} selectedTab={tab} tabTwoText={'Completed'} callback={setTabChange}/>
             </Block>
-            <Block flex={9}>
-                <Block
-                    scroll
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{paddingBottom: sizes.l}}
-                >
-
-                    <Block
-                        marginTop={sizes.m}
-                        align={"center"}>
+            <Block flex={9} style={{marginTop:sizes.sm}}>
+                <Block scroll>
+                    <Block align={"center"}>
                         {filteredQuizCards?.length > 0 ?
                             filteredQuizCards?.map((card: any) => (
                                 <ListCard

@@ -32,7 +32,6 @@ const GroupCard = (props: IGroupCard) => {
             height: cardWidth / 1.15,
             backgroundColor: props.backgroundColor,
             borderRadius: sizes.sm,
-            shadowColor: colors.shadow,
         },
         cardText: {
             textAlign: 'center',

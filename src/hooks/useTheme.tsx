@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {lightTheme} from '../constants/theme';
-import {ITheme, IThemeProvider} from '../constants/types';
+import {ITheme, IThemeProvider} from 'constants/theme/theme';
 
 export const ThemeContext = React.createContext({
   theme: lightTheme,

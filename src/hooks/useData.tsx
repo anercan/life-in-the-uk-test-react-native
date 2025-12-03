@@ -1,7 +1,7 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import Storage from '@react-native-async-storage/async-storage';
 import {darkTheme, lightTheme} from '../constants/theme';
-import {ITheme} from "constants/types";
+import {ITheme} from "constants/theme/theme";
 
 export const DataContext = React.createContext({});
 

@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 
 import useTheme from '../hooks/useTheme';
-import {IBlockProps} from 'constants/types';
+import {IBlockProps} from "constants/types/components";
 
 const Block = (props: IBlockProps) => {
   const {
@@ -40,20 +40,6 @@ const Block = (props: IBlockProps) => {
     radius,
     height,
     width,
-    margin,
-    marginBottom,
-    marginTop,
-    marginHorizontal,
-    marginVertical,
-    marginRight,
-    marginLeft,
-    padding,
-    paddingBottom,
-    paddingTop,
-    paddingHorizontal,
-    paddingVertical,
-    paddingRight,
-    paddingLeft,
     justify,
     align,
     flex = 1,
@@ -95,20 +81,6 @@ const Block = (props: IBlockProps) => {
         shadowRadius: sizes.shadowRadius,
         elevation: sizes.elevation,
       }),
-      ...(margin !== undefined && {margin}),
-      ...(marginBottom && {marginBottom}),
-      ...(marginTop && {marginTop}),
-      ...(marginHorizontal && {marginHorizontal}),
-      ...(marginVertical && {marginVertical}),
-      ...(marginRight && {marginRight}),
-      ...(marginLeft && {marginLeft}),
-      ...(padding !== undefined && {padding}),
-      ...(paddingBottom && {paddingBottom}),
-      ...(paddingTop && {paddingTop}),
-      ...(paddingHorizontal && {paddingHorizontal}),
-      ...(paddingVertical && {paddingVertical}),
-      ...(paddingRight && {paddingRight}),
-      ...(paddingLeft && {paddingLeft}),
       ...(radius && {borderRadius: radius}),
       ...(height && {height}),
       ...(width && {width}),
@@ -145,14 +117,6 @@ const Block = (props: IBlockProps) => {
     );
   }
 
-  /*if (keyboard) {
-    return (
-      <KeyboardAwareScrollView {...blockID} {...rest} style={blockStyles}>
-        {children}
-      </KeyboardAwareScrollView>
-    );
-  }*/
-
   if (scroll) {
     return (
       <ScrollView {...blockID} {...rest} style={blockStyles}>
@@ -160,32 +124,6 @@ const Block = (props: IBlockProps) => {
       </ScrollView>
     );
   }
-
-/*  if (gradient) {
-    return (
-      <LinearGradient
-        {...blockID}
-        colors={gradient}
-        style={blockStyles}
-        end={end || [1, 0]}
-        start={start || [0, 0]}
-        {...rest}>
-        {children}
-      </LinearGradient>
-    );
-  }*/
-
-/*  if (blur) {
-    return (
-      <BlurView
-        {...blockID}
-        tint={tint}
-        intensity={intensity}
-        style={blockStyles}>
-        {children}
-      </BlurView>
-    );
-  }*/
 
   return (
     <View {...blockID} {...rest} style={blockStyles}>

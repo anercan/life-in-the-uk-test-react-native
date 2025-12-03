@@ -1,6 +1,5 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 
-import {useTheme} from '../hooks/';
 import {Block} from '../components/';
 import {RouteProp, useFocusEffect, useRoute} from "@react-navigation/native";
 import {IQuizCard} from "constants/types";
@@ -10,6 +9,7 @@ import {TitleContext} from "context/TitleContext";
 import useApiCaller from "../hooks/useApiCaller";
 import {getProgress} from "util/commonUtil";
 import StatusBox from "components/StatusBox";
+import {useTheme} from "hooks";
 
 type QuizParams = {
     quizGroupTitle: number;
@@ -25,8 +25,8 @@ const QuizListScreen = ({navigation}) => {
     const [tab, setTab] = useState<number>(0);
     const [quizCards, setQuizCards] = useState([]);
     const [filteredQuizCards, setFilteredQuizCards] = useState([]);
-    const {sizes} = useTheme();
     const {setTitle} = useContext(TitleContext);
+    const {sizes} = useTheme();
 
     useFocusEffect(
         useCallback(() => {
@@ -96,15 +96,9 @@ const QuizListScreen = ({navigation}) => {
             <Block flex={0}>
                 <Tabs tabOneText={'Recent'} selectedTab={tab} tabTwoText={'Completed'} callback={setTabChange}/>
             </Block>
-            <Block flex={9}>
-                <Block
-                    scroll
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{paddingBottom: sizes.l}}
-                >
-                    <Block
-                        marginTop={sizes.m}
-                        align={"center"}>
+            <Block flex={9} style={{marginTop:sizes.sm}}>
+                <Block scroll>
+                    <Block align={"center"}>
                         {filteredQuizCards?.length > 0 ?
                             filteredQuizCards.map((card: IQuizCard) => (
                                 <ListCard

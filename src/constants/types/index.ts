@@ -1,6 +1,3 @@
-export * from './components';
-export * from './theme';
-
 export interface IQuizGroupCard {
   id?: number;
   title?: string;
@@ -58,5 +55,18 @@ export interface IQuizLightResponse {
   id?: number;
   name?: string;
   attributes?:any;
+}
+
+
+export interface ActivityData {
+  count: number,
+  date: string
+}
+
+export interface UserDataResponse {
+  avatarUrl: string;
+  userSolvedQuizCount: number;
+  userOngoingQuizCount: number;
+  totalQuizCount: number;
 }
 

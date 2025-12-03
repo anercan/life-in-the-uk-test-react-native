@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import {hexWithOpacity} from "util/commonUtil";
 import useApiCaller from "hooks/useApiCaller";
 import {useTheme} from "hooks";
-import {ActivityData} from "screens/Profile";
 import {
     Dimensions,
     Modal,
@@ -12,6 +11,7 @@ import {
 } from "react-native";
 import {ContributionGraph} from "react-native-chart-kit";
 import {AppText} from "components/index";
+import {ActivityData} from "constants/types";
 
 const {height, width} = Dimensions.get('window');
 
