@@ -1,12 +1,20 @@
 import React, {useEffect, useRef} from 'react';
-import {Animated, StyleSheet} from 'react-native';
+import {Animated, StyleSheet, View} from 'react-native';
 import {useTheme} from "hooks";
 import Image from "components/Image";
 import {AppText} from "components/index";
 
-const SwipeIndicator = () => {
-    const translateX = useRef(new Animated.Value(250)).current; // Start from 500px to the right (off-screen)
-    const fadeIn = useRef(new Animated.Value(0)).current; // Initial opacity 0 (hidden)
+interface SwipeIndicatorProps {
+    message?: string;
+    delay?: number;
+    duration?: number;
+}
+
+const SwipeIndicator: React.FC<SwipeIndicatorProps> = ({
+                                                           message = "Swipe or Tap the Card!",
+                                                           delay = 300,
+                                                           duration = 1500,
+                                                       }) => {
     const {sizes, colors, fonts} = useTheme();
 
     const styles = StyleSheet.create({
@@ -14,28 +22,27 @@ const SwipeIndicator = () => {
             justifyContent: 'center',
             alignItems: 'center',
             marginTop: sizes.s,
-            marginBottom: -sizes.sm
+            marginBottom: -sizes.sm,
         },
-        image: {
-            width: sizes.xxl,
-            height: sizes.xxl,
-        },
+        imageWrapper: {},
     });
+    const translateX = useRef(new Animated.Value(250)).current;
+    const fadeIn = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
-        // Animate the image: fade in and swipe from right to left
         Animated.parallel([
-            Animated.timing(translateX, {
-                toValue: 0, // Move to the center (from right to left)
-                duration: 1250, // Swipe duration
-                useNativeDriver: true, // Use native driver for better performance
+            Animated.spring(translateX, {
+                toValue: 0,
+                friction: 6,
+                tension: 80,
+                useNativeDriver: true,
             }),
             Animated.timing(fadeIn, {
-                toValue: 1, // Fade in to full opacity
-                duration: 1000, // Fade duration
-                delay: 500, // Delay before starting fade
-                useNativeDriver: true, // Use native driver for better performance
-            })
+                toValue: 1,
+                duration,
+                delay,
+                useNativeDriver: true,
+            }),
         ]).start();
     }, []);
 
@@ -50,16 +57,22 @@ const SwipeIndicator = () => {
             ]}
         >
             <AppText style={{
-                fontFamily: fonts.p,
+                fontFamily: fonts.text,
                 fontSize: sizes.smallText,
-                color: colors.background
-            }}>Swipe or Tap the Card!</AppText>
-            <Image
-                width={sizes.xxl}
-                height={sizes.xxl}
-                color={colors.background}
-                source={require('../assets/images/swipe.png')}
-            />
+                color: colors.primary,
+                marginBottom: sizes.xs,
+                textAlign: 'center'
+            }}>
+                {message}
+            </AppText>
+            <View style={styles.imageWrapper}>
+                <Image
+                    width={sizes.xxl}
+                    height={sizes.xxl}
+                    color={colors.background}
+                    source={require('../assets/images/swipe.png')}
+                />
+            </View>
         </Animated.View>
     );
 };
