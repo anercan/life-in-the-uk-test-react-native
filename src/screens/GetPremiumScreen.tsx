@@ -19,11 +19,11 @@ import {
     requestSubscription, SubscriptionPurchase
 } from 'react-native-iap';
 import {AuthContext} from "context/AuthContext";
-import useApiCaller from "../hooks/useApiCaller";
 import {getUserId} from "util/jwtUtil";
 import {getItemOfferText, isAndroid, isFreeTrialEligible} from "util/commonUtil";
 import {logEvent} from "util/logUtil";
 import {AppText} from "components";
+import {useUserManagementService} from "services/UserManagementService";
 
 let monthlySubProductId = 'level1';
 
@@ -37,7 +37,7 @@ const benefits = [
 ];
 
 const PremiumScreen = ({navigation}) => {
-    const {apiCaller} = useApiCaller();
+    const {googleSubscribe} = useUserManagementService(navigation);
     const {fonts, sizes, colors} = useTheme();
     const {login} = useContext(AuthContext);
     const {setTitle} = useContext(TitleContext);
@@ -97,7 +97,7 @@ const PremiumScreen = ({navigation}) => {
                 const receipt = purchase?.transactionReceipt;
                 if (receipt) {
                     if (isAndroid()) {
-                        apiCaller('user-management/google-play-subscribe', 'POST', purchase)
+                        googleSubscribe(purchase)
                             .then(async (deliveryResult) => {
                                 await consumeGooglePlayDeliveryResult(purchase, deliveryResult);
                             })
@@ -157,7 +157,7 @@ const PremiumScreen = ({navigation}) => {
             marginTop: sizes.xs,
         },
         title: {
-            textAlign:'auto',
+            textAlign: 'auto',
             fontSize: 32,
             color: colors.gray,
             fontWeight: 'bold',
@@ -176,7 +176,7 @@ const PremiumScreen = ({navigation}) => {
             marginVertical: 10,
         },
         benefitText: {
-            textAlign:'auto',
+            textAlign: 'auto',
             color: colors.gray,
             fontSize: sizes.smallText,
             marginLeft: sizes.s,
@@ -188,8 +188,8 @@ const PremiumScreen = ({navigation}) => {
         button: {
             borderRadius: sizes.m,
             overflow: 'hidden',
-            borderWidth:1,
-            borderColor:colors.cardBorder,
+            borderWidth: 1,
+            borderColor: colors.cardBorder,
         },
         gradient: {
             paddingVertical: 14,

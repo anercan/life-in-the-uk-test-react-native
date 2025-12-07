@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import {hexWithOpacity} from "util/commonUtil";
-import useApiCaller from "hooks/useApiCaller";
 import {useTheme} from "hooks";
 import {
     Dimensions,
@@ -12,17 +11,18 @@ import {
 import {ContributionGraph} from "react-native-chart-kit";
 import {AppText} from "components/index";
 import {ActivityData} from "constants/types";
+import {useUserManagementService} from "services/UserManagementService";
 
 const {height, width} = Dimensions.get('window');
 
 const ActivityModal = ({navigation, modalVisible, onPressClose}) => {
-    const {apiCaller} = useApiCaller(navigation);
     const {sizes, colors, fonts} = useTheme();
     const [activityData, setActivityData] = useState<ActivityData[]>([]);
+    const {getUserActivityData} = useUserManagementService(navigation);
 
     useEffect(() => {
         if (modalVisible) {
-            apiCaller('profile/get-user-activity-data')
+            getUserActivityData()
                 .then((response: any) => {
                     if (response?.activityDataList) {
                         let activityDataList: ActivityData[] = [];

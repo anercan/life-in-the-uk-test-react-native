@@ -26,15 +26,15 @@ import {
     purchaseUpdatedListener,
     SubscriptionPurchase
 } from "react-native-iap";
-import useApiCaller from "../hooks/useApiCaller";
 import {checkVersionWithStoresInfo} from "util/checkVersion";
 import AppOnboarding from "components/Onboarding";
 import {checkFirstLaunch} from "util/commonUtil";
 import {darkTheme, lightTheme} from "constants/theme";
 import AnalyseScreen from "screens/AnalyseScreen";
+import {useUserManagementService} from "services/UserManagementService";
 
 export default () => {
-    const {apiCaller} = useApiCaller();
+    const {googleSubscribe} = useUserManagementService();
     const {isDark, theme, setTheme} = useData();
     const {login, isLoggedIn} = useContext(AuthContext);
     const [isFirstLaunch, setIsFirstLaunch] = useState<boolean | null>(null);
@@ -72,7 +72,7 @@ export default () => {
                 const receipt = purchase?.transactionReceipt;
                 if (receipt) {
                     if (Platform.OS === 'android') {
-                        apiCaller('user-management/google-play-subscribe', 'POST', purchase)
+                        googleSubscribe(purchase)
                             .then(async (deliveryResult) => {
                                 await consumeGooglePlayDeliveryResult(purchase, deliveryResult);
                             });
@@ -126,7 +126,8 @@ export const QuizGroupListStack = () => {
     const {isDark} = useData();
 
     return (
-        <Stack.Navigator initialRouteName="QuizGroupListScreen" screenOptions={getScreenOptions(isDark ? darkTheme.colors.secondaryBackground : lightTheme.colors.secondaryBackground)}>
+        <Stack.Navigator initialRouteName="QuizGroupListScreen"
+                         screenOptions={getScreenOptions(isDark ? darkTheme.colors.secondaryBackground : lightTheme.colors.secondaryBackground)}>
             <Stack.Screen name="QuizGroupListScreen" component={QuizGroupListScreen}/>
             <Stack.Screen name="QuizListScreen" component={QuizListScreen} options={stackOptions}/>
             <Stack.Screen name="QuizScreen" component={QuizScreen} options={stackOptions}/>
@@ -141,7 +142,8 @@ export const SolvedQuizListStack = () => {
     const {isDark} = useData();
 
     return (
-        <Stack.Navigator initialRouteName="SolvedQuizListScreen" screenOptions={getScreenOptions(isDark ? darkTheme.colors.secondaryBackground : lightTheme.colors.secondaryBackground)}>
+        <Stack.Navigator initialRouteName="SolvedQuizListScreen"
+                         screenOptions={getScreenOptions(isDark ? darkTheme.colors.secondaryBackground : lightTheme.colors.secondaryBackground)}>
             <Stack.Screen name="SolvedQuizListScreen" component={SolvedQuizListScreen} options={stackOptions}/>
             <Stack.Screen name="QuizScreen" component={QuizScreen} options={stackOptions}/>
             <Stack.Screen name="CompletedQuizScreen" component={CompletedQuizScreen} options={stackOptions}/>
@@ -156,7 +158,8 @@ export const ProfileStack = () => {
     const {isDark} = useData();
 
     return (
-        <Stack.Navigator initialRouteName="Profile" screenOptions={getScreenOptions(isDark ? darkTheme.colors.secondaryBackground : lightTheme.colors.secondaryBackground)}>
+        <Stack.Navigator initialRouteName="Profile"
+                         screenOptions={getScreenOptions(isDark ? darkTheme.colors.secondaryBackground : lightTheme.colors.secondaryBackground)}>
             <Stack.Screen name="Profile" component={Profile}/>
             <Stack.Screen name="QuizScreen" component={QuizScreen} options={stackOptions}/>
             <Stack.Screen name="CompletedQuizScreen" component={CompletedQuizScreen} options={stackOptions}/>

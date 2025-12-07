@@ -6,7 +6,6 @@ import {
     isSuccessResponse,
 } from '@react-native-google-signin/google-signin';
 import {AuthContext} from "context/AuthContext";
-import useApiCaller from "../hooks/useApiCaller";
 import {useTheme} from "../hooks";
 import {AppText} from "../components";
 import {getVersionInfo} from "util/checkVersion";
@@ -14,6 +13,7 @@ import {PermissionsAndroid, Platform} from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import {isAndroid} from "util/commonUtil";
 import {loginEvent} from "util/logUtil";
+import {useUserManagementService} from "services/UserManagementService";
 
 function getGoogleConfig() {
     return {
@@ -24,10 +24,10 @@ function getGoogleConfig() {
 }
 
 const LoginScreen = () => {
-    const {apiCaller} = useApiCaller();
     const {login, autoLogin} = useContext(AuthContext);
     const {fonts, sizes, colors} = useTheme();
     const [version, setVersion] = useState("");
+    const {googleLogin} = useUserManagementService(navigator);
 
     useEffect(() => {
         GoogleSignin.configure(getGoogleConfig());
@@ -103,7 +103,7 @@ const LoginScreen = () => {
             }
         }
 
-        apiCaller('user-management/google-sign-in', 'POST', signInRequest)
+        googleLogin(signInRequest)
             .then((response) => {
                 login(response.jwt);
                 loginEvent('Google');

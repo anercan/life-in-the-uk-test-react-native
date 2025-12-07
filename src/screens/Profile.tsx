@@ -3,14 +3,14 @@ import {ScrollView, StyleSheet, View} from 'react-native';
 import {useTheme} from '../hooks/';
 import {TitleContext} from "context/TitleContext";
 import {useFocusEffect} from "@react-navigation/native";
-import useApiCaller from "../hooks/useApiCaller";
 import NavigationBox from "components/NavigationBox";
 import ActivityModal from "components/ActivityModal";
 import ProfileHeader from "components/ProfileHeader";
 import {UserDataResponse} from "constants/types";
+import {useUserManagementService} from "services/UserManagementService";
 
 const Profile = ({navigation}) => {
-    const {apiCaller} = useApiCaller(navigation);
+    const {getUserInfo} = useUserManagementService(navigation);
     const {sizes} = useTheme();
     const [userData, setUserData] = useState<UserDataResponse>();
     const {setTitle} = useContext(TitleContext);
@@ -19,16 +19,13 @@ const Profile = ({navigation}) => {
     useFocusEffect(
         useCallback(() => {
             setTitle('Profile');
-            getUserInfo();
+            getUserInfo()
+                .then((profileResponse: any) => {
+                    setUserData(profileResponse);
+                });
         }, [])
     )
 
-    const getUserInfo = () => {
-        apiCaller('profile/get-user-info')
-            .then((profileResponse: any) => {
-                setUserData(profileResponse);
-            });
-    }
 
     const styles = StyleSheet.create({
         activity: {

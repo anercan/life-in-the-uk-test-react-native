@@ -4,7 +4,6 @@ import {RouteProp, useRoute} from "@react-navigation/native";
 import {ButtonCard} from "../components";
 import {useTheme} from "../hooks";
 import {TitleContext} from "context/TitleContext";
-import useApiCaller from "../hooks/useApiCaller";
 import ScoreCard from "components/ScoreCard";
 import {isDailyQuiz, isFavoritesQuiz, mapWrongsToPieChartData} from "util/quizUtils";
 import DataDistributionCard from "components/DataDistribution";
@@ -12,6 +11,7 @@ import InAppReview from 'react-native-in-app-review';
 import {logEvent} from "util/logUtil";
 import {handleReviewRequest} from "util/commonUtil";
 import {AppText} from "components";
+import {useQuizService} from "services/QuizService";
 
 type QuizParams = {
     quizName: string;
@@ -28,8 +28,8 @@ type QuizParams = {
 type QuizRouteProp = RouteProp<{ CompletedQuizScreen: QuizParams }, 'CompletedQuizScreen'>;
 
 const CompletedQuizScreen = ({navigation}) => {
+    const {getCompletedQuizStatistics, getDailyQuiz} = useQuizService(navigation);
     const route = useRoute<QuizRouteProp>();
-    const {apiCaller} = useApiCaller();
     const {
         quizName,
         quizSize,
@@ -74,14 +74,14 @@ const CompletedQuizScreen = ({navigation}) => {
 
     const getStaticalData = async () => {
         if (quizId) {
-            apiCaller('user-quiz/get-completed-quiz-statics?quizId=' + quizId).then((response: any) => {
+            getCompletedQuizStatistics(quizId).then((response: any) => {
                 setCompletedStatics(response);
             });
         } else if (isDailyQuiz(quizType)) {
             if (dailyQuizResponse) {
                 setIncorrectList(mapWrongsToPieChartData(dailyQuizResponse?.wrongQuestionsSubjects));
             } else {
-                apiCaller('quiz/get-user-daily-quiz', 'POST')
+                getDailyQuiz()
                     .then((quizResponse) => {
                         if (quizResponse?.userDailyQuizResponse?.wrongQuestionsSubjects) {
                             setIncorrectList(mapWrongsToPieChartData(quizResponse?.userDailyQuizResponse?.wrongQuestionsSubjects));

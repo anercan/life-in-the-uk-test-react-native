@@ -6,10 +6,10 @@ import {IQuizCard} from "constants/types";
 import Tabs from "../components/Tabs";
 import ListCard from "../components/ListCard";
 import {TitleContext} from "context/TitleContext";
-import useApiCaller from "../hooks/useApiCaller";
 import {getProgress} from "util/commonUtil";
 import StatusBox from "components/StatusBox";
 import {useTheme} from "hooks";
+import {useQuizService} from "services/QuizService";
 
 type QuizParams = {
     quizGroupTitle: number;
@@ -19,7 +19,7 @@ type QuizParams = {
 type QuizListProp = RouteProp<{ QuizListProp: QuizParams }, 'QuizListProp'>;
 
 const QuizListScreen = ({navigation}) => {
-    const {apiCaller, loading} = useApiCaller();
+    const {getQuizListWithUserData, loading} = useQuizService();
     const route = useRoute<QuizListProp>();
     const {quizGroupId, quizGroupTitle} = route.params;
     const [tab, setTab] = useState<number>(0);
@@ -32,7 +32,7 @@ const QuizListScreen = ({navigation}) => {
         useCallback(() => {
             setTitle(quizGroupTitle);
 
-            apiCaller('quiz/get-quizzes-with-user-data', 'POST', {pageSize: 25, page: 0, quizGroupId: quizGroupId})
+            getQuizListWithUserData(quizGroupId)
                 .then(response => {
                     let quizList = response?.quizResponseWithUserDataList;
                     setQuizCards(quizList);
@@ -96,7 +96,7 @@ const QuizListScreen = ({navigation}) => {
             <Block flex={0}>
                 <Tabs tabOneText={'Recent'} selectedTab={tab} tabTwoText={'Completed'} callback={setTabChange}/>
             </Block>
-            <Block flex={9} style={{marginTop:sizes.sm}}>
+            <Block flex={9} style={{marginTop: sizes.sm}}>
                 <Block scroll>
                     <Block align={"center"}>
                         {filteredQuizCards?.length > 0 ?

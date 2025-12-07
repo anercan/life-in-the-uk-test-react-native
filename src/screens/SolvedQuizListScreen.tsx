@@ -7,22 +7,22 @@ import {ISolvedQuizCard} from "constants/types";
 import Tabs from "../components/Tabs";
 import ListCard from "../components/ListCard";
 import {TitleContext} from "context/TitleContext";
-import useApiCaller from "../hooks/useApiCaller";
 import {getProgress} from "util/commonUtil";
 import StatusBox from "components/StatusBox";
+import {useQuizService} from "services/QuizService";
 
 const SolvedQuizListScreen = ({navigation}) => {
-    const {apiCaller} = useApiCaller();
     const [tab, setTab] = useState<number>(0);
     const [quizCards, setQuizCards] = useState([]);
     const [filteredQuizCards, setFilteredQuizCards] = useState([]);
     const {sizes} = useTheme();
     const {setTitle} = useContext(TitleContext);
+    const {getUserQuizList} = useQuizService(navigation);
 
     useFocusEffect(
         useCallback(() => {
             setTitle('My Quizzes');
-            apiCaller('user-quiz/get-user-quiz-list')
+            getUserQuizList()
                 .then(response => {
                     let dataList = response?.userQuizResponseList;
                     setQuizCards(dataList);

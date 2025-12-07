@@ -6,12 +6,12 @@ import {IQuizGroupCard} from "constants/types";
 import {GroupCard} from "../components";
 import {useFocusEffect} from "@react-navigation/native";
 import {TitleContext} from "context/TitleContext";
-import useApiCaller from "../hooks/useApiCaller";
 import {chunkArray, groupCardBackgroundImages, randomColors} from "util/commonUtil";
 import DailyCard from "components/DailyCard";
+import {useQuizService} from "services/QuizService";
 
 const QuizGroupListScreen = ({navigation}) => {
-    const {apiCaller} = useApiCaller(navigation);
+    const {getQuizGroupListWithUserData} = useQuizService(navigation);
     const [quizGroupCards, setQuizGroupCards] = useState([]);
     const {sizes} = useTheme();
     const {setTitle} = useContext(TitleContext);
@@ -32,11 +32,11 @@ const QuizGroupListScreen = ({navigation}) => {
     useFocusEffect(
         useCallback(() => {
             setTitle('Quiz Groups');
-            apiCaller('quiz-group/get-quiz-groups-with-user-quiz-data', 'POST', {pageSize: 25, page: 0})
-                .then(response => {
-                    let dataList = response?.quizGroupWithUserDataList;
-                    setQuizGroupCards(dataList);
-                });
+
+            getQuizGroupListWithUserData().then(response => {
+                let dataList = response?.quizGroupWithUserDataList;
+                setQuizGroupCards(dataList);
+            });
         }, [])
     )
 
@@ -48,8 +48,8 @@ const QuizGroupListScreen = ({navigation}) => {
     const rows = chunkArray(quizGroupCards, 2);
 
     return (
-        <ScrollView contentContainerStyle={{alignItems: 'center', marginTop: sizes.m,paddingBottom: sizes.xl}}>
-            <View style={{flexDirection:'row',flex:1,marginBottom: sizes.md}}>
+        <ScrollView contentContainerStyle={{alignItems: 'center', marginTop: sizes.m, paddingBottom: sizes.xl}}>
+            <View style={{flexDirection: 'row', flex: 1, marginBottom: sizes.md}}>
                 <DailyCard navigation={navigation}/>
             </View>
             {rows.map((row, rowIndex) => (

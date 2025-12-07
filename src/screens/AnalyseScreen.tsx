@@ -2,7 +2,6 @@ import React, {useContext, useEffect, useState} from 'react';
 import {useTheme} from '../hooks/';
 import {ScrollView} from "react-native";
 import {TitleContext} from "context/TitleContext";
-import useApiCaller from "../hooks/useApiCaller";
 import {
     capitalizeWords,
     getColorFromPalette,
@@ -10,9 +9,10 @@ import {
 } from "util/commonUtil";
 import DataDistributionCard from "components/DataDistribution";
 import {AppText} from "components";
+import {useQuizService} from "services/QuizService";
 
 const AnalyseScreen = ({navigation}) => {
-    const {apiCaller} = useApiCaller(navigation);
+    const {getUserQuizAnalyses} = useQuizService(navigation);
     const [incorrectList, setIncorrectList] = useState<any[]>([]);
     const {sizes} = useTheme();
     const {setTitle} = useContext(TitleContext);
@@ -20,7 +20,7 @@ const AnalyseScreen = ({navigation}) => {
 
     useEffect(() => {
         setTitle('Analytics')
-        apiCaller('profile/get-user-quiz-analyses')
+        getUserQuizAnalyses()
             .then((response: any) => {
                 setLoading(false);
                 if (response?.wrongsMap) {

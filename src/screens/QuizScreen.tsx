@@ -1,10 +1,9 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {Animated, ScrollView, View} from 'react-native';
 import {RouteProp, useRoute} from "@react-navigation/native";
 import QuizQuestion from "../components/QuizQuestion";
 import {useSwipe} from "hooks/useSwipe";
 import {TitleContext} from "context/TitleContext";
-import useApiCaller from "../hooks/useApiCaller";
 import {QuizSettingsContext} from "context/QuizSettingsContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -21,16 +20,19 @@ import {logEvent} from "util/logUtil";
 import {useTheme} from "hooks";
 import StatusBox from "components/StatusBox";
 import {useSound} from "hooks/useSound";
+import {useQuizService} from "services/QuizService";
+import {useFavoriteService} from "services/FavoriteService";
 
 type QuizScreenRootProps = RouteProp<{ QuizScreen: QuizParams }, 'QuizScreen'>;
 
 const QuizScreen = ({navigation}) => {
-    const {apiCaller} = useApiCaller(navigation);
+    const {getQuizById, getDailyQuiz, saveDailyQuiz, updateUserQuiz} = useQuizService(navigation);
+    const {getFavoriteIds, getFavoriteQuestions, addOrRemove} = useFavoriteService(navigation);
     const {setTitle} = useContext(TitleContext);
     const [answerMap, setAnswerMap] = useState(new Map());
     const [activeQuestion, setActiveQuestion] = useState<any>({});
     const {onTouchStart, onTouchEnd} = useSwipe(onSwipeLeft, onSwipeRight, 20);
-    const shakeAnimation = new Animated.Value(0);
+    const shakeAnimation = useRef(new Animated.Value(0)).current;
     const route = useRoute<QuizScreenRootProps>();
     const {quizId, quizGroupId, quizCardList, quizType} = route.params;
     const {
@@ -59,7 +61,7 @@ const QuizScreen = ({navigation}) => {
     }, [quizId, quizType]);
 
     const initRegularQuizData = () => {
-        apiCaller('quiz/get-quiz-with-id/' + quizId)
+        getQuizById(quizId)
             .then((quizResponse) => {
                 setQuiz(quizResponse);
                 setTitle(quizResponse?.name);
@@ -76,7 +78,7 @@ const QuizScreen = ({navigation}) => {
     }
 
     const initUserDailyQuizData = () => {
-        apiCaller('quiz/get-user-daily-quiz', 'POST')
+        getDailyQuiz()
             .then((quizResponse) => {
                 const quizData = {name: 'Daily Quiz'};
                 setQuiz(quizData);
@@ -103,7 +105,7 @@ const QuizScreen = ({navigation}) => {
     }
 
     const initFavoritesData = () => {
-        apiCaller('favorite/get-user-questions')
+        getFavoriteQuestions()
             .then((quizResponse) => {
                 setTitle('Favorites');
                 setQuiz(quizResponse);
@@ -114,7 +116,7 @@ const QuizScreen = ({navigation}) => {
     }
 
     const setFavorites = () => {
-        apiCaller('favorite/get-user-question-ids').then(response => {
+        getFavoriteIds().then(response => {
             if (response?.favoriteIds) {
                 setFavoriteIds(response?.favoriteIds)
             }
@@ -181,10 +183,7 @@ const QuizScreen = ({navigation}) => {
         } else {
             wrongId = activeQuestion.id;
         }
-        apiCaller('quiz/save-user-daily-quiz', 'POST', {
-            correctQuestionId: correctId,
-            wrongQuestionId: wrongId,
-        })
+        saveDailyQuiz(correctId, wrongId)
     }
 
     const skipNextQuestion = () => {
@@ -216,8 +215,7 @@ const QuizScreen = ({navigation}) => {
     const createUserQuizData = (quizResponse) => {
         if (answerMap.size === 0) {
             setAnswerCounter(prev => ({...prev, total: quizResponse?.questionList?.length ?? 0}));
-            let data: any = {quizId: quizId, quizGroupId: quizGroupId};
-            apiCaller('user-quiz/create-update-user-quiz', 'POST', data);
+            updateUserQuiz({quizId: quizId, quizGroupId: quizGroupId})
         }
     }
 
@@ -231,7 +229,7 @@ const QuizScreen = ({navigation}) => {
                 userWrongAnswerRequest: {questionId: questionId, answerId: answerId}
             }
         }
-        apiCaller('user-quiz/create-update-user-quiz', 'POST', data);
+        updateUserQuiz(data);
     }
 
     const handleAnswer = (id) => {
@@ -284,10 +282,7 @@ const QuizScreen = ({navigation}) => {
         if (isAddOperation) {
             logEvent('favorite', {questionId: questionId});
         }
-        apiCaller('favorite/add-or-remove', 'POST', {
-            add: isAddOperation,
-            questionId: questionId
-        }).then((response) => {
+        addOrRemove(questionId, isAddOperation).then((response) => {
             if (response?.favoriteIds) {
                 setFavoriteIds(response.favoriteIds);
             }
