@@ -15,16 +15,7 @@ const SettingsScreen = ({navigation}) => {
     const {fonts, colors, sizes} = useTheme();
     const {isDark, setIsDark} = useData();
     const {logout} = useContext(AuthContext);
-    const {
-        setExplanationWhileSolving,
-        setCorrectAnswer,
-        showCorrectAnswer,
-        showExplanationWhileSolving,
-        skipQuestionImmediately,
-        setSkipQuestion,
-        setPlaySound,
-        playSounds
-    } = useContext(QuizSettingsContext);
+    const {settings, updateSetting, updateSettings} = useContext(QuizSettingsContext);
 
     const [isPremiumUser, setIsPremiumUser] = useState(false);
 
@@ -39,20 +30,28 @@ const SettingsScreen = ({navigation}) => {
     };
 
     const toggleCorrectAnswer = () => {
-        let newState = !showCorrectAnswer;
-        setCorrectAnswer(newState);
-        if (newState == false && showExplanationWhileSolving == true) {
-            setExplanationWhileSolving(false);
+        let newState = !settings.showCorrectAnswer;
+        if (newState == false && settings.showExplanationWhileSolving == true) {
+            updateSettings({
+                showExplanationWhileSolving: false,
+                showCorrectAnswer: newState,
+            });
+        } else {
+            updateSetting('showCorrectAnswer', newState);
         }
     }
 
     const toggleShowExplanationOnlyReview = () => {
-        let newState = !showExplanationWhileSolving;
-        setExplanationWhileSolving(newState);
-        if (newState == true && showCorrectAnswer == false) {
-            setCorrectAnswer(true);
+        const newExplanationState = !settings.showExplanationWhileSolving;
+        if (newExplanationState && !settings.showCorrectAnswer) {
+            updateSettings({
+                showCorrectAnswer: true,
+                showExplanationWhileSolving: newExplanationState,
+            });
+        } else {
+            updateSetting('showExplanationWhileSolving', newExplanationState);
         }
-    }
+    };
 
     const getRequestReview = () => {
         if (Platform.OS == "android") {
@@ -146,15 +145,15 @@ const SettingsScreen = ({navigation}) => {
                     icon: 'play-skip-forward-outline',
                     title: 'Skip Questions Fast',
                     hasSwitch: true,
-                    value: skipQuestionImmediately,
+                    value: settings.skipQuestionImmediately,
                     color: '#007AFF',
-                    onToggle: () => setSkipQuestion(!skipQuestionImmediately),
+                    onToggle: () => updateSetting('skipQuestionImmediately', !settings.skipQuestionImmediately)
                 },
                 {
                     icon: 'checkmark-outline',
                     title: 'Show Correct Answer',
                     hasSwitch: true,
-                    value: showCorrectAnswer,
+                    value: settings.showCorrectAnswer,
                     color: '#007AFF',
                     onToggle: () => toggleCorrectAnswer(),
                 },
@@ -162,7 +161,7 @@ const SettingsScreen = ({navigation}) => {
                     icon: 'document-text-outline',
                     title: 'Show Explanation',
                     hasSwitch: true,
-                    value: showExplanationWhileSolving,
+                    value: settings.showExplanationWhileSolving,
                     color: '#007AFF',
                     onToggle: () => toggleShowExplanationOnlyReview(),
                 },
@@ -170,9 +169,9 @@ const SettingsScreen = ({navigation}) => {
                     icon: 'volume-medium-outline',
                     title: 'Mute Effects',
                     hasSwitch: true,
-                    value: !playSounds,
+                    value: !settings.playSounds,
                     color: '#007AFF',
-                    onToggle: () => setPlaySound((prev) => !prev),
+                    onToggle: () => updateSetting('playSounds', !settings.playSounds),
                 },
             ],
         },
@@ -206,7 +205,7 @@ const SettingsScreen = ({navigation}) => {
                     return (
                         <View style={{marginVertical: sizes.s, paddingHorizontal: sizes.sm}}>
                             <AppText style={{
-                                textAlign:'auto',
+                                textAlign: 'auto',
                                 marginHorizontal: 16,
                                 marginBottom: 8,
                                 fontFamily: fonts.semibold,

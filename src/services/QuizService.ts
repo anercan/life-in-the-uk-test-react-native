@@ -1,4 +1,5 @@
 import useApiCaller from "../hooks/useApiCaller";
+import {QuizResponseWithUserQuizData} from "constants/types/quiz";
 
 export const useQuizService = (navigator?: any) => {
     const {apiCaller, loading} = useApiCaller(navigator);
@@ -11,7 +12,7 @@ export const useQuizService = (navigator?: any) => {
         return apiCaller('quiz/get-quizzes-with-user-data', 'POST', {pageSize: 25, page: 0, quizGroupId: quizGroupId})
     }
 
-    const getQuizById = (quizId: number) => {
+    const getQuizById: (quizId: number) => Promise<QuizResponseWithUserQuizData> = (quizId: number) => {
         return apiCaller(`quiz/get-quiz-with-id/${quizId}`, "GET");
     };
 

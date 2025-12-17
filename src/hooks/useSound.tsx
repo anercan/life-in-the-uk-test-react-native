@@ -6,7 +6,7 @@ import {QuizSettingsContext} from "context/QuizSettingsContext";
 export const useSound = (filename: string) => {
     const sound = useRef<Sound | null>(null);
     const [isLoaded, setIsLoaded] = useState(false);
-    const {playSounds,showCorrectAnswer} = useContext(QuizSettingsContext);
+    const {settings} = useContext(QuizSettingsContext);
 
     useEffect(() => {
         sound.current = new Sound(filename, Sound.MAIN_BUNDLE, (error) => {
@@ -23,7 +23,7 @@ export const useSound = (filename: string) => {
     }, [filename]);
 
     const play = () => {
-        if (showCorrectAnswer && playSounds && sound.current && isLoaded) {
+        if (settings.showCorrectAnswer && settings.playSounds && sound.current && isLoaded) {
             try {
                 sound.current.play(() => {});
             } catch (e) {

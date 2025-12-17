@@ -22,6 +22,7 @@ import StatusBox from "components/StatusBox";
 import {useSound} from "hooks/useSound";
 import {useQuizService} from "services/QuizService";
 import {useFavoriteService} from "services/FavoriteService";
+import {QuestionResponse} from "constants/types/quiz";
 
 type QuizScreenRootProps = RouteProp<{ QuizScreen: QuizParams }, 'QuizScreen'>;
 
@@ -35,15 +36,9 @@ const QuizScreen = ({navigation}) => {
     const shakeAnimation = useRef(new Animated.Value(0)).current;
     const route = useRoute<QuizScreenRootProps>();
     const {quizId, quizGroupId, quizCardList, quizType} = route.params;
-    const {
-        showCorrectAnswer,
-        showExplanationWhileSolving,
-        skipQuestionImmediately,
-        playSounds,
-        setPlaySound
-    } = useContext(QuizSettingsContext);
-    const [quiz, setQuiz] = useState<any>();
-    const [questionList, setQuestionList] = useState([]);
+    const {settings, updateSetting} = useContext(QuizSettingsContext);
+    const [quizName, setQuizName] = useState<any>();
+    const [questionList, setQuestionList] = useState<QuestionResponse[]>([]);
     const [favoriteIds, setFavoriteIds] = useState([]);
     const [answerCounter, setAnswerCounter] = useState({total: 0, correct: 0, wrong: 0});
     const {sizes} = useTheme();
@@ -63,7 +58,7 @@ const QuizScreen = ({navigation}) => {
     const initRegularQuizData = () => {
         getQuizById(quizId)
             .then((quizResponse) => {
-                setQuiz(quizResponse);
+                setQuizName(quizResponse?.name);
                 setTitle(quizResponse?.name);
                 setStatesForQuiz(quizResponse);
                 if (isReviewMode(quizType)) {
@@ -81,7 +76,7 @@ const QuizScreen = ({navigation}) => {
         getDailyQuiz()
             .then((quizResponse) => {
                 const quizData = {name: 'Daily Quiz'};
-                setQuiz(quizData);
+                setQuizName(quizData?.name);
                 if (quizResponse?.userDailyQuizResponse) {
                     AsyncStorage.setItem('dailyQuiz', new Date().toISOString().split('T')[0]);
                     navigation.replace('CompletedQuizScreen', {
@@ -108,7 +103,7 @@ const QuizScreen = ({navigation}) => {
         getFavoriteQuestions()
             .then((quizResponse) => {
                 setTitle('Favorites');
-                setQuiz(quizResponse);
+                setQuizName('Favorites');
                 setQuestionList(quizResponse?.questionList);
                 setActiveQuestionState(quizResponse?.questionList, 0);
                 setAnswerCounter({total: quizResponse?.questionList?.length, correct: 0, wrong: 0});
@@ -165,7 +160,7 @@ const QuizScreen = ({navigation}) => {
 
     const getCompletedScreenBody = () => {
         return {
-            quizName: quiz?.name,
+            quizName: quizName,
             quizSize: answerCounter.total,
             correctAnswerSize: answerCounter.correct,
             wrongAnswerSize: answerCounter.wrong,
@@ -247,8 +242,8 @@ const QuizScreen = ({navigation}) => {
         }
 
         updateAnswerMap(activeQuestion.id, id);
-        logEvent('solve_answer', {quizName: quiz?.name});
-        if (skipQuestionImmediately) {
+        logEvent('solve_answer', {quizName: quizName});
+        if (settings.skipQuestionImmediately) {
             setTimeout(() => skipNextQuestion(), 500);
         }
     }
@@ -272,7 +267,7 @@ const QuizScreen = ({navigation}) => {
         if (isReviewMode(quizType)) {
             return activeQuestion?.explanation;
         }
-        if (!isReviewMode(quizType) && showExplanationWhileSolving) {
+        if (!isReviewMode(quizType) && settings.showExplanationWhileSolving) {
             return activeQuestion?.explanation;
         }
         return '';
@@ -308,8 +303,8 @@ const QuizScreen = ({navigation}) => {
                 <ProgressBar favOperation={(questionId, isAddOperation) => favOperation(questionId, isAddOperation)}
                              isCurrentInFav={favoriteIds?.includes(activeQuestion?.id)}
                              questionId={activeQuestion?.id}
-                             isMuted={!playSounds}
-                             setPlaySound={() => setPlaySound(!playSounds)}
+                             isMuted={!settings.playSounds}
+                             setPlaySound={() => updateSetting('playSounds',!settings.playSounds)}
                              progress={activeQuestion?.counter / questionList?.length || 0}/>
             </View>
             <View style={{flex: 14, justifyContent: 'flex-start'}}>
@@ -328,7 +323,7 @@ const QuizScreen = ({navigation}) => {
                                       isAnswered={answerMap.get(activeQuestion?.id) !== undefined}
                                       isReviewPage={isReviewMode(quizType)}
                                       explanation={getExplanation()}
-                                      showCorrectAnswer={isReviewMode(quizType) ? false : showCorrectAnswer}
+                                      showCorrectAnswer={isReviewMode(quizType) ? false : settings.showCorrectAnswer}
                                       onSkipTap={() => onSwipeLeft()}
                         />
                     </Animated.View>

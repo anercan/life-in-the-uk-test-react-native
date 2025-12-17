@@ -1,3 +1,13 @@
+export enum UserQuizState {
+  COMPLETED = 'COMPLETED',
+  ON_GOING = 'ON_GOING',
+}
+
+export enum PremiumType {
+  NONE = 'NONE',
+  LEVEL1 = 'LEVEL1',
+}
+
 export interface IQuizGroupCard {
   id?: number;
   title?: string;
@@ -69,4 +79,6 @@ export interface UserDataResponse {
   userOngoingQuizCount: number;
   totalQuizCount: number;
 }
+
+
 

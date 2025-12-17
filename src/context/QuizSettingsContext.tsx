@@ -1,53 +1,70 @@
 import Storage from "@react-native-async-storage/async-storage";
 import React, {createContext, useEffect, useState} from "react";
 
-export const QuizSettingsContext = createContext(null);
+export interface QuizSettings {
+    showCorrectAnswer: boolean;
+    showExplanationWhileSolving: boolean;
+    skipQuestionImmediately: boolean;
+    playSounds: boolean;
+}
 
-export const QuizSettingsProvider = ({children}) => {
-    const [showCorrectAnswer, setShowCorrectAnswer] = useState(true);
-    const [showExplanationWhileSolving, setShowExplanationWhileSolving] = useState(true);
-    const [skipQuestionImmediately, setSkipQuestionImmediately] = useState(false);
-    const [playSounds, setPlaySounds] = useState(true);
+export interface QuizSettingsContextType {
+    settings: QuizSettings;
+    updateSetting: <K extends keyof QuizSettings>(
+        key: K,
+        value: QuizSettings[K]
+    ) => void;
+    updateSettings
+}
+
+export const QuizSettingsContext =
+    createContext<QuizSettingsContextType | null>(null);
+
+const DEFAULT_SETTINGS: QuizSettings = {
+    showCorrectAnswer: true,
+    showExplanationWhileSolving: true,
+    skipQuestionImmediately: false,
+    playSounds: true,
+};
+
+export const QuizSettingsProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
+    const [settings, setSettings] = useState<QuizSettings>(DEFAULT_SETTINGS);
 
     useEffect(() => {
-        Storage.getItem('setting.showCorrectAnswer').then(data => setShowCorrectAnswer(data ? JSON.parse(data) : showCorrectAnswer));
-        Storage.getItem('setting.showExplanation').then(data => setShowExplanationWhileSolving(data ? JSON.parse(data) : showExplanationWhileSolving));
-        Storage.getItem('setting.skipQuestionImmediately').then(data => setSkipQuestionImmediately(data ? JSON.parse(data) : skipQuestionImmediately));
-        Storage.getItem('setting.playSounds').then(data => setPlaySounds(data ? JSON.parse(data) : playSounds));
+        const loadSettings = async () => {
+            const data = await Storage.getItem('quiz.settings');
+            if (data) {
+                setSettings({ ...DEFAULT_SETTINGS, ...JSON.parse(data) });
+            }
+        };
+        loadSettings();
     }, []);
 
-    const setExplanationWhileSolving = (newState: boolean) => {
-        Storage.setItem('setting.showExplanation', String(newState));
-        setShowExplanationWhileSolving(newState);
-    }
+    const updateSetting = <K extends keyof QuizSettings>(
+        key: K,
+        value: QuizSettings[K]
+    ) => {
+        const updated = { ...settings, [key]: value };
+        setSettings(updated);
+        Storage.setItem('quiz.settings', JSON.stringify(updated));
+    };
 
-    const setCorrectAnswer = (newState: boolean) => {
-        Storage.setItem('setting.showCorrectAnswer', String(newState));
-        setShowCorrectAnswer(newState);
-    }
-
-    const setSkipQuestion = (newState: boolean) => {
-        Storage.setItem('setting.skipQuestionImmediately', String(newState));
-        setSkipQuestionImmediately(newState);
-    }
-
-    const setPlaySound = (newState: boolean) => {
-        Storage.setItem('setting.playSounds', String(newState));
-        setPlaySounds(newState);
-    }
+    const updateSettings = (updates: Partial<QuizSettings>) => {
+        const updated = { ...settings, ...updates };
+        setSettings(updated);
+        Storage.setItem('quiz.settings', JSON.stringify(updated));
+    };
 
     return (
-        <QuizSettingsContext.Provider value={{
-            showExplanationWhileSolving,
-            setExplanationWhileSolving,
-            showCorrectAnswer,
-            setCorrectAnswer,
-            skipQuestionImmediately,
-            setSkipQuestion,
-            playSounds,
-            setPlaySound
-        }}>
+        <QuizSettingsContext.Provider
+            value={{
+                settings,
+                updateSetting,
+                updateSettings
+            }}
+        >
             {children}
         </QuizSettingsContext.Provider>
     );
 };
+
