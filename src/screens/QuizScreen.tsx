@@ -36,7 +36,7 @@ const QuizScreen = ({navigation}) => {
     const shakeAnimation = useRef(new Animated.Value(0)).current;
     const route = useRoute<QuizScreenRootProps>();
     const {quizId, quizGroupId, quizCardList, quizType} = route.params;
-    const {settings, updateSetting} = useContext(QuizSettingsContext);
+    const {settings, updateSettings} = useContext(QuizSettingsContext);
     const [quizName, setQuizName] = useState<any>();
     const [questionList, setQuestionList] = useState<QuestionResponse[]>([]);
     const [favoriteIds, setFavoriteIds] = useState([]);
@@ -304,7 +304,7 @@ const QuizScreen = ({navigation}) => {
                              isCurrentInFav={favoriteIds?.includes(activeQuestion?.id)}
                              questionId={activeQuestion?.id}
                              isMuted={!settings.playSounds}
-                             setPlaySound={() => updateSetting('playSounds',!settings.playSounds)}
+                             setPlaySound={() => updateSettings({playSounds: !settings.playSounds})}
                              progress={activeQuestion?.counter / questionList?.length || 0}/>
             </View>
             <View style={{flex: 14, justifyContent: 'flex-start'}}>

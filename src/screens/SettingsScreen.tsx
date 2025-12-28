@@ -15,7 +15,7 @@ const SettingsScreen = ({navigation}) => {
     const {fonts, colors, sizes} = useTheme();
     const {isDark, setIsDark} = useData();
     const {logout} = useContext(AuthContext);
-    const {settings, updateSetting, updateSettings} = useContext(QuizSettingsContext);
+    const {settings, updateSettings} = useContext(QuizSettingsContext);
 
     const [isPremiumUser, setIsPremiumUser] = useState(false);
 
@@ -37,7 +37,7 @@ const SettingsScreen = ({navigation}) => {
                 showCorrectAnswer: newState,
             });
         } else {
-            updateSetting('showCorrectAnswer', newState);
+            updateSettings({showCorrectAnswer: newState});
         }
     }
 
@@ -49,7 +49,7 @@ const SettingsScreen = ({navigation}) => {
                 showExplanationWhileSolving: newExplanationState,
             });
         } else {
-            updateSetting('showExplanationWhileSolving', newExplanationState);
+            updateSettings({showExplanationWhileSolving: newExplanationState});
         }
     };
 
@@ -147,7 +147,7 @@ const SettingsScreen = ({navigation}) => {
                     hasSwitch: true,
                     value: settings.skipQuestionImmediately,
                     color: '#007AFF',
-                    onToggle: () => updateSetting('skipQuestionImmediately', !settings.skipQuestionImmediately)
+                    onToggle: () => updateSettings({skipQuestionImmediately: !settings.skipQuestionImmediately})
                 },
                 {
                     icon: 'checkmark-outline',
@@ -171,7 +171,7 @@ const SettingsScreen = ({navigation}) => {
                     hasSwitch: true,
                     value: !settings.playSounds,
                     color: '#007AFF',
-                    onToggle: () => updateSetting('playSounds', !settings.playSounds),
+                    onToggle: () => updateSettings({playSounds: !settings.playSounds}),
                 },
             ],
         },

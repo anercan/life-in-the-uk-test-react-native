@@ -10,11 +10,7 @@ export interface QuizSettings {
 
 export interface QuizSettingsContextType {
     settings: QuizSettings;
-    updateSetting: <K extends keyof QuizSettings>(
-        key: K,
-        value: QuizSettings[K]
-    ) => void;
-    updateSettings
+    updateSettings: any
 }
 
 export const QuizSettingsContext =
@@ -40,15 +36,6 @@ export const QuizSettingsProvider: React.FC<{children: React.ReactNode}> = ({chi
         loadSettings();
     }, []);
 
-    const updateSetting = <K extends keyof QuizSettings>(
-        key: K,
-        value: QuizSettings[K]
-    ) => {
-        const updated = { ...settings, [key]: value };
-        setSettings(updated);
-        Storage.setItem('quiz.settings', JSON.stringify(updated));
-    };
-
     const updateSettings = (updates: Partial<QuizSettings>) => {
         const updated = { ...settings, ...updates };
         setSettings(updated);
@@ -59,7 +46,6 @@ export const QuizSettingsProvider: React.FC<{children: React.ReactNode}> = ({chi
         <QuizSettingsContext.Provider
             value={{
                 settings,
-                updateSetting,
                 updateSettings
             }}
         >

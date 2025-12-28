@@ -1,6 +1,6 @@
 import React from "react";
 import {Text, TextProps, StyleSheet} from "react-native";
-import {LIGHT_THEME} from "constants/theme/lightTheme";
+import {useTheme} from "hooks";
 
 interface AppTextProps extends TextProps {
     children: React.ReactNode;
@@ -8,6 +8,17 @@ interface AppTextProps extends TextProps {
 }
 
 const AppText: React.FC<AppTextProps> = ({children, style, ...rest}) => {
+    const {fonts, colors, sizes} = useTheme();
+
+    const styles = StyleSheet.create({
+        default: {
+            textAlign: "center",
+            fontSize: sizes.text,
+            color: colors.text,
+            fontFamily: fonts.text
+        },
+    });
+
     return (
         <Text style={[styles.default, style]} {...rest}>
             {children}
@@ -15,13 +26,6 @@ const AppText: React.FC<AppTextProps> = ({children, style, ...rest}) => {
     );
 };
 
-const styles = StyleSheet.create({
-    default: {
-        textAlign: "center",
-        fontSize: LIGHT_THEME.sizes.text,
-        color: LIGHT_THEME.colors.text,
-        fontFamily: LIGHT_THEME.fonts.text
-    },
-});
 
-export default AppText;
+
+export default React.memo(AppText);
