@@ -7,7 +7,7 @@
     "android-reconnect": "adb reverse tcp:8081 tcp:8081",
     "apk-install-debug": "cd android/app/build/outputs/apk/debug && adb install app-debug.apk",
     "apk-install-release": "cd android/app/build/outputs/apk/release && adb install app-release.apk",
-    "build-release-aab": "react-native build-android --mode=release",
+    "build-release-aab": "yarn clean && react-native build-android --mode=release",
     "build-release-apk": "react-native build-android --tasks=assembleRelease",
     "clean": "react-native clean --include android,metro",
     "clean-android": "yarn clean",
