@@ -58,9 +58,20 @@ DerivedData/
 xcuserdata/
 *.xcuserstate
 
+# Xcode
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.xccheckout
+*.moved-aside
+*.hmap
+*.ipa
+
 # CocoaPods
 Pods/
-Podfile.lock
+
 
 # Carthage
 Carthage/Build/
