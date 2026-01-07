@@ -14,7 +14,8 @@ import {
     CompletedQuizScreen,
     LoginScreen,
     GetPremiumScreen,
-    SettingsScreen
+    SettingsScreen,
+    SplashScreen
 } from "../screens";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import Feather from "react-native-vector-icons/Feather";
@@ -38,6 +39,7 @@ export default () => {
     const {isDark, theme, setTheme} = useData();
     const {login, isLoggedIn} = useContext(AuthContext);
     const [isFirstLaunch, setIsFirstLaunch] = useState<boolean | null>(null);
+    const [showSplash, setShowSplash] = useState<boolean>(true);
 
     useEffect(() => {
         checkVersionWithStoresInfo();
@@ -90,7 +92,9 @@ export default () => {
     });
 
     const getScreen = () => {
-        if (isFirstLaunch) {
+        if (showSplash) {
+            return <SplashScreen onAnimationComplete={() => setShowSplash(false)}/>
+        } else if (isFirstLaunch) {
             return <AppOnboarding onDone={() => setIsFirstLaunch(false)}/>
         } else if (isLoggedIn) {
             return <TabMenu/>
@@ -126,7 +130,7 @@ export const QuizGroupListStack = () => {
     const {isDark} = useData();
 
     return (
-        <Stack.Navigator initialRouteName="QuizGroupListScreen"
+        <Stack.Navigator id={undefined} initialRouteName="QuizGroupListScreen"
                          screenOptions={getScreenOptions(isDark ? darkTheme.colors.secondaryBackground : lightTheme.colors.secondaryBackground)}>
             <Stack.Screen name="QuizGroupListScreen" component={QuizGroupListScreen}/>
             <Stack.Screen name="QuizListScreen" component={QuizListScreen} options={stackOptions}/>
@@ -142,7 +146,7 @@ export const SolvedQuizListStack = () => {
     const {isDark} = useData();
 
     return (
-        <Stack.Navigator initialRouteName="SolvedQuizListScreen"
+        <Stack.Navigator id={undefined} initialRouteName="SolvedQuizListScreen"
                          screenOptions={getScreenOptions(isDark ? darkTheme.colors.secondaryBackground : lightTheme.colors.secondaryBackground)}>
             <Stack.Screen name="SolvedQuizListScreen" component={SolvedQuizListScreen} options={stackOptions}/>
             <Stack.Screen name="QuizScreen" component={QuizScreen} options={stackOptions}/>
@@ -158,7 +162,7 @@ export const ProfileStack = () => {
     const {isDark} = useData();
 
     return (
-        <Stack.Navigator initialRouteName="Profile"
+        <Stack.Navigator id={undefined} initialRouteName="Profile"
                          screenOptions={getScreenOptions(isDark ? darkTheme.colors.secondaryBackground : lightTheme.colors.secondaryBackground)}>
             <Stack.Screen name="Profile" component={Profile}/>
             <Stack.Screen name="QuizScreen" component={QuizScreen} options={stackOptions}/>
@@ -179,6 +183,7 @@ export const TabMenu = () => {
     return (
 
         <Tab.Navigator
+            id={undefined}
             initialRouteName="QuizGroupListStack"
             screenOptions={{
                 headerShown: false,

@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, StyleSheet, TouchableOpacity, Image, Linking} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import {
     GoogleSignin,
     isErrorWithCode,
@@ -43,7 +43,10 @@ const LoginScreen = () => {
     }
 
     const requestNotificationPermission = async () => {
-        if (isAndroid() && Platform.Version >= 33) {
+        const androidVersion = typeof Platform.Version === 'string'
+            ? parseInt(Platform.Version, 10)
+            : Platform.Version;
+        if (isAndroid() && androidVersion >= 33) {
             await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
         }
     }
@@ -148,14 +151,14 @@ const LoginScreen = () => {
             fontWeight: 'thin',
         },
         logoContainer: {
-            marginTop: sizes.xxxl,
+            marginTop: sizes.s,
             width: sizes.base * 20, // Adjust size as needed
             height: sizes.base * 20,
             borderRadius: sizes.xxl,
             overflow: 'hidden',
             borderWidth: 2,
             borderColor: '#cecece',
-            marginBottom: sizes.base * 14,
+            marginBottom: sizes.base * 25,
         },
         logo: {
             width: '100%',
@@ -164,6 +167,7 @@ const LoginScreen = () => {
         },
         mailText: {
             textAlign: "center",
+            fontFamily: fonts.text,
             fontSize: sizes.smallText,
             color: colors.gray
         }
@@ -187,12 +191,8 @@ const LoginScreen = () => {
                 </View>
                 <AppText style={styles.text}>Login with Google</AppText>
             </TouchableOpacity>
-            <View style={{marginTop: sizes.xxxl}}>
+            <View style={{justifyContent:'flex-end',marginTop: 115}}>
                 <AppText style={styles.mailText}>team@quizmarkt.com</AppText>
-                <AppText onPress={() => Linking.openURL('https://quizmarkt.com/life-in-the-uk/privacy-policy.html')}
-                         style={{...styles.mailText, textDecorationLine: 'underline'}}>
-                    Privacy Policy
-                </AppText>
                 {version != '' && version != 'null' &&
                     <AppText style={styles.mailText}>{version}</AppText>
                 }

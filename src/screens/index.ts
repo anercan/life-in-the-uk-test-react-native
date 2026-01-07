@@ -7,5 +7,6 @@ export {default as LoginScreen} from './LoginScreen';
 export {default as CompletedQuizScreen} from './CompletedQuizScreen';
 export {default as GetPremiumScreen} from './GetPremiumScreen';
 export {default as SettingsScreen} from './SettingsScreen';
+export {default as SplashScreen} from './SplashScreen';
 
 
