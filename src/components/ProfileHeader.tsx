@@ -10,29 +10,27 @@ const ProfileHeader = ({userData, navigation}) => {
 
     return (
         <View style={{marginHorizontal: sizes.xs, marginBottom: sizes.m}}>
-            <Image
-                background
-                resizeMode="cover"
-                padding={sizes.sm}
-                paddingBottom={sizes.l}
-                radius={sizes.s}
-                shadow={true}
+            <Image background
+                   borderRadius={sizes.s}
+                style={{
+                    padding: sizes.sm,
+                    borderRadius: sizes.sm,
+                }}
                 source={require('../assets/images/img.png')}
             >
                 <Block flex={0} align="center">
                     <Image
-                        width={sizes.xxl}
-                        height={sizes.xxl}
-                        marginBottom={sizes.sm}
+                        style={{width: sizes.xxl, height: sizes.xxl, borderRadius: sizes.m,marginBottom: sizes.md,borderWidth:2,borderColor:colors.white}}
                         source={{uri: userData?.avatarUrl}}
                     />
                 </Block>
             </Image>
 
             <Block
+                shadow={true}
                 flex={0}
                 radius={sizes.sm}
-                color="rgba(255,255,255,0.2)"
+                color={colors.card}
                 style={{
                     marginTop: -sizes.l,
                     marginHorizontal: "8%",

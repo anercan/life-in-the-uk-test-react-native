@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import {
     GoogleSignin,
     isErrorWithCode,
@@ -12,8 +12,9 @@ import {getVersionInfo} from "util/checkVersion";
 import {PermissionsAndroid, Platform} from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import {isAndroid} from "util/commonUtil";
-import {loginEvent} from "util/logUtil";
+import {logEvent, loginEvent} from "util/logUtil";
 import {useUserManagementService} from "services/UserManagementService";
+import {Image} from "components";
 
 function getGoogleConfig() {
     return {
@@ -111,7 +112,7 @@ const LoginScreen = () => {
                 login(response.jwt);
                 loginEvent('Google');
             })
-            .catch(() => alert('Login Failed'));
+            .catch(() => logEvent('exit_login', {method: 'Google'}));
     }
 
     const styles = StyleSheet.create({
@@ -122,10 +123,12 @@ const LoginScreen = () => {
             backgroundColor: colors.background,
         },
         iconImage: {
+            resizeMode:'center',
             width: sizes.base * 3,
             height: sizes.base * 3,
         },
         button: {
+            elevation:1,
             flexDirection: 'row',
             alignItems: 'center',
             backgroundColor: '#4285F4',
@@ -185,7 +188,6 @@ const LoginScreen = () => {
                 <View style={styles.iconContainer}>
                     <Image
                         style={styles.iconImage}
-                        resizeMethod={'auto'}
                         source={require('../assets/icons/google2.png')}
                     />
                 </View>

@@ -14,6 +14,7 @@ const NavigationCard = ({id, header, subText, onPress}) => {
             alignSelf: 'center',
         },
         card: {
+            elevation:2,
             backgroundColor: colors.card,
             flexDirection: 'row',
             alignItems: 'center',

@@ -15,6 +15,7 @@ const NavigationBox = ({header, icon, onPress}) => {
         card: {
             width: width / 2.5,
             height: width / 3,
+            elevation:1,
             backgroundColor: colors.card,
             flexDirection: 'column',
             alignItems: 'center',

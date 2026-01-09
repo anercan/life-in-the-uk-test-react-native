@@ -1,7 +1,6 @@
 import React, {useEffect, useRef} from 'react';
 import {Animated, StyleSheet, View} from 'react-native';
 import {useTheme} from "hooks";
-import Image from "components/Image";
 import {AppText} from "components/index";
 
 interface SwipeIndicatorProps {
@@ -24,10 +23,14 @@ const SwipeIndicator: React.FC<SwipeIndicatorProps> = ({
             marginTop: sizes.s,
             marginBottom: -sizes.sm,
         },
-        imageWrapper: {},
+        imageWrapper: {
+            alignItems: 'center',
+        },
     });
     const translateX = useRef(new Animated.Value(250)).current;
     const fadeIn = useRef(new Animated.Value(0)).current;
+    const scaleArrow = useRef(new Animated.Value(0.8)).current;
+    const heartbeat = useRef(new Animated.Value(1)).current;
 
     useEffect(() => {
         Animated.parallel([
@@ -43,8 +46,46 @@ const SwipeIndicator: React.FC<SwipeIndicatorProps> = ({
                 delay,
                 useNativeDriver: true,
             }),
+            Animated.spring(scaleArrow, {
+                toValue: 1,
+                friction: 5,
+                tension: 70,
+                delay,
+                useNativeDriver: true,
+            }),
         ]).start();
+
+        // Heartbeat animation loop
+        Animated.loop(
+            Animated.sequence([
+                // First beat
+                Animated.timing(heartbeat, {
+                    toValue: 1.2,
+                    duration: 200,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(heartbeat, {
+                    toValue: 1,
+                    duration: 150,
+                    useNativeDriver: true,
+                }),
+                // Second beat
+                Animated.timing(heartbeat, {
+                    toValue: 1.2,
+                    duration: 200,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(heartbeat, {
+                    toValue: 1,
+                    duration: 150,
+                    useNativeDriver: true,
+                }),
+                // Pause
+                Animated.delay(600),
+            ])
+        ).start();
     }, []);
+
 
     return (
         <Animated.View
@@ -57,19 +98,26 @@ const SwipeIndicator: React.FC<SwipeIndicatorProps> = ({
             ]}
         >
             <AppText style={{
-                fontFamily: fonts.text,
+                fontFamily: fonts.semibold,
                 fontSize: sizes.smallText,
                 color: colors.primary,
-                marginBottom: sizes.xs,
-                textAlign: 'center'
+                marginBottom: sizes.s,
+                textAlign: 'center',
+                letterSpacing: 0.5,
             }}>
                 {message}
             </AppText>
             <View style={styles.imageWrapper}>
-                <Image
-                    width={sizes.xxl}
-                    height={sizes.xxl}
-                    color={colors.background}
+                <Animated.Image
+                    style={{
+                        width: sizes.xxl,
+                        height: sizes.xxl,
+                        tintColor: colors.primary,
+                        transform: [
+                            {scale: scaleArrow},
+                            {scale: heartbeat}
+                        ],
+                    }}
                     source={require('../assets/images/swipe.png')}
                 />
             </View>

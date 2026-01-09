@@ -4,10 +4,11 @@ import {
   StyleSheet,
   Text,
   Animated,
-  SafeAreaView, Image,
+  SafeAreaView,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {useTheme} from 'hooks';
+import {Image} from "components";
 
 
 interface SplashScreenProps {
@@ -56,7 +57,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({
         if (onAnimationComplete) {
           onAnimationComplete();
         }
-      }, 4000);
+      }, 3000);
     });
   }, [fadeAnim, scaleAnim, rotateAnim, textSlideAnim, textOpacityAnim, onAnimationComplete]);
 
@@ -242,8 +243,8 @@ const SplashScreen: React.FC<SplashScreenProps> = ({
                 style={{
                   width: '100%',
                   height: '100%',
+                  resizeMode:'cover'
                 }}
-                resizeMode='cover'
                 source={require('../assets/images/lifeintheukapp-logo.png')}
               />
             </View>
