@@ -20,8 +20,8 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         missingDimensionStrategy('store', 'play')
-        versionCode 96
-        versionName "6.1"
+        versionCode 97
+        versionName "6.2"
     }
 
     signingConfigs {
@@ -47,12 +47,9 @@ android {
         }
         release {
             signingConfig signingConfigs.release
-            minifyEnabled false
-            shrinkResources false
-            // ProGuard kullanmak istersen aşağıdakini açabilirsin:
-            // minifyEnabled true
-            // shrinkResources true
-            // proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
         }
     }
 }
