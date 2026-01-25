@@ -7,6 +7,11 @@ export const useUserManagementService = (navigator?: any) => {
         return apiCaller('user-management/google-sign-in', 'POST', signInRequest)
     };
 
+    const appleLogin = (appleSignInRequest) => {
+        console.log(appleSignInRequest)
+        return apiCaller('user-management/apple-sign-in', 'POST', appleSignInRequest)
+    };
+
     const getUserInfo = () => {
         return apiCaller('profile/get-user-info')
     }
@@ -23,6 +28,7 @@ export const useUserManagementService = (navigator?: any) => {
         getUserActivityData,
         getUserInfo,
         googleLogin,
+        appleLogin,
         googleSubscribe
     };
 };

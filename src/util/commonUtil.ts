@@ -157,6 +157,10 @@ export const isAndroid = () => {
     return Platform.OS === 'android'
 }
 
+export const isIOS = () => {
+    return Platform.OS === 'ios'
+}
+
 export const getProgress = (part,total) => {
     if (part && total) {
         return Math.round((part/ total) * 100);

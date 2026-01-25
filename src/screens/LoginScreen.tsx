@@ -1,20 +1,20 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {
     GoogleSignin,
     isErrorWithCode,
     isSuccessResponse,
 } from '@react-native-google-signin/google-signin';
+import {appleAuth, AppleButton} from '@invertase/react-native-apple-authentication';
 import {AuthContext} from "context/AuthContext";
 import {useTheme} from "../hooks";
-import {AppText} from "../components";
+import {AppText, GoogleSignInButton, AppLogo} from "../components";
 import {getVersionInfo} from "util/checkVersion";
 import {PermissionsAndroid, Platform} from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import {isAndroid} from "util/commonUtil";
 import {logEvent, loginEvent} from "util/logUtil";
 import {useUserManagementService} from "services/UserManagementService";
-import {Image} from "components";
 
 function getGoogleConfig() {
     return {
@@ -28,16 +28,58 @@ const LoginScreen = () => {
     const {login, autoLogin} = useContext(AuthContext);
     const {fonts, sizes, colors} = useTheme();
     const [version, setVersion] = useState("");
-    const {googleLogin} = useUserManagementService(navigator);
+    const {googleLogin, appleLogin} = useUserManagementService(navigator);
+    const isAppleLoginAvailable = appleAuth.isSupported;
 
     useEffect(() => {
         GoogleSignin.configure(getGoogleConfig());
         checkAppVersion();
         requestNotificationPermission();
         if (autoLogin) {
-            hasPreviousSignIn();
+            //auto login for apple
+            hasPreviousGoogleSignIn();
         }
     }, []);
+
+
+    const onAppleButtonPress = async () => {
+        try {
+            const credential = await appleAuth.performRequest({
+                requestedOperation: 1,//AppleRequestOperation.LOGIN,
+                requestedScopes: [
+                    0,//AppleRequestScope.EMAIL,
+                    1,//AppleRequestScope.FULL_NAME,
+                ]
+            });
+
+            const {identityToken, user, email, fullName} = credential;
+            console.log("log2", credential)
+
+            if (!identityToken) {
+                return;
+            }
+
+            let signInRequest = {
+                identityToken: identityToken,
+                appId: 1,
+                appleUserId: user,
+                email: email ?? '',
+                fullName: fullName ? `${fullName.givenName ?? ''} ${fullName.familyName ?? ''}`.trim() : '',
+                deviceInfo: {
+                    token: await fireBaseToken(),
+                    osType: isAndroid() ? 'ANDROID' : 'IOS'
+                }
+            }
+
+            appleLogin(signInRequest);
+
+        } catch (error: any) {
+            if (error.code === 'ERR_REQUEST_CANCELED') {
+            } else {
+                console.error(error);
+            }
+        }
+    };
 
     const checkAppVersion = () => {
         getVersionInfo().then((r) => setVersion(r.version))
@@ -52,20 +94,20 @@ const LoginScreen = () => {
         }
     }
 
-    const googleSignIn = async () => {
+    const onGoogleSignInButtonPress = async () => {
         try {
             //await GoogleSignin.hasPlayServices();
             const response: any = await GoogleSignin.signIn();
             if (isSuccessResponse(response)) {
                 loginWithGoogle(response);
             } else {
-                alert('Login Failed!')
+                logEvent('login_exit', {method: 'Google'});
             }
         } catch (error) {
             if (isErrorWithCode(error)) {
-                console.log('error', error)
+                logEvent('login_error', {method: 'Google', code: error.code});
             } else {
-                console.log('error', error)
+                logEvent('login_error', {method: 'Google', code: 'UNKNOWN', error: error?.toString()});
             }
         }
     };
@@ -80,9 +122,9 @@ const LoginScreen = () => {
         }
     };
 
-    const hasPreviousSignIn = async () => {
-        const hasPreviousSignIn = GoogleSignin.hasPreviousSignIn();
-        if (hasPreviousSignIn) {
+    const hasPreviousGoogleSignIn = async () => {
+        const hasPreviousGoogleSignIn = GoogleSignin.hasPreviousSignIn();
+        if (hasPreviousGoogleSignIn) {
             loginWithCurrentUser();
         }
     };
@@ -92,7 +134,6 @@ const LoginScreen = () => {
             let token = await messaging().getToken();
             return token?.toString();
         } catch (e) {
-            console.log(e);
             return null;
         }
     };
@@ -112,61 +153,20 @@ const LoginScreen = () => {
                 login(response.jwt);
                 loginEvent('Google');
             })
-            .catch(() => logEvent('exit_login', {method: 'Google'}));
+            .catch((e) => logEvent('login_service_error', {method: 'Google',error: e}));
     }
 
     const styles = StyleSheet.create({
         container: {
             flex: 1,
+            flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: colors.background,
         },
-        iconImage: {
-            resizeMode:'center',
-            width: sizes.base * 3,
-            height: sizes.base * 3,
-        },
-        button: {
-            elevation:1,
-            flexDirection: 'row',
-            alignItems: 'center',
-            backgroundColor: '#4285F4',
-            height: sizes.xl,
-            width: sizes.base * 30,
-            paddingVertical: sizes.xs,
-            paddingHorizontal: sizes.xs,
-            borderRadius: sizes.md,
-        },
-        iconContainer: {
-            backgroundColor: '#fff',
-            borderRadius: sizes.xxxl,
-            width: sizes.base * 5,
-            height: sizes.base * 5,
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginRight: sizes.sm,
-        },
-        text: {
-            color: '#fff',
-            fontFamily: fonts.p,
-            fontSize: sizes.text,
-            fontWeight: 'thin',
-        },
-        logoContainer: {
-            marginTop: sizes.s,
-            width: sizes.base * 20, // Adjust size as needed
-            height: sizes.base * 20,
-            borderRadius: sizes.xxl,
-            overflow: 'hidden',
-            borderWidth: 2,
-            borderColor: '#cecece',
+        logoWrapper: {
+            marginTop: sizes.xxxl,
             marginBottom: sizes.base * 25,
-        },
-        logo: {
-            width: '100%',
-            height: '100%',
-            resizeMode: 'cover', // Ensures the image scales to fill the circle
         },
         mailText: {
             textAlign: "center",
@@ -178,25 +178,22 @@ const LoginScreen = () => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.logoContainer}>
-                <Image
-                    source={require('../assets/images/lifeintheukapp-logo.png')}
-                    style={styles.logo}
-                />
+            <View style={styles.logoWrapper}>
+                <AppLogo />
             </View>
-            <TouchableOpacity style={styles.button} onPress={() => googleSignIn()}>
-                <View style={styles.iconContainer}>
-                    <Image
-                        style={styles.iconImage}
-                        source={require('../assets/icons/google2.png')}
-                    />
-                </View>
-                <AppText style={styles.text}>Login with Google</AppText>
-            </TouchableOpacity>
-            <View style={{justifyContent:'flex-end',marginTop: 115}}>
-                <AppText style={styles.mailText}>team@quizmarkt.com</AppText>
+            <GoogleSignInButton onPress={onGoogleSignInButtonPress}/>
+            {!isAndroid() && isAppleLoginAvailable &&
+                <AppleButton
+                    buttonStyle={AppleButton.Style.WHITE_OUTLINE}
+                    buttonType={AppleButton.Type.SIGN_IN}
+                    style={{width: sizes.base * 35, height: sizes.xl, marginTop: sizes.m, borderRadius: sizes.l}}
+                    onPress={onAppleButtonPress}
+                />
+            }
+            <View style={{marginTop: 'auto', marginBottom: sizes.m}}>
+                <AppText style={styles.mailText}>team@quizmarkt.com </AppText>
                 {version != '' && version != 'null' &&
-                    <AppText style={styles.mailText}>{version}</AppText>
+                    <AppText style={styles.mailText}>v.{version}</AppText>
                 }
             </View>
         </View>

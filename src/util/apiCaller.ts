@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const BASE_URL = "https://api.quizmarkt.com/quizmarkt-base";
-//const BASE_URL = 'http://10.0.2.2:9092/quizmarkt-base';
+//const BASE_URL = 'http://192.168.1.176:9092/quizmarkt-base';
 
 export interface ApiResponse {
     data?: any;

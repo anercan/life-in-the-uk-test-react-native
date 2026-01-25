@@ -29,7 +29,7 @@ import {
 } from "react-native-iap";
 import {checkVersionWithStoresInfo} from "util/checkVersion";
 import AppOnboarding from "components/Onboarding";
-import {checkFirstLaunch} from "util/commonUtil";
+import {checkFirstLaunch, isAndroid} from "util/commonUtil";
 import {darkTheme, lightTheme} from "constants/theme";
 import AnalyseScreen from "screens/AnalyseScreen";
 import {useUserManagementService} from "services/UserManagementService";
@@ -42,7 +42,9 @@ export default () => {
     const [showSplash, setShowSplash] = useState<boolean>(true);
 
     useEffect(() => {
-        checkVersionWithStoresInfo();
+        if (isAndroid()) {
+            checkVersionWithStoresInfo();
+        }
         Platform.OS === 'android' && StatusBar.setTranslucent(true);
         subscribeListener();
         checkFirstLaunch().then((isFirst: boolean) => setIsFirstLaunch(isFirst))
