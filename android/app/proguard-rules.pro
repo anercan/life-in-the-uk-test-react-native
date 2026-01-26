@@ -45,6 +45,34 @@
 -keep class com.facebook.hermes.unicode.** { *; }
 -keep class com.facebook.hermes.intl.** { *; }
 
+# ===== React Native New Architecture (Fabric/Bridgeless) =====
+-keep class com.facebook.react.fabric.** { *; }
+-keep class com.facebook.react.runtime.** { *; }
+-keep interface com.facebook.react.runtime.** { *; }
+# NOT: devsupport kuralları KALDIRILDI - release'de native lib yok, Java kodu da olmamalı
+# -keep class com.facebook.react.devsupport.** { *; }  # KALDIRILDI - CXX crash'e sebep olur!
+# -keep interface com.facebook.react.devsupport.** { *; }  # KALDIRILDI
+-keep class com.facebook.react.uimanager.** { *; }
+-keep class com.facebook.react.modules.** { *; }
+-keep class com.facebook.react.common.** { *; }
+-keep class com.facebook.react.internal.** { *; }
+-keep,includedescriptorclasses class com.facebook.react.codegen.** { *; }
+-keep class com.facebook.react.turbomodule.** { *; }
+-keep interface com.facebook.react.turbomodule.** { *; }
+# DevSupport uyarılarını sustur (kod silinecek ama uyarı vermesin)
+-dontwarn com.facebook.react.devsupport.**
+-dontwarn com.facebook.react.runtime.**
+-dontwarn com.facebook.react.internal.**
+
+# NativeModule extensions
+-keep class * extends com.facebook.react.bridge.ReactContextBaseJavaModule { *; }
+-keep class * extends com.facebook.react.bridge.BaseJavaModule { *; }
+
+# SoLoader
+-keep class com.facebook.soloader.** { *; }
+-dontwarn com.facebook.soloader.**
+
+
 # ===== OkHttp =====
 -keepattributes Signature
 -keepattributes *Annotation*
@@ -54,33 +82,27 @@
 -dontwarn okio.**
 -dontwarn javax.annotation.**
 
-# ===== Firebase =====
--keep class com.google.firebase.** { *; }
--keep class com.google.android.gms.** { *; }
+# ===== Firebase & Google Play Services =====
+-keepattributes SourceFile,LineNumberTable
+-keep public class * extends java.lang.Exception
+-keep class com.google.firebase.messaging.** { *; }
+-keep class com.google.firebase.crashlytics.** { *; }
+-keep class com.google.firebase.analytics.** { *; }
+-keep class com.google.firebase.installations.** { *; }
+-keep class com.google.firebase.sessions.** { *; }
+-keep class com.google.firebase.iid.** { *; }
+-keep class com.google.android.gms.common.** { *; }
+-keep class com.google.android.gms.tasks.** { *; }
+-keep class com.google.android.gms.auth.** { *; }
+-keep class androidx.credentials.** { *; }
+-keep class com.google.android.libraries.identity.googleid.** { *; }
 -dontwarn com.google.firebase.**
 -dontwarn com.google.android.gms.**
 
-# Firebase Crashlytics
--keepattributes SourceFile,LineNumberTable
--keep public class * extends java.lang.Exception
--keep class com.google.firebase.crashlytics.** { *; }
--dontwarn com.google.firebase.crashlytics.**
-
-# Firebase Messaging
--keep class com.google.firebase.messaging.** { *; }
--keep class com.google.firebase.iid.** { *; }
-
-# ===== Google Sign-In / Play Services Auth =====
--keep class com.google.android.gms.auth.** { *; }
--keep class com.google.android.gms.common.** { *; }
--keep class com.google.android.gms.tasks.** { *; }
--keep class androidx.credentials.** { *; }
--keep class com.google.android.libraries.identity.googleid.** { *; }
--dontwarn com.google.android.gms.**
-
 # ===== Kotlin =====
--keep class kotlin.** { *; }
 -keep class kotlin.Metadata { *; }
+-keep class kotlin.reflect.** { *; }
+-keep class kotlin.coroutines.** { *; }
 -dontwarn kotlin.**
 -keepclassmembers class **$WhenMappings {
     <fields>;
@@ -89,19 +111,63 @@
     public <methods>;
 }
 -assumenosideeffects class kotlin.jvm.internal.Intrinsics {
+    static void checkNotNull(java.lang.Object);
+    static void checkNotNull(java.lang.Object, java.lang.String);
     static void checkParameterIsNotNull(java.lang.Object, java.lang.String);
 }
 
-# ===== AndroidX =====
--keep class androidx.** { *; }
--keep interface androidx.** { *; }
--dontwarn androidx.**
+# ===== AndroidX (Specific rules only) =====
+# Core AndroidX
+-keep class androidx.lifecycle.** { *; }
+-keep class androidx.savedstate.** { *; }
+-keep class androidx.activity.** { *; }
+-keep class androidx.fragment.** { *; }
+
+# Credentials API (for Google Sign-In)
+-keep class androidx.credentials.** { *; }
+
+# AndroidX annotations
+-dontwarn androidx.annotation.**
+-dontwarn androidx.appcompat.**
+-dontwarn androidx.core.**
 
 # ===== React Native Vector Icons =====
 -keep class com.oblador.vectoricons.** { *; }
 
 # ===== React Native Apple Authentication =====
 -keep class com.invertase.react.apple.** { *; }
+
+# ===== React Native IAP (In-App Purchase) =====
+-keep class com.dooboolab.rniap.** { *; }
+-keep class com.android.billingclient.api.** { *; }
+
+# ===== React Native Sound =====
+-keep class com.zmxv.RNSound.** { *; }
+
+# ===== React Native Reanimated =====
+-keep class com.swmansion.reanimated.** { *; }
+-keep class com.facebook.react.turbomodule.** { *; }
+
+# ===== React Native Gesture Handler =====
+-keep class com.swmansion.gesturehandler.** { *; }
+
+# ===== React Native Screens =====
+-keep class com.swmansion.rnscreens.** { *; }
+
+# ===== React Native SVG =====
+-keep class com.horcrux.svg.** { *; }
+
+# ===== React Native Device Info =====
+-keep class com.learnium.RNDeviceInfo.** { *; }
+
+# ===== React Native Linear Gradient =====
+-keep class com.BV.LinearGradient.** { *; }
+
+# ===== React Native Safe Area Context =====
+-keep class com.th3rdwave.safeareacontext.** { *; }
+
+# ===== React Native In-App Review =====
+-keep class com.google.android.play.core.review.** { *; }
 
 # ===== General =====
 -keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod
@@ -132,9 +198,6 @@
     java.lang.Object readResolve();
 }
 
-# ===== SoLoader =====
--keep class com.facebook.soloader.** { *; }
--dontwarn com.facebook.soloader.**
 
 # Keep BuildConfig
 -keep class **.BuildConfig { *; }

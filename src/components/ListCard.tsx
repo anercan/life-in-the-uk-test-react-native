@@ -62,7 +62,6 @@ const ListCard = (props: IListCard) => {
                 contentBox: {
                     flex: 1,
                     paddingVertical: sizes.s,
-                    paddingRight: sizes.sm,
                     justifyContent: 'space-between',
                 },
                 titleContainer: {
@@ -78,6 +77,7 @@ const ListCard = (props: IListCard) => {
                 },
                 descContainer: {
                     marginTop: sizes.xs,
+                    marginBottom: sizes.xs,
                 },
                 descText: {
                     fontSize: sizes.h5,
