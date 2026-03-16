@@ -57,7 +57,7 @@ const CompletedQuizScreen = ({navigation}) => {
 
     const reviewModal = async () => {
         const isAvailable = InAppReview.isAvailable();
-        if (isAvailable) {
+        if (isAvailable) { //&& correctAnswerSize > 9
             handleReviewRequest('CompletedScreenReview').then((shouldShowModal) => {
                 if (shouldShowModal) {
                     InAppReview.RequestInAppReview()

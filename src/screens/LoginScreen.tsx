@@ -53,7 +53,6 @@ const LoginScreen = () => {
             });
 
             const {identityToken, user, email, fullName} = credential;
-            console.log("log2", credential)
 
             if (!identityToken) {
                 return;
@@ -71,12 +70,16 @@ const LoginScreen = () => {
                 }
             }
 
-            appleLogin(signInRequest);
+            appleLogin(signInRequest).then(response => {
+                login(response.jwt);
+                loginEvent('Apple');
+            });
 
         } catch (error: any) {
             if (error.code === 'ERR_REQUEST_CANCELED') {
+                logEvent('login_exit', {method: 'Apple'});
             } else {
-                console.error(error);
+                logEvent('login_error', {method: 'Google', code: error?.code, error: error?.toString()});
             }
         }
     };
@@ -153,7 +156,7 @@ const LoginScreen = () => {
                 login(response.jwt);
                 loginEvent('Google');
             })
-            .catch((e) => logEvent('login_service_error', {method: 'Google',error: e}));
+            .catch((e) => logEvent('login_service_error', {method: 'Google', error: e}));
     }
 
     const styles = StyleSheet.create({
@@ -179,19 +182,20 @@ const LoginScreen = () => {
     return (
         <View style={styles.container}>
             <View style={styles.logoWrapper}>
-                <AppLogo />
+                <AppLogo/>
             </View>
             <GoogleSignInButton onPress={onGoogleSignInButtonPress}/>
             {!isAndroid() && isAppleLoginAvailable &&
                 <AppleButton
                     buttonStyle={AppleButton.Style.WHITE_OUTLINE}
                     buttonType={AppleButton.Type.SIGN_IN}
-                    style={{width: sizes.base * 35, height: sizes.xl, marginTop: sizes.m, borderRadius: sizes.l}}
+                    cornerRadius={sizes.l}
+                    style={{width: sizes.base * 35, height: sizes.xl, marginTop: sizes.m}}
                     onPress={onAppleButtonPress}
                 />
             }
             <View style={{marginTop: 'auto', marginBottom: sizes.m}}>
-                <AppText style={styles.mailText}>team@quizmarkt.com </AppText>
+                <AppText style={styles.mailText}>team@quizmarkt.com</AppText>
                 {version != '' && version != 'null' &&
                     <AppText style={styles.mailText}>v.{version}</AppText>
                 }

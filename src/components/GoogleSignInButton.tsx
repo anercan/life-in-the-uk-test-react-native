@@ -13,7 +13,7 @@ export const GoogleSignInButton: React.FC<GoogleSignInButtonProps> = ({onPress})
 
     const styles = StyleSheet.create({
         button: {
-            borderRadius: sizes.l,
+            borderRadius: sizes.xl,
             elevation: 1,
             flexDirection: 'row',
             alignItems: 'center',

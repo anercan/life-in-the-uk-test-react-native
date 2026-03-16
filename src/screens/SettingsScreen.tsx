@@ -213,7 +213,7 @@ const SettingsScreen = ({navigation}) => {
                                 {item.section}
                             </AppText>
                             {// @ts-ignore
-                                item.items?.filter((setting: any) => setting?.show !== false).map((setting, idx) => (
+                                item.items?.filter((setting: any) => setting?.show !== false).map((setting :any, idx) => (
                                     <React.Fragment key={idx}>
                                         {idx !== 0 && getLine()}
                                         <TouchableOpacity

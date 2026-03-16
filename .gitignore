@@ -57,6 +57,7 @@ DerivedData/
 *.xcodeproj/project.xcworkspace/
 xcuserdata/
 *.xcuserstate
+*.xcworkspace/xcuserdata/
 
 # Xcode
 *.pbxuser
@@ -87,3 +88,5 @@ Packages/
 *.idea/
 
 GoogleService-Info.plist
+
+
