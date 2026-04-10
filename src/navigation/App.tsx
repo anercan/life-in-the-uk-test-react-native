@@ -13,31 +13,23 @@ import {
     SolvedQuizListScreen,
     CompletedQuizScreen,
     LoginScreen,
-    GetPremiumScreen,
     SettingsScreen,
-    SplashScreen
+    SplashScreen,
+    SubscriptionScreen
 } from "../screens";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import Feather from "react-native-vector-icons/Feather";
 import {AuthContext} from "context/AuthContext";
-import {
-    finishTransaction, flushFailedPurchasesCachedAsPendingAndroid, initConnection,
-    ProductPurchase,
-    Purchase,
-    purchaseUpdatedListener,
-    SubscriptionPurchase
-} from "react-native-iap";
 import {checkVersionWithStoresInfo} from "util/checkVersion";
 import AppOnboarding from "components/Onboarding";
 import {checkFirstLaunch, isAndroid} from "util/commonUtil";
 import {darkTheme, lightTheme} from "constants/theme";
 import AnalyseScreen from "screens/AnalyseScreen";
-import {useUserManagementService} from "services/UserManagementService";
 
 export default () => {
-    const {googleSubscribe} = useUserManagementService();
+    //todo subscriber listener konulmali mi ? subscribe sonrasi backend cagrimini kapatip denenebilir
     const {isDark, theme, setTheme} = useData();
-    const {login, isLoggedIn} = useContext(AuthContext);
+    const {isLoggedIn} = useContext(AuthContext);
     const [isFirstLaunch, setIsFirstLaunch] = useState<boolean | null>(null);
     const [showSplash, setShowSplash] = useState<boolean>(true);
 
@@ -46,7 +38,6 @@ export default () => {
             checkVersionWithStoresInfo();
         }
         Platform.OS === 'android' && StatusBar.setTranslucent(true);
-        subscribeListener();
         checkFirstLaunch().then((isFirst: boolean) => setIsFirstLaunch(isFirst))
         return () => {
             StatusBar.setBarStyle('default');
@@ -56,35 +47,6 @@ export default () => {
     useEffect(() => {
         setTheme(isDark ? darkTheme : lightTheme);
     }, [isDark]);
-
-    const subscribeListener = async () => {
-        await initConnection().then(() => {
-            flushFailedPurchasesCachedAsPendingAndroid().then(() => subscriptionListener())
-        });
-    }
-
-    const consumeGooglePlayDeliveryResult = async (purchaseResult: Purchase, serviceResult: any) => {
-        if (serviceResult) {
-            await finishTransaction({purchase: purchaseResult, isConsumable: false});
-            await login(serviceResult.jwt);
-        }
-    }
-
-    const subscriptionListener = () => {
-        purchaseUpdatedListener((purchase: SubscriptionPurchase | ProductPurchase) => {
-                console.log('subscriptionListener called')
-                const receipt = purchase?.transactionReceipt;
-                if (receipt) {
-                    if (Platform.OS === 'android') {
-                        googleSubscribe(purchase)
-                            .then(async (deliveryResult) => {
-                                await consumeGooglePlayDeliveryResult(purchase, deliveryResult);
-                            });
-                    }
-                }
-            },
-        );
-    }
 
     const styles = StyleSheet.create({
         container: {
@@ -138,7 +100,7 @@ export const QuizGroupListStack = () => {
             <Stack.Screen name="QuizListScreen" component={QuizListScreen} options={stackOptions}/>
             <Stack.Screen name="QuizScreen" component={QuizScreen} options={stackOptions}/>
             <Stack.Screen name="CompletedQuizScreen" component={CompletedQuizScreen} options={stackOptions}/>
-            <Stack.Screen name="GetPremiumScreen" component={GetPremiumScreen} options={stackOptions}/>
+            <Stack.Screen name="SubscriptionScreen" component={SubscriptionScreen} options={stackOptions}/>
             <Stack.Screen name="SettingsScreen" component={SettingsScreen} options={stackOptions}/>
         </Stack.Navigator>
     );
@@ -154,7 +116,7 @@ export const SolvedQuizListStack = () => {
             <Stack.Screen name="QuizScreen" component={QuizScreen} options={stackOptions}/>
             <Stack.Screen name="CompletedQuizScreen" component={CompletedQuizScreen} options={stackOptions}/>
 
-            <Stack.Screen name="GetPremiumScreen" component={GetPremiumScreen} options={stackOptions}/>
+            <Stack.Screen name="SubscriptionScreen" component={SubscriptionScreen} options={stackOptions}/>
             <Stack.Screen name="SettingsScreen" component={SettingsScreen} options={stackOptions}/>
         </Stack.Navigator>
     );
@@ -171,7 +133,7 @@ export const ProfileStack = () => {
             <Stack.Screen name="CompletedQuizScreen" component={CompletedQuizScreen} options={stackOptions}/>
 
             <Stack.Screen name="AnalyseScreen" component={AnalyseScreen} options={stackOptions}/>
-            <Stack.Screen name="GetPremiumScreen" component={GetPremiumScreen} options={stackOptions}/>
+            <Stack.Screen name="SubscriptionScreen" component={SubscriptionScreen} options={stackOptions}/>
             <Stack.Screen name="SettingsScreen" component={SettingsScreen} options={stackOptions}/>
         </Stack.Navigator>
     );

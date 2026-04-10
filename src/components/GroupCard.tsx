@@ -8,7 +8,7 @@ interface IGroupCard {
     card: any,
     onPress?: () => void;
     backgroundColor: string
-    backgroundImage: ImageProps
+    backgroundImage?: ImageProps
 }
 
 const {width} = Dimensions.get('window');

@@ -83,53 +83,6 @@ export const randomColors = [
     '#74808d', '#74808d'
 ];
 
-export const getItemOfferText = (billingPeriod, formattedPrice: string | undefined, priceAmountMicros: string | undefined) => {
-    try {
-        // Match duration and unit from the billingPeriod
-        const regex = /P(\d+)([A-Za-z]+)/;
-
-        const match = billingPeriod.match(regex);
-
-        if (match) {
-            const quantity = match[1]; // The number part (e.g., 3, 6, 1)
-            const unit = match[2]; // The unit part (e.g., D, M, W, Y)
-
-            // Mapping units to human-readable terms
-            const unitMap = {
-                D: "Day",
-                W: "Week",
-                M: "Month",
-                Y: "Year"
-            };
-
-            // Handle pluralization (e.g., "1 day" vs "2 days")
-            const unitName = unitMap[unit] || unit;
-            let period = quantity === "1" ? unitName : unitName + "s";
-
-            if(priceAmountMicros == "0" ) { // burası her dil için free textini dönmüyo ('Ücretsiz' vs dönüyor)
-                return 'Free for ' + quantity + ' ' + period;
-            }
-            if (quantity === '1') {
-                return formattedPrice + '/' + unitName;
-            } else {
-                return formattedPrice + '/' + quantity + ' ' + period;
-            }
-        }
-
-        return billingPeriod; // If no match, return the original period
-    } catch (e) {
-        return ''
-    }
-}
-
-export const isFreeTrialEligible = (product) => {
-    try {
-        return product?.subscriptionOfferDetails[0]?.offerTags[0]?.includes('free') || product?.subscriptionOfferDetails[0]?.pricingPhases.pricingPhaseList[0]?.formattedPrice === 0;
-    } catch (e) {
-        return false;
-    }
-}
-
 export const hexWithOpacity = (color,opacity) => {
     const alpha = Math.round(opacity * 255).toString(16).padStart(2, '0');
     return color+alpha;

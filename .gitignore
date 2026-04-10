@@ -14,6 +14,12 @@ web-build/
 
 android/app/google-services.json
 android/app/lifeintheuk-prod.keystore
+android/app/debug.keystore
+android/local.properties
+
+# iOS sensitive
+ios/.xcode.env
+ios/.xcode.env.local
 
 # Ignore Gradle project-specific cache directory
 .gradle
@@ -88,5 +94,6 @@ Packages/
 *.idea/
 
 GoogleService-Info.plist
+ios/LifeInTheUKClient/GoogleService-Info.plist
 
 

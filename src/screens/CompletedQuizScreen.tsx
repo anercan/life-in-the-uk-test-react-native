@@ -103,7 +103,7 @@ const CompletedQuizScreen = ({navigation}) => {
     const onPressNextQuiz = () => {
         let nextQuiz = getNextQuiz();
         if (nextQuiz?.locked) {
-            navigation.navigate('GetPremiumScreen');
+            navigation.navigate('SubscriptionScreen');
         } else {
             navigation.navigate('QuizScreen', {
                 quizType: 'REGULAR',

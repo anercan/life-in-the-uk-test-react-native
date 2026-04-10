@@ -8,7 +8,6 @@ export const useUserManagementService = (navigator?: any) => {
     };
 
     const appleLogin = (appleSignInRequest) => {
-        console.log(appleSignInRequest)
         return apiCaller('user-management/apple-sign-in', 'POST', appleSignInRequest)
     };
 

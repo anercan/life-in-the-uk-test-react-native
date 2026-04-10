@@ -83,7 +83,7 @@ const QuizListScreen = ({navigation}) => {
                 });
             }
         } else {
-            navigation.navigate('GetPremiumScreen');
+            navigation.navigate('SubscriptionScreen');
         }
     }
 

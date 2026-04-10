@@ -6,7 +6,7 @@ import {IQuizGroupCard} from "constants/types";
 import {GroupCard} from "../components";
 import {useFocusEffect} from "@react-navigation/native";
 import {TitleContext} from "context/TitleContext";
-import {chunkArray, groupCardBackgroundImages, randomColors} from "util/commonUtil";
+import {chunkArray, randomColors} from "util/commonUtil";
 import DailyCard from "components/DailyCard";
 import {useQuizService} from "services/QuizService";
 
@@ -57,7 +57,6 @@ const QuizGroupListScreen = ({navigation}) => {
                     {row.map((card, index) => (
                         <View key={row + '' + index}>
                             <GroupCard
-                                backgroundImage={groupCardBackgroundImages[(rowIndex * row.length) + index]}
                                 backgroundColor={randomColors[(rowIndex * row.length) + index]}
                                 card={card}
                                 onPress={() => onPressQuizGroupCard(card)}

@@ -21,7 +21,7 @@ const useApiCaller = (navigator?: any) => {
             );
 
             if (response?.status?.code === -3 && navigator) {
-                navigator.replace("GetPremiumScreen");
+                navigator.replace("SubscriptionScreen");
             }
 
             return response?.data;

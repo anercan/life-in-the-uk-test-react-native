@@ -86,7 +86,7 @@ const SettingsScreen = ({navigation}) => {
                     icon: 'key-outline',
                     title: 'Get Premium+',
                     buttonText: 'View',
-                    onPress: () => navigation.push('GetPremiumScreen'),
+                    onPress: () => navigation.push('SubscriptionScreen'),
                     show: !isPremiumUser,
                     color: '#e8ae60'
                 },

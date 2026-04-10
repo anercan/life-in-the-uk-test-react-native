@@ -142,10 +142,8 @@ const ListCard = (props: IListCard) => {
             onPress={onPress}
             style={styles.container}
             activeOpacity={0.7}
-            disabled={locked}
             accessibilityRole="button"
             accessibilityLabel={`${title}, ${rightBottomDesc || ''}`}
-            accessibilityState={{disabled: locked}}
         >
             <View style={styles.card}>
                 <View style={styles.iconBox}>{renderIconContent}</View>
