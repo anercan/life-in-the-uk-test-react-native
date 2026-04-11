@@ -62,20 +62,6 @@ export const checkFirstLaunch = async (): Promise<boolean> => {
     }
 };
 
-export const groupCardBackgroundImages = {
-    0: require('../assets/icons/groupIcons/icon-8.png'),
-    1: require('../assets/icons/groupIcons/icon-3.png'),
-    2: require('../assets/icons/groupIcons/icon-2.png'),
-    3: require('../assets/icons/groupIcons/icon-6.png'),
-    4: require('../assets/icons/groupIcons/icon-4.png'),
-    5: require('../assets/icons/groupIcons/icon-5.png'),
-    6: require('../assets/icons/groupIcons/icon-8.png'),
-    7: require('../assets/icons/groupIcons/icon-7.png'),
-    9: require('../assets/icons/groupIcons/icon-9.png'),
-    10: require('../assets/icons/groupIcons/icon-10.png'),
-    11: require('../assets/icons/groupIcons/icon-11.png')
-};
-
 export const randomColors = [
     '#245DB3', '#2492b3',
     '#4755E6', '#1C88E6',
