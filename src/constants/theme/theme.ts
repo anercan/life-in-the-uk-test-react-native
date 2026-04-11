@@ -41,6 +41,8 @@ export interface ThemeColors {
     orderBoxBackGround: ColorValue;
     shadow: ColorValue;
     mediumGray: ColorValue;
+    cardProgress: ColorValue;
+    cardTab: ColorValue;
 }
 
 export interface ThemeSizes {

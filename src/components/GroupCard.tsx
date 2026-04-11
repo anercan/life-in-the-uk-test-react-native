@@ -1,8 +1,9 @@
 import React from 'react';
-import {View, StyleSheet, TouchableOpacity, ImageProps, Dimensions, Animated} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, ImageProps, Dimensions, Animated, Platform} from 'react-native';
 import {useTheme} from "../hooks";
 import {AppText} from "components/index";
-import * as Progress from 'react-native-progress';
+import LinearGradient from 'react-native-linear-gradient';
+import {buttonPressInConfig, buttonPressOutConfig} from "util/commonUtil";
 
 interface IGroupCard {
     card: any,
@@ -15,92 +16,171 @@ const {width} = Dimensions.get('window');
 
 const GroupCard = (props: IGroupCard) => {
 
-    const {fonts, sizes, colors} = useTheme();
+    const {fonts, sizes} = useTheme();
     const [pressAnim] = React.useState(new Animated.Value(1));
 
-    const cardWidth = width / 2.4;
+    const cardWidth = width / 2.25;
+    const cardHeight = width * 0.42;
 
     const handlePressIn = () => {
-        Animated.spring(pressAnim, {
-            toValue: 0.9,
-            useNativeDriver: true,
-        }).start();
+        Animated.spring(pressAnim, buttonPressInConfig).start();
     };
 
     const handlePressOut = () => {
-        Animated.spring(pressAnim, {
-            toValue: 1,
-            useNativeDriver: true,
-        }).start();
+        Animated.spring(pressAnim, buttonPressOutConfig).start();
     };
 
-    const styles = StyleSheet.create({
-        container: {
-            margin: sizes.xs,
-            marginHorizontal: sizes.s,
-            marginVertical: sizes.s,
-        },
-        card: {
-            elevation: 2,
-            justifyContent: 'space-between',
-            width: cardWidth,
-            height: cardWidth / 1.1,
-            backgroundColor: props.backgroundColor,
-            borderRadius: sizes.md,
-            overflow: 'hidden',
-        },
-        cardTextSection: {
-            marginTop: sizes.m,
-        },
-        progressSection: {
-            backgroundColor: 'rgba(62,63,64,0.5)',
-            width: '100%',
-            height: cardWidth / 3.5,
-            alignItems: 'center',
-            justifyContent: 'center',
-        },
-        cardText: {
-            fontFamily: fonts.text,
-            fontSize: sizes.h2,
-            color: colors.gray,
-            lineHeight: sizes.m,
-            minHeight: sizes.m * 3,
-        },
-        progressBar: {
-            width: '75%',
-        },
-        progressLabel: {
-            flexDirection: 'row',
-            alignItems: 'baseline',
-            justifyContent: 'center',
-        },
-        percentageText: {
-            marginTop: sizes.xs,
-            color: colors.gray,
-            fontSize: sizes.h4,
-            fontFamily: fonts.h2,
-            fontWeight: 'bold',
-        },
-        percentageSymbol: {
-            color: colors.gray,
-            fontSize: sizes.h5,
-            fontFamily: fonts.text,
-            marginLeft: 2,
-        }
-    });
-
     function getProgress() {
+        if (!props.card?.quizQuantity) return 0;
         return Math.round((props.card?.userSolvedCount / props.card?.quizQuantity) * 100);
     }
 
-    const progressValue = getProgress() / 100;
+    const progressPercent = getProgress();
+    const isCompleted = progressPercent === 100;
 
-    let titleText = props.card?.title
-        ?.replace(/(?<!\bof|is)\s/g, '\n');
+    const lightenColor = (hex: string, amount: number): string => {
+        const num = parseInt(hex.replace('#', ''), 16);
+        const r = Math.min(255, (num >> 16) + amount);
+        const g = Math.min(255, ((num >> 8) & 0x00FF) + amount);
+        const b = Math.min(255, (num & 0x0000FF) + amount);
+        return `#${(r << 16 | g << 8 | b).toString(16).padStart(6, '0')}`;
+    };
 
-    if (titleText && !titleText.includes('\n')) {
-        titleText = `\n${titleText}\n`;
-    }
+    const darkenColor = (hex: string, amount: number): string => {
+        const num = parseInt(hex.replace('#', ''), 16);
+        const r = Math.max(0, (num >> 16) - amount);
+        const g = Math.max(0, ((num >> 8) & 0x00FF) - amount);
+        const b = Math.max(0, (num & 0x0000FF) - amount);
+        return `#${(r << 16 | g << 8 | b).toString(16).padStart(6, '0')}`;
+    };
+
+    const bgColor = props.backgroundColor;
+    const gradientStart = lightenColor(bgColor, 25);
+    const gradientEnd = darkenColor(bgColor, 30);
+
+    const styles = StyleSheet.create({
+        container: {
+            marginHorizontal: sizes.s,
+            marginVertical: sizes.s * 0.8,
+        },
+        cardShadow: {
+            borderRadius: sizes.cardRadius,
+            ...Platform.select({
+                ios: {
+                    shadowColor: darkenColor(bgColor, 60),
+                    shadowOffset: {width: 0, height: 6},
+                    shadowOpacity: 0.3,
+                    shadowRadius: 12,
+                },
+                android: {
+                    elevation: 3,
+                },
+            }),
+        },
+        card: {
+            width: cardWidth,
+            height: cardHeight,
+            borderRadius: sizes.cardRadius,
+            overflow: 'hidden',
+        },
+        gradient: {
+            flex: 1,
+            justifyContent: 'space-between',
+            padding: sizes.sm,
+            paddingBottom: sizes.s,
+        },
+        topRow: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+        },
+        iconContainer: {
+            width: sizes.md + 4,
+            height: sizes.md + 4,
+            borderRadius: (sizes.md + 4) / 2,
+            backgroundColor: 'rgba(255,255,255,0.1)',
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        statusBadge: {
+            paddingHorizontal: sizes.s * 1.2,
+            paddingVertical: 3,
+            borderRadius: sizes.s * 2,
+            backgroundColor: isCompleted ? 'rgba(6,194,63,0.35)' : 'rgba(255,255,255,0.18)',
+        },
+        statusText: {
+            fontFamily: fonts.semibold,
+            fontSize: sizes.smallestText - 1,
+            color: '#FFFFFF',
+            letterSpacing: 0.3,
+        },
+        titleSection: {
+            flex: 1,
+            justifyContent: 'center',
+            marginTop: sizes.s,
+        },
+        cardTitle: {
+            fontFamily: fonts.medium,
+            fontSize: sizes.text,
+            color: '#FFFFFF',
+            //lineHeight: sizes.sm,
+            //textAlign: 'left',
+            textShadowColor: 'rgba(0,0,0,0.15)',
+            textShadowOffset: {width: 0, height: 1},
+            textShadowRadius: 2,
+        },
+        bottomSection: {
+            marginTop: sizes.m,
+        },
+        progressRow: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: sizes.xs + 1,
+        },
+        progressLabelText: {
+            fontFamily: fonts.semibold,
+            fontSize: sizes.smallestText,
+            color: 'rgba(255,255,255,0.85)',
+        },
+        progressPercentText: {
+            fontFamily: fonts.bold,
+            fontSize: sizes.smallestText,
+            color: '#FFFFFF',
+        },
+        progressBarContainer: {
+            width: '100%',
+            height: 5,
+            borderRadius: 3,
+            backgroundColor: 'rgba(255,255,255,0.2)',
+            overflow: 'hidden',
+        },
+        progressBarFill: {
+            height: '100%',
+            borderRadius: 3,
+            backgroundColor: '#FFFFFF',
+        },
+        decorativeCircle: {
+            position: 'absolute',
+            width: cardWidth * 0.55,
+            height: cardWidth * 0.55,
+            borderRadius: cardWidth * 0.275,
+            backgroundColor: 'rgba(255,255,255,0.06)',
+            top: -cardWidth * 0.12,
+            right: -cardWidth * 0.15,
+        },
+        decorativeCircleSmall: {
+            position: 'absolute',
+            width: cardWidth * 0.3,
+            height: cardWidth * 0.3,
+            borderRadius: cardWidth * 0.15,
+            backgroundColor: 'rgba(255,255,255,0.04)',
+            bottom: cardWidth * 0.25,
+            left: -cardWidth * 0.08,
+        },
+    });
+
+    const titleText = props.card?.title || '';
 
     return (
         <TouchableOpacity
@@ -109,43 +189,56 @@ const GroupCard = (props: IGroupCard) => {
             onPress={props.onPress}
             onPressIn={handlePressIn}
             onPressOut={handlePressOut}
-            activeOpacity={0.8}
+            activeOpacity={1}
         >
-            <Animated.View style={[{transform: [{scale: pressAnim}]}]}>
+            <Animated.View style={[styles.cardShadow, {transform: [{scale: pressAnim}]}]}>
                 <View style={styles.card}>
-                    <View>
-                        <View style={styles.cardTextSection}>
+                    <LinearGradient
+                        colors={[gradientStart, bgColor, gradientEnd]}
+                        start={{x: 0, y: 0}}
+                        end={{x: 1, y: 1}}
+                        style={styles.gradient}
+                    >
+                        {/* Decorative circles */}
+                        <View style={styles.decorativeCircle} />
+                        <View style={styles.decorativeCircleSmall} />
+
+                        {/* Top row: icon + status */}
+                        <View style={styles.topRow}>
+                            <View style={styles.iconContainer}>
+                            </View>
+                            <View style={styles.statusBadge}>
+                                <AppText style={styles.statusText}>
+                                    {isCompleted ? '✓ Done' : `${props.card?.userSolvedCount || 0}/${props.card?.quizQuantity || 0}`}
+                                </AppText>
+                            </View>
+                        </View>
+
+                        {/* Title */}
+                        <View style={styles.titleSection}>
                             <AppText
-                                style={styles.cardText}
-                                numberOfLines={3}
+                                style={styles.cardTitle}
+                                numberOfLines={2}
                             >
                                 {titleText}
                             </AppText>
                         </View>
-                    </View>
 
-                    {/* Progress Section */}
-                    <View style={styles.progressSection}>
-                        <View style={styles.progressBar}>
-                            <Progress.Bar
-                                progress={progressValue}
-                                width={null}
-                                height={4}
-                                color={colors.text as string}
-                                unfilledColor={colors.cardBorder as string}
-                                borderWidth={0}
-                                borderRadius={2}
-                            />
+                        {/* Progress bar */}
+                        <View style={styles.bottomSection}>
+                            <View style={styles.progressRow}>
+                                <AppText style={styles.progressLabelText}>
+                                    Progress
+                                </AppText>
+                                <AppText style={styles.progressPercentText}>
+                                    {progressPercent}%
+                                </AppText>
+                            </View>
+                            <View style={styles.progressBarContainer}>
+                                <View style={[styles.progressBarFill, {width: `${Math.max(progressPercent, 2)}%`}]} />
+                            </View>
                         </View>
-
-                        <View style={styles.progressLabel}>
-                            <AppText style={styles.percentageText}>
-                                {props.card?.userSolvedCount}
-                            </AppText>
-                            <AppText style={styles.percentageSymbol}>/{props.card?.quizQuantity}
-                            </AppText>
-                        </View>
-                    </View>
+                    </LinearGradient>
                 </View>
             </Animated.View>
         </TouchableOpacity>

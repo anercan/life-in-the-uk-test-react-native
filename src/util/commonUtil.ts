@@ -77,10 +77,10 @@ export const groupCardBackgroundImages = {
 };
 
 export const randomColors = [
-    '#447bb4', '#447bb4',
-    '#5582b3', '#5582b3',
-    '#6680a1', '#6680a1',
-    '#74808d', '#74808d'
+    '#245DB3', '#2492b3',
+    '#4755E6', '#1C88E6',
+    '#614ba8', '#2baaa6',
+    '#4755E6', '#33B3E6',
 ];
 
 export const hexWithOpacity = (color,opacity) => {
@@ -120,3 +120,17 @@ export const getProgress = (part,total) => {
     }
     return 0;
 }
+
+export const buttonPressInConfig = {
+    toValue: 0.97,
+    friction: 8,
+    tension: 100,
+    useNativeDriver: true,
+};
+
+export const buttonPressOutConfig = {
+    toValue: 1,
+    friction: 5,
+    tension: 40,
+    useNativeDriver: true,
+};

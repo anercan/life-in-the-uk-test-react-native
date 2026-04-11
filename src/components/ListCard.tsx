@@ -1,10 +1,12 @@
 import React, {useMemo} from 'react';
-import {View, StyleSheet, TouchableOpacity, Platform} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Platform, Animated, Dimensions} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {useTheme} from '../hooks';
-import {getShortenText} from 'util/commonUtil';
+import {buttonPressInConfig, buttonPressOutConfig, getShortenText} from 'util/commonUtil';
 import {AppText} from 'components/index';
+
+const {width} = Dimensions.get('window');
 
 interface IListCard {
     title?: string;
@@ -18,149 +20,184 @@ interface IListCard {
 const ListCard = (props: IListCard) => {
     const {fonts, colors, sizes} = useTheme();
     const {title, rightTopText1, rightTopText2, rightBottomDesc, locked, onPress} = props;
+    const [pressAnim] = React.useState(new Animated.Value(1));
+
+    const cardWidth = width * 0.92;
+
+    const handlePressIn = () => {
+        Animated.spring(pressAnim, buttonPressInConfig).start();
+    };
+
+    const handlePressOut = () => {
+        Animated.spring(pressAnim, buttonPressOutConfig).start();
+    };
 
     const styles = useMemo(
         () =>
             StyleSheet.create({
                 container: {
-                    width: '90%',
+                    width: cardWidth,
                     marginBottom: sizes.sm,
                 },
-                card: {
-                    flexDirection: 'row',
-                    backgroundColor: colors.card,
-                    borderRadius: sizes.sm,
-                    borderLeftWidth: sizes.s,
-                    borderColor: locked ? colors.light : colors.primary,
-                    borderWidth: 0.5,
-                    overflow: 'hidden',
+                cardShadow: {
+                    borderRadius: sizes.cardRadius,
                     ...Platform.select({
                         ios: {
-                            shadowColor: colors.shadow,
-                            shadowOffset: {
-                                width: 0,
-                                height: 2,
-                            },
-                            shadowOpacity: 0.1,
-                            shadowRadius: 3,
+                            shadowColor: locked ? '#6B7280' : '#4A6CF7',
+                            shadowOffset: {width: 0, height: 4},
+                            shadowOpacity: locked ? 0.08 : 0.12,
+                            shadowRadius: 10,
                         },
                         android: {
                             elevation: 2,
                         },
                     }),
                 },
-                iconBox: {
-                    width: 70,
-                    height: 70,
-                    margin: sizes.s,
-                    marginRight: sizes.sm,
+                card: {
+                    flexDirection: 'row',
+                    backgroundColor: colors.card,
+                    borderRadius: sizes.cardRadius,
+                    overflow: 'hidden',
+                    alignItems: 'center',
+                },
+                accentStrip: {
+                    width: 7,
+                    alignSelf: 'stretch',
+                    backgroundColor: colors.cardProgress,
+                },
+                contentRow: {
+                    flex: 1,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingHorizontal: sizes.sm,
+                },
+                textSection: {
+                    flex: 1,
+                    marginRight: sizes.s,
+                },
+                title: {
+                    color: locked ? '#9CA3AF' : colors.text,
+                    fontSize: sizes.h4,
+                    textAlign: 'left',
+                    fontFamily: fonts.medium,
+                    lineHeight: sizes.h2,
+                    marginTop: sizes.sm,
+                },
+                descChip: {
+                    alignSelf: 'flex-start',
+                    marginTop: sizes.sm,
+                    marginBottom: sizes.s,
+                    paddingHorizontal: sizes.s,
+                    paddingVertical: 2.5,
                     borderRadius: sizes.s,
-                    backgroundColor: locked ? colors.mediumGray : colors.orderBoxBackGround,
+                    backgroundColor: colors.cardTab,
+                },
+                descText: {
+                    fontSize: sizes.smallestText,
+                    color: locked ? colors.mediumGray : colors.cardProgress,
+                    fontFamily: fonts.medium,
+                },
+                scoreBadge: {
+                    minWidth: sizes.xl,
+                    height: sizes.xl,
+                    borderRadius: sizes.s,
+                    backgroundColor: locked ? '#F3F4F6' : colors.cardTab,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    paddingHorizontal: sizes.s,
+                },
+                scoreText: {
+                    fontFamily: fonts.bold,
+                    fontSize: sizes.h4,
+                    color: colors.cardProgress,
+                },
+                scoreSubText: {
+                    fontFamily: fonts.medium,
+                    fontSize: sizes.smallestText,
+                    color: colors.cardProgress,
+                },
+                percentText: {
+                    fontFamily: fonts.medium,
+                    fontSize: sizes.text,
+                    color: colors.cardProgress,
+                },
+                percentSymbol: {
+                    fontFamily: fonts.semibold,
+                    fontSize: sizes.smallestText,
+                    color: colors.cardProgress
+                },
+                lockContainer: {
+                    width: sizes.xl,
+                    height: sizes.xl,
+                    borderRadius: sizes.s,
+                    backgroundColor: colors.cardTab,
                     justifyContent: 'center',
                     alignItems: 'center',
                 },
-                contentBox: {
-                    flex: 1,
-                    paddingVertical: sizes.s,
-                    justifyContent: 'space-between',
-                },
-                titleContainer: {
-                    flex: 1,
-                    justifyContent: 'center',
-                },
-                title: {
-                    color: locked ? colors.light : colors.text,
-                    fontSize: sizes.h3,
-                    textAlign: 'left',
-                    fontFamily: fonts.semibold,
-                    lineHeight: sizes.h3 * 1.3,
-                },
-                descContainer: {
-                    marginTop: sizes.xs,
-                    marginBottom: sizes.xs,
-                },
-                descText: {
-                    fontSize: sizes.h5,
-                    textAlign: 'left',
-                    color: locked ? colors.light : colors.secondary,
-                    fontFamily: fonts.medium,
-                },
-                topText: {
-                    fontFamily: fonts.bold,
-                    fontSize: sizes.h2,
-                    color: colors.text,
-                },
-                topTextSecondary: {
-                    fontFamily: fonts.semibold,
-                    fontSize: sizes.h4,
-                    color: colors.text,
-                },
-                percentageText: {
-                    fontFamily: fonts.bold,
-                    fontSize: sizes.h1,
-                    color: colors.text,
-                },
-                percentageSymbol: {
-                    fontFamily: fonts.semibold,
-                    fontSize: sizes.h4,
-                    color: colors.text,
-                },
             }),
-        [colors, locked]
+        [colors, locked, cardWidth],
     );
 
-    const renderIconContent = useMemo(() => {
+    const renderScoreContent = () =>  {
         if (locked) {
             return (
-                <MaterialCommunityIcons
-                    name="lock"
-                    color={colors.light}
-                    size={sizes.l}
-                />
+                <View style={styles.lockContainer}>
+                    <MaterialCommunityIcons
+                        name="lock"
+                        color={colors.mediumGray}
+                        size={sizes.h2}
+                    />
+                </View>
             );
         }
 
         if (rightTopText1 !== undefined) {
             return (
-                <AppText style={styles.topText}>
-                    {rightTopText1}
-                    <AppText style={styles.topTextSecondary}>/{rightTopText2}</AppText>
-                </AppText>
+                <View style={styles.scoreBadge}>
+                    <AppText style={styles.scoreText}>{rightTopText1}<AppText
+                        style={styles.scoreSubText}>/{rightTopText2}</AppText></AppText>
+                </View>
             );
         }
 
         return (
-            <AppText style={styles.percentageText}>
-                {rightTopText2}
-                <AppText style={styles.percentageSymbol}>%</AppText>
-            </AppText>
+            <View style={styles.scoreBadge}>
+                <AppText style={styles.percentText}>
+                    {rightTopText2}
+                    <AppText style={styles.percentSymbol}>%</AppText>
+                </AppText>
+            </View>
         );
-    }, [locked, rightTopText1, rightTopText2, colors]);
+    }
 
     return (
         <TouchableOpacity
             onPress={onPress}
+            onPressIn={handlePressIn}
+            onPressOut={handlePressOut}
             style={styles.container}
-            activeOpacity={0.7}
+            activeOpacity={1}
             accessibilityRole="button"
             accessibilityLabel={`${title}, ${rightBottomDesc || ''}`}
         >
-            <View style={styles.card}>
-                <View style={styles.iconBox}>{renderIconContent}</View>
-                <View style={styles.contentBox}>
-                    <View style={styles.titleContainer}>
-                        <AppText style={styles.title} numberOfLines={2}>
-                            {getShortenText(title, 35)}
-                        </AppText>
-                    </View>
-                    {rightBottomDesc && (
-                        <View style={styles.descContainer}>
-                            <AppText style={styles.descText}>{rightBottomDesc}</AppText>
+            <Animated.View style={[styles.cardShadow, {transform: [{scale: pressAnim}]}]}>
+                <View style={styles.card}>
+                    <View style={styles.accentStrip}/>
+                    <View style={styles.contentRow}>
+                        <View style={styles.textSection}>
+                            <AppText style={styles.title} numberOfLines={1}>
+                                {getShortenText(title, 38)}
+                            </AppText>
+                            {rightBottomDesc && (
+                                <View style={styles.descChip}>
+                                    <AppText style={styles.descText}>{rightBottomDesc}</AppText>
+                                </View>
+                            )}
                         </View>
-                    )}
+                        {renderScoreContent()}
+                    </View>
                 </View>
-            </View>
-
+            </Animated.View>
         </TouchableOpacity>
     );
 };

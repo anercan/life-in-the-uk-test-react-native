@@ -94,6 +94,8 @@ export const COLORS: ThemeColors = {
     cardBorder: '#9a9494',
     shadow: '#363636',
     mediumGray: '#77777d',
+    cardProgress: '#d9dadc',
+    cardTab: '#afb1b3'
 };
 
 const baseSize = normalize(7);

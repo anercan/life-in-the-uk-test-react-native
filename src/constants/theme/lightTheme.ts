@@ -76,7 +76,7 @@ export const COLORS: ThemeColors = {
     text: '#444444',
     primary: '#1465ad',
     background: '#1465ad',
-    secondaryBackground: '#e9e9ec',
+    secondaryBackground: '#f4f4f4',
     tabBackground: '#c6c8ce',
     orderBoxBackGround: '#dddede',
     secondary: '#1465ad', // '#8392AB',
@@ -90,10 +90,12 @@ export const COLORS: ThemeColors = {
     warning: '#f6c93d',
     success: '#06c23f',
     info: '#0297b8',
-    card: '#f5f4f4',
+    card: '#ffffff',
     cardBorder: '#c7c2c2',
     shadow: '#000000',
     mediumGray: '#b9bbbf',
+    cardProgress: '#3a74bf',
+    cardTab: '#e7e9ea'
 };
 
 const baseSize = normalize(7);
