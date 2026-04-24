@@ -48,9 +48,7 @@ const NavigationCard = ({id, header, subText, onPress}) => {
         gradient: {
             flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'space-between',
-            paddingHorizontal: sizes.sm + 2,
-            paddingVertical: sizes.sm,
+            justifyContent: 'space-between'
         },
         leftContent: {
             flexDirection: 'row',
@@ -58,13 +56,13 @@ const NavigationCard = ({id, header, subText, onPress}) => {
             flex: 1,
         },
         iconContainer: {
-            width: sizes.md + 6,
-            height: sizes.md + 6,
-            borderRadius: (sizes.md + 6) / 2,
+            width: sizes.l,
+            height: sizes.l,
+            borderRadius: sizes.l,
             backgroundColor: 'rgba(255,255,255,0.2)',
             alignItems: 'center',
             justifyContent: 'center',
-            marginRight: sizes.s + 4,
+            marginRight: sizes.sm,
         },
         textContainer: {
             flex: 1,
@@ -72,7 +70,7 @@ const NavigationCard = ({id, header, subText, onPress}) => {
         header: {
             fontFamily: fonts.h2,
             fontSize: sizes.h3,
-            color: '#FFFFFF',
+            color: '#ffffff',
             textAlign: 'left',
             marginBottom: 3,
             textShadowColor: 'rgba(0,0,0,0.15)',
@@ -81,9 +79,9 @@ const NavigationCard = ({id, header, subText, onPress}) => {
         },
         subText: {
             textAlign: 'left',
-            fontSize: sizes.smallestText + 1,
-            fontFamily: fonts.normal,
-            color: 'rgba(255,255,255,0.85)',
+            fontSize: sizes.smallestText,
+            fontFamily: fonts.text,
+            color: 'rgba(255,255,255,0.90)',
         },
         arrowContainer: {
             width: sizes.m + 4,
@@ -126,35 +124,36 @@ const NavigationCard = ({id, header, subText, onPress}) => {
             <Animated.View style={[styles.cardShadow, {transform: [{scale: pressAnim}]}]}>
                 <View style={styles.card}>
                     <LinearGradient
-                        colors={['#1976D2', '#1565C0', '#0D47A1']}
-                        start={{x: 0, y: 0}}
-                        end={{x: 1, y: 1}}
+                        colors={['#506e88', '#6e7c8a', '#506e88']}
+                        start={{x: 0.6, y: 1}}
+                        end={{x: 1, y: 2}}
                         style={styles.gradient}
                     >
                         {/* Decorative circles */}
                         <View style={styles.decorativeCircle} />
                         <View style={styles.decorativeCircleSmall} />
+                        <View style={{paddingHorizontal:sizes.s,paddingVertical:sizes.sm, flexDirection: 'row', alignItems: 'center', flex: 1}}>
+                            <View style={styles.leftContent}>
+                                <View style={styles.iconContainer}>
+                                    <Icon
+                                        name="flash-outline"
+                                        size={sizes.h2}
+                                        color="#FFFFFF"
+                                    />
+                                </View>
+                                <View style={styles.textContainer}>
+                                    <AppText style={styles.header}>{header}</AppText>
+                                    <AppText style={styles.subText} numberOfLines={1}>{subText}</AppText>
+                                </View>
+                            </View>
 
-                        <View style={styles.leftContent}>
-                            <View style={styles.iconContainer}>
+                            <View style={styles.arrowContainer}>
                                 <Icon
-                                    name="flash-outline"
-                                    size={sizes.h2}
+                                    name="chevron-forward"
+                                    size={sizes.h3}
                                     color="#FFFFFF"
                                 />
                             </View>
-                            <View style={styles.textContainer}>
-                                <AppText style={styles.header}>{header}</AppText>
-                                <AppText style={styles.subText} numberOfLines={1}>{subText}</AppText>
-                            </View>
-                        </View>
-
-                        <View style={styles.arrowContainer}>
-                            <Icon
-                                name="chevron-forward"
-                                size={sizes.h3}
-                                color="#FFFFFF"
-                            />
                         </View>
                     </LinearGradient>
                 </View>

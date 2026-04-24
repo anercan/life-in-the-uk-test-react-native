@@ -86,8 +86,6 @@ const GroupCard = (props: IGroupCard) => {
         gradient: {
             flex: 1,
             justifyContent: 'space-between',
-            padding: sizes.sm,
-            paddingBottom: sizes.s,
         },
         topRow: {
             flexDirection: 'row',
@@ -130,13 +128,13 @@ const GroupCard = (props: IGroupCard) => {
             textShadowRadius: 2,
         },
         bottomSection: {
-            marginTop: sizes.m,
+            marginTop: sizes.md,
         },
         progressRow: {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-            marginBottom: sizes.xs + 1,
+            marginBottom: sizes.s,
         },
         progressLabelText: {
             fontFamily: fonts.semibold,
@@ -200,44 +198,47 @@ const GroupCard = (props: IGroupCard) => {
                         style={styles.gradient}
                     >
                         {/* Decorative circles */}
-                        <View style={styles.decorativeCircle} />
-                        <View style={styles.decorativeCircleSmall} />
+                        <View style={styles.decorativeCircle}/>
+                        <View style={styles.decorativeCircleSmall}/>
 
-                        {/* Top row: icon + status */}
-                        <View style={styles.topRow}>
-                            <View style={styles.iconContainer}>
+                        <View style={{padding: sizes.s}}>
+                            {/* Top row: status */}
+                            <View style={styles.topRow}>
+                                <View style={styles.iconContainer}>
+                                </View>
+                                <View style={styles.statusBadge}>
+                                    <AppText style={styles.statusText}>
+                                        {isCompleted ? '✓ Done' : `${props.card?.userSolvedCount || 0}/${props.card?.quizQuantity || 0}`}
+                                    </AppText>
+                                </View>
                             </View>
-                            <View style={styles.statusBadge}>
-                                <AppText style={styles.statusText}>
-                                    {isCompleted ? '✓ Done' : `${props.card?.userSolvedCount || 0}/${props.card?.quizQuantity || 0}`}
+
+                            {/* Title */}
+                            <View style={styles.titleSection}>
+                                <AppText adjustsFontSizeToFit
+                                         numberOfLines={1}
+                                         minimumFontScale={0.5} style={styles.cardTitle}>
+                                    {titleText}
                                 </AppText>
+                            </View>
+
+                            {/* Progress bar */}
+                            <View style={styles.bottomSection}>
+                                <View style={styles.progressRow}>
+                                    <AppText style={styles.progressLabelText}>
+                                        Progress
+                                    </AppText>
+                                    <AppText style={styles.progressPercentText}>
+                                        {progressPercent}%
+                                    </AppText>
+                                </View>
+                                <View style={styles.progressBarContainer}>
+                                    <View
+                                        style={[styles.progressBarFill, {width: `${Math.max(progressPercent, 2)}%`}]}/>
+                                </View>
                             </View>
                         </View>
 
-                        {/* Title */}
-                        <View style={styles.titleSection}>
-                            <AppText
-                                style={styles.cardTitle}
-                                numberOfLines={2}
-                            >
-                                {titleText}
-                            </AppText>
-                        </View>
-
-                        {/* Progress bar */}
-                        <View style={styles.bottomSection}>
-                            <View style={styles.progressRow}>
-                                <AppText style={styles.progressLabelText}>
-                                    Progress
-                                </AppText>
-                                <AppText style={styles.progressPercentText}>
-                                    {progressPercent}%
-                                </AppText>
-                            </View>
-                            <View style={styles.progressBarContainer}>
-                                <View style={[styles.progressBarFill, {width: `${Math.max(progressPercent, 2)}%`}]} />
-                            </View>
-                        </View>
                     </LinearGradient>
                 </View>
             </Animated.View>

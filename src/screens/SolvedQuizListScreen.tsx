@@ -21,7 +21,7 @@ const SolvedQuizListScreen = ({navigation}) => {
 
     useFocusEffect(
         useCallback(() => {
-            setTitle('My Quizzes');
+            setTitle('History');
             getUserQuizList()
                 .then(response => {
                     let dataList = response?.userQuizResponseList;

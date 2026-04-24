@@ -151,7 +151,7 @@ export const TabMenu = () => {
             initialRouteName="QuizGroupListStack"
             screenOptions={{
                 headerShown: false,
-                tabBarShowLabel: false, // Hides label names
+                tabBarShowLabel: true, // Hides label names
                 tabBarActiveTintColor: '#ffffff', // White color for active items
                 tabBarInactiveTintColor: '#9c9595', // Light gray color for inactive items
                 tabBarStyle: {
@@ -166,6 +166,7 @@ export const TabMenu = () => {
                 name="QuizGroupListStack"
                 component={QuizGroupListStack}
                 options={{
+                    tabBarLabel: 'Home',
                     tabBarIcon: ({color, size}) => (
                         <Feather name="home" color={color} size={size}/>
                     ),
@@ -175,6 +176,7 @@ export const TabMenu = () => {
                 name="SolvedQuizListScreens"
                 component={SolvedQuizListStack}
                 options={{
+                    tabBarLabel: 'History',
                     tabBarIcon: ({color, size}) => (
                         <Feather name="file" color={color} size={size}/>
                     ),
@@ -195,6 +197,10 @@ export const TabMenu = () => {
                 name="ProfileScreens"
                 component={ProfileStack}
                 options={{
+                    tabBarLabel: 'Profile',
+                    // tabBarLabelStyle: { todo androidde bakilacak
+                    //     fontFamily: 'OpenSans-Regular',
+                    // },
                     tabBarIcon: ({color, size}) => (
                         <Feather name="user" color={color} size={size}/>
                     ),
