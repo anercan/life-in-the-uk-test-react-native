@@ -113,13 +113,12 @@ const GroupCard = (props: IGroupCard) => {
             letterSpacing: 0.3,
         },
         titleSection: {
-            flex: 1,
             justifyContent: 'center',
-            marginTop: sizes.s,
+            marginTop: sizes.m,
         },
         cardTitle: {
-            fontFamily: fonts.medium,
-            fontSize: sizes.text,
+            fontFamily: fonts.text,
+            fontSize: sizes.h2,
             color: '#FFFFFF',
             //lineHeight: sizes.sm,
             //textAlign: 'left',
@@ -128,7 +127,7 @@ const GroupCard = (props: IGroupCard) => {
             textShadowRadius: 2,
         },
         bottomSection: {
-            marginTop: sizes.md,
+            marginTop: sizes.l,
         },
         progressRow: {
             flexDirection: 'row',
